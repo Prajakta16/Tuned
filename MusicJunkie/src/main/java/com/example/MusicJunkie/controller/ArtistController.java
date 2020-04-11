@@ -1,4 +1,4 @@
-package com.example.MusicJunkie.dao;
+package com.example.MusicJunkie.controller;
 
 import com.example.MusicJunkie.model.Artist;
 import com.example.MusicJunkie.repository.ArtistRepository;
