@@ -30,6 +30,14 @@ public class Album {
     @JsonIgnore
     private List<Song> songs;
 
+    public Album(String title) {
+        this.title=title;
+    }
+
+    public Album(){
+
+    }
+
     public int getAlbum_id() {
         return album_id;
     }

@@ -8,9 +8,6 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Listener extends User{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int listener_id;
     private String fav_genre;
     private String disliked_genre;
 
@@ -19,14 +16,6 @@ public class Listener extends User{
 
     @OneToMany(mappedBy = "listener")
     private List<Listener_activity> listener_activities;
-
-    public int getListener_id() {
-        return listener_id;
-    }
-
-    public void setListener_id(int listener_id) {
-        this.listener_id = listener_id;
-    }
 
     public String getFav_genre() {
         return fav_genre;

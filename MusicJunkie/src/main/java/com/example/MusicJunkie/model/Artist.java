@@ -11,10 +11,6 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Artist extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int artist_id;
-
     @Column(columnDefinition = "varchar(20) DEFAULT 'singer'")
     private String artist_type;
 
@@ -22,18 +18,11 @@ public class Artist extends User {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="song_production",
-            joinColumns= @JoinColumn(name="artist_id", referencedColumnName="artist_id"),
+            joinColumns= @JoinColumn(name="artist_id", referencedColumnName="user_id"),
             inverseJoinColumns= @JoinColumn(name= "song_id", referencedColumnName="song_id"))
     @JsonIgnore
     private List<Song> producedSongs;
 
-    public int getArtist_id() {
-        return artist_id;
-    }
-
-    public void setArtist_id(int artist_id) {
-        this.artist_id = artist_id;
-    }
 
     public String getArtist_type() {
         return artist_type;
