@@ -29,7 +29,7 @@ public class User {
     private String email;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "Follower_detail",
+    @JoinTable(name = "follower_detail",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
     @JsonIgnore
@@ -41,6 +41,14 @@ public class User {
 
 //    public User() {
 //    }
+//
+//    public User(String username, String password, String first_name, String last_name) {
+//        this.username = username;
+//        this.password = password;
+//        this.first_name = first_name;
+//        this.last_name = last_name;
+//    }
+
 
 
     public int getUser_id() {
