@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlaylistRepository extends CrudRepository<Playlist,Integer> {
 
-    @Query("SELECT ply FROM playlist ply where ply.title=: title ")
-    public Playlist findPlaylistByTitle(@Param("title") String title);
+//    @Query("SELECT ply FROM playlist ply where ply.title=: title ")
+//    public Playlist findPlaylistByTitle(@Param("title") String title);
 }

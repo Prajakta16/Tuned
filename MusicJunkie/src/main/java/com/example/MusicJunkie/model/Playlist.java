@@ -21,7 +21,8 @@ public class Playlist {
 
     @ManyToOne
     @JsonIgnore
-    private Listener belongsToListener;
+    private Listener listener;
+
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "playlist_detail",
@@ -61,5 +62,21 @@ public class Playlist {
 
     public void setVisits(int visits) {
         this.visits = visits;
+    }
+
+    public Listener getListener() {
+        return listener;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public List<Song> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(List<Song> songs) {
+        this.songs = songs;
     }
 }

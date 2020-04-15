@@ -31,11 +31,45 @@ public class Song {
 
     @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Playlist> belongsToPlaylists;
+    private List<Playlist> playlists;
 
     @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Album> partOfAlbums;
+    private List<Album> albums;
+
+    public List<Listener_activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(List<Listener_activity> activities) {
+        this.activities = activities;
+    }
+
+    public List<Artist> getProducedByArtists() {
+        return producedByArtists;
+    }
+
+    public void setProducedByArtists(List<Artist> producedByArtists) {
+        this.producedByArtists = producedByArtists;
+    }
+
+    public List<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(List<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
+    }
+
+
 
     public int getSong_id() {
         return song_id;

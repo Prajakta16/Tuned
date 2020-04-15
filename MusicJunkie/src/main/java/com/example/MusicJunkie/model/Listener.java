@@ -11,8 +11,8 @@ public class Listener extends User{
     private String fav_genre;
     private String disliked_genre;
 
-    @OneToMany(mappedBy = "belongsToListener")
-    private List<Playlist> hasPlaylists;
+    @OneToMany(mappedBy = "listener")
+    private List<Playlist> playlists;
 
     @OneToMany(mappedBy = "listener")
     private List<Listener_activity> listener_activities;
@@ -32,4 +32,22 @@ public class Listener extends User{
     public void setDisliked_genre(String disliked_genre) {
         this.disliked_genre = disliked_genre;
     }
+
+    public List<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(List<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
+    public List<Listener_activity> getListener_activities() {
+        return listener_activities;
+    }
+
+    public void setListener_activities(List<Listener_activity> listener_activities) {
+        this.listener_activities = listener_activities;
+    }
+
+
 }
