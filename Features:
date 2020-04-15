@@ -1,0 +1,38 @@
+Features:
+
+1. Get login authorization
+
+User:
+1. Follow a user
+2. Unfollow a user
+
+Listener
+1. Creation of a new listener
+2. Get listener details
+3. Get all listeners
+
+Artist
+1. Creation of a new artist
+2. Get artist details
+3. Get all artists
+4. Get image for a artist — later
+
+Song
+1. Get all songs
+2. Get song by title
+3. Get song by genre
+4. Get song by album
+5. Get song by artist
+6. Like a song
+7. Dislike a song
+8. Mark song as favorite 
+9. Increase views on a song
+
+Album
+1. Get album by title
+2. Get image for a song — later
+
+Playlist
+1. Create a new playlist
+2. Add song to a playlist
+3. Increase views on a playlist
