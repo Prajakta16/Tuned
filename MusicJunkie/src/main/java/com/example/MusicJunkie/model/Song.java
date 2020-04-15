@@ -3,7 +3,9 @@ package com.example.MusicJunkie.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name="song")
 @Table(name="song")
@@ -29,9 +31,9 @@ public class Song {
     @JsonIgnore
     private List<Artist> producedByArtists;
 
-    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "songs")
     @JsonIgnore
-    private List<Playlist> playlists;
+    private Set<Playlist> playlists = new HashSet<Playlist>();
 
     @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -66,11 +68,11 @@ public class Song {
         this.producedByArtists = producedByArtists;
     }
 
-    public List<Playlist> getPlaylists() {
+    public Set<Playlist> getPlaylists() {
         return playlists;
     }
 
-    public void setPlaylists(List<Playlist> playlists) {
+    public void setPlaylists(Set<Playlist> playlists) {
         this.playlists = playlists;
     }
 

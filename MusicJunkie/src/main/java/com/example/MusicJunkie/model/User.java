@@ -24,7 +24,6 @@ public class User {
 
     @Column(unique = true)
     private int phone;
-    private Date dob;
     private String address;
     private String email;
 
@@ -40,13 +39,12 @@ public class User {
     private List<User> follows;
 
 
-    public User(String username, String password, String first_name, String last_name, int phone, Date dob, String address, String email) {
+    public User(String username, String password, String first_name, String last_name, int phone, String address, String email) {
         this.username = username;
         this.password = password;
         this.first_name = first_name;
         this.last_name = last_name;
         this.phone = phone;
-        this.dob = dob;
         this.address = address;
         this.email = email;
     }
@@ -101,14 +99,6 @@ public class User {
 
     public void setPhone(int phone) {
         this.phone = phone;
-    }
-
-    public Date getDob() {
-        return dob;
-    }
-
-    public void setDob(Date dob) {
-        this.dob = dob;
     }
 
     public String getAddress() {

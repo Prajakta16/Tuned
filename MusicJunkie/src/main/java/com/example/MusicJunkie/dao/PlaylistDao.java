@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlaylistDao {
@@ -24,48 +25,61 @@ public class PlaylistDao {
     @Autowired
     SongRepository songRepository;
 
-    public Playlist  createPlaylist(Playlist playlist){
-        return playlistRepository.save(playlist);
+    public Playlist createPlaylistForListener(Playlist playlist, Listener listener) {
+        if (listenerRepository.findById(listener.getUser_id()).isPresent()) {
+            playlist.setListener(listener);
+            if (listener.getPlaylists() == null) {
+                List<Playlist> playlistsForListener = new ArrayList<>();
+                playlistsForListener.add(playlist);
+                listener.setPlaylists(playlistsForListener);
+            } else
+                listener.getPlaylists().add(playlist);
+            listenerRepository.save(listener);
+            return playlistRepository.save(playlist);
+        }
+        return null;
     }
 
-    public void deletePlaylist(Playlist playlist){
-         playlistRepository.delete(playlist);
+    public void deletePlaylistById(int playlist_id) {
+        Playlist playlist = playlistRepository.findById(playlist_id).get();
+        playlistRepository.delete(playlist);
     }
 
-    public List<Playlist> findAllPlaylistsForListener(int listener_id){
-        if(listenerRepository.findById(listener_id).isPresent()){
+    public Playlist findPlaylistById(int playlist_id) {
+        if (playlistRepository.findById(playlist_id).isPresent())
+            return playlistRepository.findById(playlist_id).get();
+        else
+            return null;
+    }
+
+    public List<Playlist> findAllPlaylistsForListener(int listener_id) {
+        if (listenerRepository.findById(listener_id).isPresent()) {
             Listener listener = listenerRepository.findById(listener_id).get();
             return listener.getPlaylists();
         }
         return null;
     }
 
-    public List<Playlist> findAllPlaylists(){
+    public List<Playlist> findAllPlaylists() {
         return (List<Playlist>) playlistRepository.findAll();
     }
 
-    public void addSongToPlaylist(int song_id, int playlist_id){
-        if(playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()){
+    public void addSongToPlaylist(int song_id, int playlist_id) {
+        if (playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Song song = songRepository.findById(song_id).get();
             Playlist playlist = playlistRepository.findById(playlist_id).get();
-            if(playlist.getSongs() == null){
-                List<Song> songsInPlaylist = new ArrayList<>();
-                songsInPlaylist.add(song);
-                playlist.setSongs(songsInPlaylist);
-            }
-            else{
-                playlist.getSongs().add(song);
-            }
-            if(song.getPlaylists() == null){
-                List<Playlist>  playlistsForSong = new ArrayList<>();
-                playlistsForSong.add(playlist);
-                song.setPlaylists(playlistsForSong);
-            }
-            else{
-                song.getPlaylists().add(playlist);
-            }
+            playlist.addSong(song);
+            songRepository.save(song);
+            playlistRepository.save(playlist);
         }
+    }
 
+    public void removeSongFromPlaylist(int song_id, int playlist_id) {
+        if (playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Song song = songRepository.findById(song_id).get();
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
+            playlist.removeSong(song);
+        }
     }
 
 }

@@ -18,8 +18,8 @@ public class Listener extends User{
     @OneToMany(mappedBy = "listener")
     private List<Listener_activity> listener_activities;
 
-    public Listener(String username, String password, String first_name, String last_name, int phone, Date dob, String address, String email, String fav_genre, String disliked_genre) {
-        super(username, password, first_name, last_name, phone, dob, address, email);
+    public Listener(String username, String password, String first_name, String last_name, int phone, String address, String email, String fav_genre, String disliked_genre) {
+        super(username, password, first_name, last_name, phone, address, email);
         this.fav_genre=fav_genre;
         this.disliked_genre=disliked_genre;
     }

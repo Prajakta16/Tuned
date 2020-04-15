@@ -3,7 +3,9 @@ package com.example.MusicJunkie.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "playlist")
 @Table(name = "playlist")
@@ -19,17 +21,17 @@ public class Playlist {
     @Column(columnDefinition = "int(11) DEFAULT '0'")
     private int visits;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Listener listener;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "playlist_detail",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")
     )
     @JsonIgnore
-    private List<Song> songs;
+    private Set<Song> songs = new HashSet<Song>();
 
     public Playlist(String title, String description) {
         this.title=title;
@@ -37,6 +39,16 @@ public class Playlist {
     }
 
     public Playlist() {
+    }
+
+    public void addSong(Song song){
+        this.songs.add(song);
+        song.getPlaylists().add(this);
+    }
+
+    public void removeSong(Song song){
+        this.songs.remove(song);
+        song.getPlaylists().remove(this);
     }
 
     public int getPlaylist_id() {
@@ -79,11 +91,11 @@ public class Playlist {
         this.listener = listener;
     }
 
-    public List<Song> getSongs() {
+    public Set<Song> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<Song> songs) {
+    public void setSongs(Set<Song> songs) {
         this.songs = songs;
     }
 }
