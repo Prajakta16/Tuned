@@ -41,6 +41,19 @@ public class Song {
         return activities;
     }
 
+    public Song(String title, String genre, String description, int duration, int year_released, int popularity, int energy) {
+        this.title = title;
+        this.genre = genre;
+        this.description = description;
+        this.duration = duration;
+        this.year_released = year_released;
+        this.popularity = popularity;
+        this.energy = energy;
+    }
+
+    public Song() {
+    }
+
     public void setActivities(List<Listener_activity> activities) {
         this.activities = activities;
     }

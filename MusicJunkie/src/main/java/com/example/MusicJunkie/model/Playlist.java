@@ -23,7 +23,6 @@ public class Playlist {
     @JsonIgnore
     private Listener listener;
 
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "playlist_detail",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "playlist_id"),
@@ -31,6 +30,14 @@ public class Playlist {
     )
     @JsonIgnore
     private List<Song> songs;
+
+    public Playlist(String title, String description) {
+        this.title=title;
+        this.description=description;
+    }
+
+    public Playlist() {
+    }
 
     public int getPlaylist_id() {
         return playlist_id;

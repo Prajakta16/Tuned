@@ -39,6 +39,22 @@ public class User {
     @JsonIgnore
     private List<User> follows;
 
+
+    public User(String username, String password, String first_name, String last_name, int phone, Date dob, String address, String email) {
+        this.username = username;
+        this.password = password;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.phone = phone;
+        this.dob = dob;
+        this.address = address;
+        this.email = email;
+    }
+
+    public User() {
+
+    }
+
     public int getUser_id() {
         return user_id;
     }
