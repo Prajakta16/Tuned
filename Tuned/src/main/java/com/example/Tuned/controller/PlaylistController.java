@@ -25,7 +25,6 @@ public class PlaylistController {
         return playlistRepository.save(playlist);
     }
 
-    //not working
     @PostMapping("/api/playlist/{playlist_id}/song/{song_id}")
     public Playlist addSongToPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id){
         if(playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()){
