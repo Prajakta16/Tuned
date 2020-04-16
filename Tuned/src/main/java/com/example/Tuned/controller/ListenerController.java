@@ -1,20 +1,33 @@
 package com.example.Tuned.controller;
 
+import com.example.Tuned.model.Artist;
 import com.example.Tuned.model.Listener;
 import com.example.Tuned.repository.ListenerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Service
+@RestController
 public class ListenerController {
 
     @Autowired
     ListenerRepository listenerRepository;
 
-    @PostMapping("/api/listener")
+    @PostMapping("/api/listener/new")
     Listener createListener(@RequestBody  Listener listener){
         return listenerRepository.save(listener);
+    }
+
+    @GetMapping("/api/listener/all")
+    public List<Listener> getAllListeners(){
+        return (List<Listener>) listenerRepository.findAll();
+    }
+
+    @GetMapping("/api/listener/{listener_id}")
+    public Listener getListenerById(@PathVariable("listener_id") int listener_id){
+        return listenerRepository.findById(listener_id).get();
     }
 }

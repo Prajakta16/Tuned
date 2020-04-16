@@ -20,7 +20,7 @@ public class Playlist {
     @Column(columnDefinition = "int(11) DEFAULT '0'")
     private int visits;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JsonIgnore
     private Listener listener;
 

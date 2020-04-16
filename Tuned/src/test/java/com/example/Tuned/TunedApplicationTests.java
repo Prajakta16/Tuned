@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TunedApplicationTests {
 
+	/*
+
 	@Autowired
 	ListenerDao listenerDao;
 
@@ -93,4 +95,6 @@ class TunedApplicationTests {
 //		assertEquals(2, playlistDao.findAllPlaylistsForListener(1));
 //	}
 
+
+	 */
 }
