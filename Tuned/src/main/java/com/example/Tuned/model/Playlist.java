@@ -48,12 +48,14 @@ public class Playlist {
 
     public void addSong(Song song){
         this.songs.add(song);
-        song.getPlaylists().add(this);
+        if(!song.getPlaylists().contains(this))
+            song.getPlaylists().add(this);
     }
 
     public void removeSong(Song song){
         this.songs.remove(song);
-        song.getPlaylists().remove(this);
+        if(song.getPlaylists().contains(this))
+            song.getPlaylists().remove(this);
     }
 
     public int getPlaylist_id() {

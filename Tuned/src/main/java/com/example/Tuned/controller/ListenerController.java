@@ -4,6 +4,7 @@ import com.example.Tuned.model.Artist;
 import com.example.Tuned.model.Listener;
 import com.example.Tuned.model.Playlist;
 import com.example.Tuned.repository.ListenerRepository;
+import com.example.Tuned.repository.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ public class ListenerController {
     @Autowired
     ListenerRepository listenerRepository;
 
+    @Autowired
+    PlaylistRepository playlistRepository;
+
     @PostMapping("/api/listener/new")
     Listener createListener(@RequestBody  Listener listener){
         return listenerRepository.save(listener);
@@ -26,6 +30,7 @@ public class ListenerController {
     Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist){
         Listener listener = listenerRepository.findById(listener_id).get();
         listener.addPlaylists(newPlaylist);
+        playlistRepository.save(newPlaylist);
         return listenerRepository.save(listener);
     }
 
@@ -37,5 +42,14 @@ public class ListenerController {
     @GetMapping("/api/listener/{listener_id}")
     public Listener getListenerById(@PathVariable("listener_id") int listener_id){
         return listenerRepository.findById(listener_id).get();
+    }
+
+    @GetMapping("/api/listener/{listener_id}/playlists/all")
+    public List<Playlist> findAllPlaylistsForListener(int listener_id) {
+        if (listenerRepository.findById(listener_id).isPresent()) {
+            Listener listener = listenerRepository.findById(listener_id).get();
+            return listener.getPlaylists();
+        }
+        return null;
     }
 }
