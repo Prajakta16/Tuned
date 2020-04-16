@@ -40,6 +40,12 @@ public class Playlist {
     public Playlist() {
     }
 
+    public void setListener(Listener listener) {
+        this.listener = listener;
+        if(!listener.getPlaylists().contains(this))
+            listener.getPlaylists().add(this);
+    }
+
     public void addSong(Song song){
         this.songs.add(song);
         song.getPlaylists().add(this);
@@ -84,10 +90,6 @@ public class Playlist {
 
     public Listener getListener() {
         return listener;
-    }
-
-    public void setListener(Listener listener) {
-        this.listener = listener;
     }
 
     public Set<Song> getSongs() {

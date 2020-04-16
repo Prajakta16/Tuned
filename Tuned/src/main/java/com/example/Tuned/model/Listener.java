@@ -23,6 +23,12 @@ public class Listener extends User{
         this.disliked_genre=disliked_genre;
     }
 
+    public void addPlaylists(Playlist playlist){
+        this.playlists.add(playlist);
+        if(playlist.getListener()!=this)
+            playlist.setListener(this);
+    }
+
     public Listener(){
         super();
     }
