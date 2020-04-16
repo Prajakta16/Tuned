@@ -24,7 +24,7 @@ public class Playlist {
     @JsonIgnore
     private Listener listener;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "playlist_detail",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")

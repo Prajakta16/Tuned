@@ -31,7 +31,7 @@ public class Song {
     @JsonIgnore
     private List<Artist> producedByArtists;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs")
     @JsonIgnore
     private Set<Playlist> playlists = new HashSet<Playlist>();
 

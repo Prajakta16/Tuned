@@ -24,8 +24,9 @@ public class PlaylistController {
         return playlistRepository.save(playlist);
     }
 
-    @PostMapping("/api/playlist/{playlist_id}/song/{song_id}")
-    public Playlist createPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id){
+    //not working
+    @PutMapping("/api/playlist/{playlist_id}/song/{song_id}")
+    public Playlist addSongToPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id){
         Playlist playlist = playlistRepository.findById(playlist_id).get();
         Song song = songRepository.findById(song_id).get();
         playlist.addSong(song);
