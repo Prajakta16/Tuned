@@ -15,10 +15,22 @@ public class Listener_activity {
     @ManyToOne
     @JsonIgnore
     private Listener listener;
+    public void setListener(Listener listener) {
+        this.listener = listener;
+        if(!listener.getSongActivity().contains(this)) {
+            listener.getSongActivity().add(this);
+        }
+    }
 
     @ManyToOne
     @JsonIgnore
     private Song song;
+//    public void setSong(Song song) {
+//        this.song = song;
+//        if(!song.getListenerActivity().contains(this)) {
+//            song.getListenerActivity().add(this);
+//        }
+//    }
 
     private String comment;
 
@@ -34,6 +46,10 @@ public class Listener_activity {
     @Column(columnDefinition = "int(3) DEFAULT 0")
     private int visits;
 
+    public Listener_activity(Listener listener, Song song) {
+        this.listener = listener;
+        this.song = song;
+    }
     public int getListener_activity_id() {
         return listener_activity_id;
     }
@@ -54,10 +70,11 @@ public class Listener_activity {
         return likes;
     }
 
+    public Boolean getLikes() { return likes; }
     public void setLikes(boolean likes) {
         this.likes = likes;
     }
-
+    public Boolean getDislikes() { return dislikes; }
     public boolean isDislikes() {
         return dislikes;
     }
@@ -79,6 +96,23 @@ public class Listener_activity {
     }
 
     public void setVisits(int visits) {
+        this.visits = visits;
+    }
+
+    public Song getSong() {
+        return song;
+    }
+
+    public User getListener() { return listener; }
+
+    public Listener_activity(int listener_activity_id, Listener listener, Song song, String comment, boolean likes, boolean dislikes, boolean is_favourite, int visits) {
+        this.listener_activity_id = listener_activity_id;
+        this.listener = listener;
+        this.song = song;
+        this.comment = comment;
+        this.likes = likes;
+        this.dislikes = dislikes;
+        this.is_favourite = is_favourite;
         this.visits = visits;
     }
 }

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name="album")
 @Table(name="album")
@@ -28,7 +30,9 @@ public class Album {
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")
     )
     @JsonIgnore
-    private List<Song> songs;
+    //private List<Song> songs;
+    private Set<Song> songs = new HashSet<Song>();
+
 
     public Album(String title) {
         this.title=title;
@@ -36,6 +40,14 @@ public class Album {
 
     public Album(){
 
+    }
+
+    public Set<Song> getSongs() {
+        return songs;
+    }
+
+    public void setSongs(Set<Song> songs) {
+        this.songs = songs;
     }
 
     public int getAlbum_id() {
@@ -100,5 +112,18 @@ public class Album {
 
     public void setVisits(int visits) {
         this.visits = visits;
+    }
+
+
+    public void addSong(Song song){
+        this.songs.add(song);
+        if(!song.getAlbums().contains(this))
+            song.getAlbums().add(this);
+    }
+
+    public void removeSong(Song song){
+        this.songs.remove(song);
+        if(song.getAlbums().contains(this))
+            song.getAlbums().remove(this);
     }
 }

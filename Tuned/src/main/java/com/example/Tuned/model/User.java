@@ -52,6 +52,22 @@ public class User {
 
     }
 
+    public List<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<User> followers) {
+        this.followers = followers;
+    }
+
+    public List<User> getFollows() {
+        return follows;
+    }
+
+    public void setFollows(List<User> follows) {
+        this.follows = follows;
+    }
+
     public int getUser_id() {
         return user_id;
     }
@@ -115,4 +131,18 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void addFollower(User followers){
+        this.followers.add(followers);
+        if(!followers.getFollowers().contains(this))
+            followers.getFollowers().add(this);
+    }
+
+    public void removeFollower(User followers){
+        this.followers.remove(followers);
+        if(followers.getFollowers().contains(this))
+            followers.getFollowers().remove(this);
+    }
+
+
 }

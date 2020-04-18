@@ -2,6 +2,7 @@ package com.example.Tuned.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "listener")
 @Table(name = "listener")
@@ -15,7 +16,13 @@ public class Listener extends User{
     private List<Playlist> playlists;
 
     @OneToMany(mappedBy = "listener")
-    private List<Listener_activity> listener_activities;
+    private Set<Listener_activity> listener_activities;
+
+    public void listenedUser(Listener_activity listener_activity) {
+        this.listener_activities.add(listener_activity);
+        if(listener_activity.getListener()!= this)
+            listener_activity.setListener(this);
+    }
 
     public Listener(String username, String password, String first_name, String last_name, int phone, String address, String email, String fav_genre, String disliked_genre) {
         super(username, password, first_name, last_name, phone, address, email);
@@ -28,6 +35,7 @@ public class Listener extends User{
         if(playlist.getListener()!=this)
             playlist.setListener(this);
     }
+
 
     public Listener(){
         super();
@@ -57,13 +65,15 @@ public class Listener extends User{
         this.playlists = playlists;
     }
 
-    public List<Listener_activity> getListener_activities() {
-        return listener_activities;
-    }
+    //public List<Listener_activity> getListener_activities() {
+    //    return listener_activities;
+    //}
 
     public void setListener_activities(List<Listener_activity> listener_activities) {
-        this.listener_activities = listener_activities;
+        this.listener_activities = (Set<Listener_activity>) listener_activities;
     }
 
-
+    public Set<Listener_activity> getSongActivity() {
+        return listener_activities;
+    }
 }

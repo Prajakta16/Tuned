@@ -16,9 +16,9 @@ public class Artist extends User {
     private String image_url;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="song_production",
-            joinColumns= @JoinColumn(name="artist_id", referencedColumnName="user_id"),
-            inverseJoinColumns= @JoinColumn(name= "song_id", referencedColumnName="song_id"))
+    @JoinTable(name = "song_production",
+            joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id"))
     @JsonIgnore
     private List<Song> producedSongs;
 
@@ -37,5 +37,20 @@ public class Artist extends User {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public List<Song> getProducedSongs() {
+        return producedSongs;
+    }
+
+    public void setProducedSongs(List<Song> producedSongs) {
+        this.producedSongs = producedSongs;
+    }
+
+    public void addSongs(Song song) {
+        this.producedSongs.add(song);
+        if (song.getProducedByArtists() != this) {
+            song.setProducedByArtists((List<Artist>) this);
+        }
     }
 }
