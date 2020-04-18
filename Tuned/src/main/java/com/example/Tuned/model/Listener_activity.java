@@ -43,8 +43,8 @@ public class Listener_activity {
 
     public void setSong(Song song) {
         this.song = song;
-        if(!song.getListenerActivity().contains(this)) {
-            song.getListenerActivity().add(this);
+        if(!song.getActivities().contains(this)) {
+            song.getActivities().add(this);
         }
     }
 
