@@ -12,44 +12,49 @@ public class Listener_activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int listener_activity_id;
 
+    private String comment;
+    @Column(columnDefinition = "boolean DEFAULT false")
+    private boolean likes;
+    @Column(columnDefinition = "boolean DEFAULT false")
+    private boolean dislikes;
+    @Column(columnDefinition = "boolean DEFAULT false")
+    private boolean is_favourite;
+    @Column(columnDefinition = "int(3) DEFAULT 0")
+    private int visits;
+
     @ManyToOne
     @JsonIgnore
     private Listener listener;
-    public void setListener(Listener listener) {
-        this.listener = listener;
-        if(!listener.getSongActivity().contains(this)) {
-            listener.getSongActivity().add(this);
-        }
-    }
 
     @ManyToOne
     @JsonIgnore
     private Song song;
-//    public void setSong(Song song) {
-//        this.song = song;
-//        if(!song.getListenerActivity().contains(this)) {
-//            song.getListenerActivity().add(this);
-//        }
-//    }
 
-    private String comment;
-
-    @Column(columnDefinition = "boolean DEFAULT false")
-    private boolean likes;
-
-    @Column(columnDefinition = "boolean DEFAULT false")
-    private boolean dislikes;
-
-    @Column(columnDefinition = "boolean DEFAULT false")
-    private boolean is_favourite;
-
-    @Column(columnDefinition = "int(3) DEFAULT 0")
-    private int visits;
-
-    public Listener_activity(Listener listener, Song song) {
+    public Listener_activity(int listener_activity_id, Listener listener, Song song, String comment, boolean likes, boolean dislikes, boolean is_favourite, int visits) {
+        this.listener_activity_id = listener_activity_id;
         this.listener = listener;
         this.song = song;
+        this.comment = comment;
+        this.likes = likes;
+        this.dislikes = dislikes;
+        this.is_favourite = is_favourite;
+        this.visits = visits;
     }
+
+    public void setSong(Song song) {
+        this.song = song;
+        if(!song.getListenerActivity().contains(this)) {
+            song.getListenerActivity().add(this);
+        }
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+        if(!listener.getListener_activities().contains(this)) {
+            listener.getListener_activities().add(this);
+        }
+    }
+
     public int getListener_activity_id() {
         return listener_activity_id;
     }
@@ -105,14 +110,4 @@ public class Listener_activity {
 
     public User getListener() { return listener; }
 
-    public Listener_activity(int listener_activity_id, Listener listener, Song song, String comment, boolean likes, boolean dislikes, boolean is_favourite, int visits) {
-        this.listener_activity_id = listener_activity_id;
-        this.listener = listener;
-        this.song = song;
-        this.comment = comment;
-        this.likes = likes;
-        this.dislikes = dislikes;
-        this.is_favourite = is_favourite;
-        this.visits = visits;
-    }
 }

@@ -35,20 +35,20 @@ public class ArtistController {
         return artistRepository.findArtistByFirstName(first_name);
     }
 
-    @PostMapping("/api/artist/{artist_id}/song/new")
-    Artist addSongToArtist(@PathVariable("artist_id") int artist_id, @RequestBody Song newSong){
-        Artist artist = artistRepository.findById(artist_id).get();
-        artist.addSongs(newSong);
-        songRepository.save(newSong);
-        return artistRepository.save(artist);
-    }
-
-    @GetMapping("api/artist/{artist_id}/songs/all")
-    public List<Song> findSongOfArtist(@PathVariable("artist_id") int artist_id) {
-        if (artistRepository.findById(artist_id).isPresent()) {
-            Artist artist = artistRepository.findById(artist_id).get();
-            return artist.getProducedSongs();
-        }
-        return null;
-    }
+//    @PostMapping("/api/artist/{artist_id}/song/new")
+//    Artist addSongToArtist(@PathVariable("artist_id") int artist_id, @RequestBody Song newSong){
+//        Artist artist = artistRepository.findById(artist_id).get();
+//        artist.addSongs(newSong);
+//        songRepository.save(newSong);
+//        return artistRepository.save(artist);
+//    }
+//
+//    @GetMapping("api/artist/{artist_id}/songs/all")
+//    public List<Song> findSongOfArtist(@PathVariable("artist_id") int artist_id) {
+//        if (artistRepository.findById(artist_id).isPresent()) {
+//            Artist artist = artistRepository.findById(artist_id).get();
+//            return artist.getProducedSongs();
+//        }
+//        return null;
+//    }
 }

@@ -18,10 +18,8 @@ public class Listener extends User{
     @OneToMany(mappedBy = "listener")
     private Set<Listener_activity> listener_activities;
 
-    public void listenedUser(Listener_activity listener_activity) {
-        this.listener_activities.add(listener_activity);
-        if(listener_activity.getListener()!= this)
-            listener_activity.setListener(this);
+    public Listener(){
+        super();
     }
 
     public Listener(String username, String password, String first_name, String last_name, int phone, String address, String email, String fav_genre, String disliked_genre) {
@@ -30,15 +28,20 @@ public class Listener extends User{
         this.disliked_genre=disliked_genre;
     }
 
-    public void addPlaylists(Playlist playlist){
+    public void addActivity(Listener_activity listener_activity) {
+        this.listener_activities.add(listener_activity);
+        if(listener_activity.getListener()!= this)
+            listener_activity.setListener(this);
+    }
+
+    public void addPlaylist(Playlist playlist){
         this.playlists.add(playlist);
         if(playlist.getListener()!=this)
             playlist.setListener(this);
     }
 
-
-    public Listener(){
-        super();
+    public void removePlaylist(Playlist playlist){
+        this.playlists.remove(playlist);
     }
 
     public String getFav_genre() {
@@ -65,15 +68,19 @@ public class Listener extends User{
         this.playlists = playlists;
     }
 
-    //public List<Listener_activity> getListener_activities() {
-    //    return listener_activities;
-    //}
-
-    public void setListener_activities(List<Listener_activity> listener_activities) {
-        this.listener_activities = (Set<Listener_activity>) listener_activities;
-    }
-
-    public Set<Listener_activity> getSongActivity() {
+    public Set<Listener_activity> getListener_activities() {
         return listener_activities;
     }
+
+    public void setListener_activities(Set<Listener_activity> listener_activities) {
+        this.listener_activities = listener_activities;
+    }
+
+//    public void setListener_activities(List<Listener_activity> listener_activities) {
+//        this.listener_activities = (Set<Listener_activity>) listener_activities;
+//    }
+//
+//    public Set<Listener_activity> getSongActivity() {
+//        return listener_activities;
+//    }
 }

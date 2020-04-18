@@ -16,25 +16,14 @@ public class Song {
     private int song_id;
 
     private String title;
-    private String genre;
-    private String description;
-    private String image_url;
     private int duration;
-    private int year_released;
     private int popularity;
-    private int energy;
+    private String preview_url;
+    private String spotify_url;
+    private String spotify_id;
 
     @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
     private Set<Listener_activity> activities;
-//    public void songListened(Listener_activity listener_activity) {
-//        this.activities.add(listener_activity);
-//        if(listener_activity.getSong()!= this)
-//            listener_activity.setSong(this);
-//    }
-
-    @ManyToMany(mappedBy = "producedSongs", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Artist> producedByArtists;
 
     @ManyToMany(mappedBy = "songs")
     @JsonIgnore
@@ -44,52 +33,23 @@ public class Song {
     @JsonIgnore
     private List<Album> albums;
 
-    public List<Listener_activity> getActivities() {
-        return (List<Listener_activity>) activities;
-    }
-
-    public Song(String title, String genre, String description, int duration, int year_released, int popularity, int energy) {
+    public Song(String title, int duration, int popularity, String preview_url, String spotify_url, String spotify_id) {
         this.title = title;
-        this.genre = genre;
-        this.description = description;
         this.duration = duration;
-        this.year_released = year_released;
         this.popularity = popularity;
-        this.energy = energy;
+        this.preview_url = preview_url;
+        this.spotify_url = spotify_url;
+        this.spotify_id = spotify_id;
     }
 
     public Song() {
     }
 
-    public void setActivities(List<Listener_activity> activities) {
-        this.activities = (Set<Listener_activity>) activities;
+    public void setActivities(Listener_activity listener_activity) {
+        this.getActivities().add(listener_activity);
+        if(listener_activity.getSong()!= this)
+            listener_activity.setSong(this);
     }
-
-    public List<Artist> getProducedByArtists() {
-        return producedByArtists;
-    }
-
-    public void setProducedByArtists(List<Artist> producedByArtists) {
-        this.producedByArtists = producedByArtists;
-    }
-
-    public Set<Playlist> getPlaylists() {
-        return playlists;
-    }
-
-    public void setPlaylists(Set<Playlist> playlists) {
-        this.playlists = playlists;
-    }
-
-    public List<Album> getAlbums() {
-        return albums;
-    }
-
-    public void setAlbums(List<Album> albums) {
-        this.albums = albums;
-    }
-
-
 
     public int getSong_id() {
         return song_id;
@@ -107,44 +67,12 @@ public class Song {
         this.title = title;
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImage_url() {
-        return image_url;
-    }
-
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
-    }
-
     public int getDuration() {
         return duration;
     }
 
     public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    public int getYear_released() {
-        return year_released;
-    }
-
-    public void setYear_released(int year_released) {
-        this.year_released = year_released;
     }
 
     public int getPopularity() {
@@ -155,18 +83,51 @@ public class Song {
         this.popularity = popularity;
     }
 
-    public int getEnergy() {
-        return energy;
+    public String getPreview_url() {
+        return preview_url;
     }
 
-    public void setEnergy(int energy) {
-        this.energy = energy;
+    public void setPreview_url(String preview_url) {
+        this.preview_url = preview_url;
     }
 
-    public void add(Song song) {
+    public String getSpotify_url() {
+        return spotify_url;
     }
 
-    public Set<Listener_activity> getListenerActivity() {
+    public void setSpotify_url(String spotify_url) {
+        this.spotify_url = spotify_url;
+    }
+
+    public String getSpotify_id() {
+        return spotify_id;
+    }
+
+    public void setSpotify_id(String spotify_id) {
+        this.spotify_id = spotify_id;
+    }
+
+    public Set<Listener_activity> getActivities() {
         return activities;
+    }
+
+//    public void setActivities(Set<Listener_activity> activities) {
+//        this.activities = activities;
+//    }
+
+    public Set<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(Set<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<Album> albums) {
+        this.albums = albums;
     }
 }

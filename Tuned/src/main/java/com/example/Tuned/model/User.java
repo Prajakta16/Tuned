@@ -15,28 +15,27 @@ public class User {
 
     @Column(unique = true)
     private String username;
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private String password;
 
     private String first_name;
     private String last_name;
 
-    @Column(unique = true)
+    //@Column(unique = true)
     private int phone;
     private String address;
     private String email;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(name = "follower_detail",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
     @JsonIgnore
     private List<User> followers;
 
-    @ManyToMany(mappedBy = "followers", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "followers")
     @JsonIgnore
     private List<User> follows;
-
 
     public User(String username, String password, String first_name, String last_name, int phone, String address, String email) {
         this.username = username;
@@ -49,7 +48,32 @@ public class User {
     }
 
     public User() {
+    }
 
+    public void addFollower(User followers){
+        this.followers.add(followers);
+        if(!followers.getFollowers().contains(this))
+            followers.getFollowers().add(this);
+    }
+
+    public void removeFollower(User followers){
+        this.followers.remove(followers);
+        if(followers.getFollowers().contains(this))
+            followers.getFollowers().remove(this);
+    }
+
+    public void followUser(User user){
+        this.getFollows().add(user);
+        if(!user.getFollowers().contains(this)){
+            user.getFollowers().add(this);
+        }
+    }
+
+    public void unfollowUser(User user){
+        this.getFollows().remove(user);
+        if(user.getFollowers().contains(this)){
+            user.getFollowers().remove(this);
+        }
     }
 
     public List<User> getFollowers() {
@@ -130,18 +154,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void addFollower(User followers){
-        this.followers.add(followers);
-        if(!followers.getFollowers().contains(this))
-            followers.getFollowers().add(this);
-    }
-
-    public void removeFollower(User followers){
-        this.followers.remove(followers);
-        if(followers.getFollowers().contains(this))
-            followers.getFollowers().remove(this);
     }
 
 

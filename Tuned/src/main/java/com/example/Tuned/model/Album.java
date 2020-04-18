@@ -17,37 +17,58 @@ public class Album {
     private int album_id;
 
     private String title;
-    private String description;
-    private String movie;
-    private String year;
-    private Date year_released;
-    private String image_url;
     private int visits;
+    private Integer popularity;
+    private String album_type;
+    private String release_year;
+    private String spotify_url;
+    private String spotify_id;
+    private String image_url;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "album")
+    private List<Album_genre> album_genres;
+
+    @ManyToMany
     @JoinTable(name = "album_detail",
             joinColumns = @JoinColumn(name = "album_id", referencedColumnName = "album_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")
     )
     @JsonIgnore
-    //private List<Song> songs;
     private Set<Song> songs = new HashSet<Song>();
 
-
-    public Album(String title) {
-        this.title=title;
-    }
+    @ManyToMany(mappedBy = "producedAlbums")
+    @JsonIgnore
+    private List<Artist> producedByArtists;
 
     public Album(){
-
     }
 
-    public Set<Song> getSongs() {
-        return songs;
+    public Album(String title, Integer popularity, String album_type, String release_year, String spotify_url, String spotify_id, String image_url) {
+        this.title = title;
+        this.popularity = popularity;
+        this.album_type = album_type;
+        this.release_year = release_year;
+        this.spotify_url = spotify_url;
+        this.spotify_id = spotify_id;
+        this.image_url = image_url;
     }
 
-    public void setSongs(Set<Song> songs) {
-        this.songs = songs;
+    public void addGenre(Album_genre album_genre){
+        this.getAlbum_genres().add(album_genre);
+        if(album_genre.getAlbum()!=this)
+            album_genre.setAlbum(this);
+    }
+
+    public void addSong(Song song){
+        this.songs.add(song);
+        if(!song.getAlbums().contains(this))
+            song.getAlbums().add(this);
+    }
+
+    public void removeSong(Song song){
+        this.songs.remove(song);
+        if(song.getAlbums().contains(this))
+            song.getAlbums().remove(this);
     }
 
     public int getAlbum_id() {
@@ -66,36 +87,52 @@ public class Album {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public int getVisits() {
+        return visits;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setVisits(int visits) {
+        this.visits = visits;
     }
 
-    public String getMovie() {
-        return movie;
+    public Integer getPopularity() {
+        return popularity;
     }
 
-    public void setMovie(String movie) {
-        this.movie = movie;
+    public void setPopularity(Integer popularity) {
+        this.popularity = popularity;
     }
 
-    public String getYear() {
-        return year;
+    public String getAlbum_type() {
+        return album_type;
     }
 
-    public void setYear(String year) {
-        this.year = year;
+    public void setAlbum_type(String album_type) {
+        this.album_type = album_type;
     }
 
-    public Date getYear_released() {
-        return year_released;
+    public String getRelease_year() {
+        return release_year;
     }
 
-    public void setYear_released(Date year_released) {
-        this.year_released = year_released;
+    public void setRelease_year(String release_year) {
+        this.release_year = release_year;
+    }
+
+    public String getSpotify_url() {
+        return spotify_url;
+    }
+
+    public void setSpotify_url(String spotify_url) {
+        this.spotify_url = spotify_url;
+    }
+
+    public String getSpotify_id() {
+        return spotify_id;
+    }
+
+    public void setSpotify_id(String spotify_id) {
+        this.spotify_id = spotify_id;
     }
 
     public String getImage_url() {
@@ -106,24 +143,27 @@ public class Album {
         this.image_url = image_url;
     }
 
-    public int getVisits() {
-        return visits;
+    public Set<Song> getSongs() {
+        return songs;
     }
 
-    public void setVisits(int visits) {
-        this.visits = visits;
+    public void setSongs(Set<Song> songs) {
+        this.songs = songs;
     }
 
-
-    public void addSong(Song song){
-        this.songs.add(song);
-        if(!song.getAlbums().contains(this))
-            song.getAlbums().add(this);
+    public List<Artist> getProducedByArtists() {
+        return producedByArtists;
     }
 
-    public void removeSong(Song song){
-        this.songs.remove(song);
-        if(song.getAlbums().contains(this))
-            song.getAlbums().remove(this);
+    public void setProducedByArtists(List<Artist> producedByArtists) {
+        this.producedByArtists = producedByArtists;
+    }
+
+    public List<Album_genre> getAlbum_genres() {
+        return album_genres;
+    }
+
+    public void setAlbum_genres(List<Album_genre> album_genres) {
+        this.album_genres = album_genres;
     }
 }

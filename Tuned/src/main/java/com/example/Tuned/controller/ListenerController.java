@@ -29,7 +29,7 @@ public class ListenerController {
     @PostMapping("/api/listener/{listener_id}/playlist/new")
     Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist){
         Listener listener = listenerRepository.findById(listener_id).get();
-        listener.addPlaylists(newPlaylist);
+        listener.addPlaylist(newPlaylist);
         playlistRepository.save(newPlaylist);
         return listenerRepository.save(listener);
     }

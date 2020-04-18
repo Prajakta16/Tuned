@@ -15,7 +15,6 @@ public class Playlist {
     private int playlist_id;
 
     private String title;
-    private String description;
 
     @Column(columnDefinition = "int(11) DEFAULT '0'")
     private int visits;
@@ -34,7 +33,6 @@ public class Playlist {
 
     public Playlist(String title, String description) {
         this.title=title;
-        this.description=description;
     }
 
     public Playlist() {
@@ -72,14 +70,6 @@ public class Playlist {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public int getVisits() {

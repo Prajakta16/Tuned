@@ -37,7 +37,8 @@ public class AlbumController {
 
     @RequestMapping("/api/album/insert/{title}")
     public Album insertAlbum(@PathVariable("title") String title) {
-        Album alb = new Album(title);
+        Album alb = new Album();
+        alb.setTitle(title);
         albumRepository.save(alb);
         return alb;
     }
