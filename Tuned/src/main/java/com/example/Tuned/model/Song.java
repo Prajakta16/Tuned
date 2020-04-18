@@ -24,8 +24,13 @@ public class Song {
     private int popularity;
     private int energy;
 
-    @OneToMany(mappedBy = "song")
-    private List<Listener_activity> activities;
+    @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
+    private Set<Listener_activity> activities;
+//    public void songListened(Listener_activity listener_activity) {
+//        this.activities.add(listener_activity);
+//        if(listener_activity.getSong()!= this)
+//            listener_activity.setSong(this);
+//    }
 
     @ManyToMany(mappedBy = "producedSongs", cascade = CascadeType.ALL)
     @JsonIgnore
@@ -40,7 +45,7 @@ public class Song {
     private List<Album> albums;
 
     public List<Listener_activity> getActivities() {
-        return activities;
+        return (List<Listener_activity>) activities;
     }
 
     public Song(String title, String genre, String description, int duration, int year_released, int popularity, int energy) {
@@ -57,7 +62,7 @@ public class Song {
     }
 
     public void setActivities(List<Listener_activity> activities) {
-        this.activities = activities;
+        this.activities = (Set<Listener_activity>) activities;
     }
 
     public List<Artist> getProducedByArtists() {
@@ -156,5 +161,12 @@ public class Song {
 
     public void setEnergy(int energy) {
         this.energy = energy;
+    }
+
+    public void add(Song song) {
+    }
+
+    public Set<Listener_activity> getListenerActivity() {
+        return activities;
     }
 }
