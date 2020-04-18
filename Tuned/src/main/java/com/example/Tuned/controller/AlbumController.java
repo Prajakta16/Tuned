@@ -1,7 +1,10 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.model.Album;
+import com.example.Tuned.model.Playlist;
+import com.example.Tuned.model.Song;
 import com.example.Tuned.repository.AlbumRepository;
+import com.example.Tuned.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -15,20 +18,22 @@ public class AlbumController {
     @Autowired
     AlbumRepository albumRepository;
 
+    @Autowired
+    SongRepository songRepository;
+
     @PostMapping("/api/album")
     public Album createAlbum(@RequestBody Album album){
         return albumRepository.save(album);
     }
 
-//    @RequestMapping("api/album/select")
-//    public Album findAlbumByTitle(/*@PathVariable("title") String title*/){
-//        return albumRepository.findAlbumByTitle("PDAlbum");
-//    }
-//
-//    @GetMapping("api/album/select/id/{album_id}")
-//    public Optional<Album> findAlbumById(@PathVariable("album_id") int album_id){
-//        return albumRepository.findById(album_id);
-//    }
+
+    @GetMapping("api/album/{album_id}")
+    public Album findAlbumById(@PathVariable("album_id") int album_id) {
+        if (albumRepository.findById(album_id).isPresent())
+            return albumRepository.findById(album_id).get();
+        else
+            return null;
+    }
 
     @RequestMapping("/api/album/insert/{title}")
     public Album insertAlbum(@PathVariable("title") String title) {
@@ -42,9 +47,16 @@ public class AlbumController {
         List<Album> albums = (List<Album>) albumRepository.findAll();
         return albums;
     }
-//
-//    @RequestMapping("/api/hello/string")
-//    public String sayHello() {
-//        return "Hello Prajakta string!";
-//    }
+
+    @PostMapping("/api/album/{album_id}/song/{song_id}")
+    public Album addSongToAlbum(@PathVariable("album_id") int album_id, @PathVariable("song_id") int song_id) {
+        if (albumRepository.findById(album_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Album album = albumRepository.findById(album_id).get();
+            Song song = songRepository.findById(song_id).get();
+            album.addSong(song);
+            //songRepository.save(song);
+            return albumRepository.save(album);
+        }
+        return null;
+    }
 }

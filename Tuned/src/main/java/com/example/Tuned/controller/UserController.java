@@ -32,4 +32,21 @@ public class UserController {
     public User getUserByFirst_name(@PathVariable("first_name") String first_name) {
         return userRepository.findUserByFirst_name(first_name);
     }
+
+    @GetMapping("api/users/{user_id}/follows/{follower_id}")
+    public void userFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
+    {
+        User user = userRepository.findById(user_id).get();
+        User follower = userRepository.findById(follower_id).get();
+        user.addFollower(follower);
+    }
+    @GetMapping("api/users/{user_id}/unfollows/{follower_id}")
+    public void userUnfollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
+    {
+        User user = userRepository.findById(user_id).get();
+        User follower = userRepository.findById(follower_id).get();
+        user.removeFollower(follower);
+    }
+    //follow and unfollow a user
+
 }
