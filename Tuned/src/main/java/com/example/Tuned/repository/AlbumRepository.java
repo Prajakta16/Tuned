@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AlbumRepository extends CrudRepository<Album,Integer> {
 
-    @Query("SELECT alb FROM album alb where alb.title=: title ")
+    @Query("SELECT alb FROM album alb where alb.title = :title ")
     public Album findAlbumByTitle(@Param("title") String title);
+
+    @Query("SELECT alb FROM album alb WHERE alb.spotify_id = :spotify_id")
+    public Album findAlbumBySpotifyId(@Param("spotify_id") String spotify_id);
 
 }
