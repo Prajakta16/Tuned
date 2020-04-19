@@ -122,26 +122,26 @@ public class Spotify {
                     jsonObject.put("duration",JsonPath.read(song_json, "$.tracks.items[" + i + "].duration_ms"));
                     jsonObject.put("preview_url",JsonPath.read(song_json,"$.tracks.items[" + i + "].preview_url"));
 
-                    Integer count_albums_for_song = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.length()");
-//                    JSONArray ja = new JSONArray();
-//                    for (int j = 0; j < count_artists_in_song; j++) {
-//                        Map m = new LinkedHashMap(2);
-//                        m.put("artist_name", JsonPath.read(song_json, "$.tracks.items[" + i + "].artists[" + j + "].name"));
-//                        m.put("artist_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].artists[" + j + "].id"));
-//                        ja.add(m); // adding map to list
-//                    }
-//                    jsonObject.put("artists",ja);
+                    Map m = new LinkedHashMap(6);
+                    m.put("title", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.name"));
+                    m.put("spotify_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.external_urls.spotify"));
+                    m.put("spotify_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.id"));
+                    m.put("image_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.images[2].url"));
+                    m.put("release_year", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.release_date"));
 
-
-//                    Integer count_artists_in_song = JsonPath.read(song_json, "$.tracks.items[" + i + "].artists.length()");
-//                    JSONArray ja = new JSONArray();
-//                    for (int j = 0; j < count_artists_in_song; j++) {
-//                        Map m = new LinkedHashMap(2);
-//                        m.put("artist_name", JsonPath.read(song_json, "$.tracks.items[" + i + "].artists[" + j + "].name"));
-//                        m.put("artist_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].artists[" + j + "].id"));
-//                        ja.add(m); // adding map to list
-//                    }
-//                    jsonObject.put("artists",ja);
+                    Integer count_artists_in_album = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists.length()");
+                    JSONArray ja = new JSONArray();
+                    System.out.println(count_artists_in_album);
+                    for (int j = 0; j < count_artists_in_album; j++) {
+                        Map mArtist = new LinkedHashMap(2);
+                        mArtist.put("name", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].name"));
+                        mArtist.put("spotify_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].id"));
+                        mArtist.put("spotify_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].external_urls.spotify"));
+                        ja.add(mArtist); // adding map to array
+                    }
+                    //jsonObject.put("artists",ja);
+                    m.put("artists",ja);
+                    jsonObject.put("album", m); // putting album to JSONObject of song
 
                     jsonArray.add(jsonObject);
                 }

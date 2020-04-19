@@ -38,10 +38,10 @@ public class SongController {
             return null;
     }
 
-    @GetMapping("api/song/{title}")
-    public Song findSongByTitle(@PathVariable("title") String title){
-        return songRepository.findSongByTitle(title);
-    }
+//    @GetMapping("api/song/{title}")
+//    public Song findSongByTitle(@PathVariable("title") String title){
+//        return songRepository.findSongByTitle(title);
+//    }
 
 
     //@GetMapping("api/song/{album_id}")

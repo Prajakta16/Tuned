@@ -30,9 +30,9 @@ public class ArtistController {
         return (List<Artist>) artistRepository.findAll();
     }
 
-    @GetMapping("api/artist/{first_name}")
-    public Artist findArtistByFirstName(@PathVariable("first_name") String first_name){
-        return artistRepository.findArtistByFirstName(first_name);
+    @GetMapping("api/artist/{username}")
+    public Artist findArtistByFirstName(@PathVariable("username") String first_name){
+        return artistRepository.findArtistByUsername(first_name);
     }
 
 //    @PostMapping("/api/artist/{artist_id}/song/new")

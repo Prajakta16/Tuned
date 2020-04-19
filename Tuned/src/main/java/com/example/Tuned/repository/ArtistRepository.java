@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ArtistRepository extends CrudRepository<Artist,Integer> {
 
-    @Query("SELECT art FROM artist art WHERE art.first_name=: first_name")
-    public Artist findArtistByFirstName(@Param("first_name") String name);
+    @Query("SELECT art FROM artist art WHERE art.username=: username")
+    public Artist findArtistByUsername(@Param("username") String username);
 }

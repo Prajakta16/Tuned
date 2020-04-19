@@ -22,7 +22,7 @@ public class User {
     private String last_name;
 
     //@Column(unique = true)
-    private int phone;
+    private long phone;
     private String address;
     private String email;
 
@@ -132,11 +132,11 @@ public class User {
         this.last_name = last_name;
     }
 
-    public int getPhone() {
+    public long getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(long phone) {
         this.phone = phone;
     }
 
