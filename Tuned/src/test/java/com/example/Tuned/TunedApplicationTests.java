@@ -1,8 +1,6 @@
 package com.example.Tuned;
 
-import com.example.Tuned.dao.ListenerDao;
-import com.example.Tuned.dao.PlaylistDao;
-import com.example.Tuned.dao.SongDao;
+
 import com.example.Tuned.model.Listener;
 import com.example.Tuned.model.Playlist;
 import com.example.Tuned.model.Song;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "listener_activity")
 @Table(name = "listener_activity")
 public class Listener_activity {
 
@@ -39,6 +39,10 @@ public class Listener_activity {
         this.dislikes = dislikes;
         this.is_favourite = is_favourite;
         this.visits = visits;
+    }
+
+    public Listener_activity() {
+
     }
 
     public void setSong(Song song) {

@@ -43,10 +43,6 @@ public class SongController {
         return songRepository.findSongByTitle(title);
     }
 
-    @GetMapping("api/song/{genre}")
-    public List<Song> findSongByGenre(@PathVariable("genre") String genre){
-        return (List<Song>) songRepository.findSongByGenre(genre); //check list
-    }
 
     //@GetMapping("api/song/{album_id}")
     //public List<Song> findSongByAlbum(@PathVariable("album_id") int album_id) {

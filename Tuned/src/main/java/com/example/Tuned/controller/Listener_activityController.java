@@ -34,6 +34,35 @@ public class Listener_activityController {
     //   9. Increase views on a song
     //  10. comments a song
 
+    @GetMapping("api/user/{listener_id}/likes/{song_id}")
+    public Listener_activity likeASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
+        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Listener_activity la;
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Song song = songRepository.findById(song_id).get();
+            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
+                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+                la.setLikes(true);
+            }
+            else{
+                la = new Listener_activity();
+                la.setSong(song);
+                la.setListener(listener);
+                la.setLikes(true);
+                if(!listener.getListener_activities().contains(la))
+                    listener.getListener_activities().add(la);
+                if(!song.getActivities().contains(la))
+                    song.getActivities().add(la);
+            }
+            listener_activityRepository.save(la);
+            listenerRepository.save(listener);
+            songRepository.save(song);
+            return la;
+        }
+        System.out.println("listener or song not present");
+        return null;
+    }
+
     /*
 
     @GetMapping("api/user/{user_id}/likes/{song_id}")

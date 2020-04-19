@@ -22,14 +22,14 @@ public class Song {
     private String spotify_url;
     private String spotify_id;
 
-    @OneToMany(mappedBy = "song", fetch = FetchType.EAGER)
-    private Set<Listener_activity> activities;
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
+    private List<Listener_activity> activities;
 
     @ManyToMany(mappedBy = "songs")
     @JsonIgnore
     private Set<Playlist> playlists = new HashSet<Playlist>();
 
-    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "songs")
     @JsonIgnore
     private List<Album> albums;
 
@@ -45,11 +45,11 @@ public class Song {
     public Song() {
     }
 
-    public void setActivities(Listener_activity listener_activity) {
-        this.getActivities().add(listener_activity);
-        if(listener_activity.getSong()!= this)
-            listener_activity.setSong(this);
-    }
+//    public void setActivities(Listener_activity listener_activity) {
+//        this.getActivities().add(listener_activity);
+//        if(listener_activity.getSong()!= this)
+//            listener_activity.setSong(this);
+//    }
 
     public int getSong_id() {
         return song_id;
@@ -107,13 +107,13 @@ public class Song {
         this.spotify_id = spotify_id;
     }
 
-    public Set<Listener_activity> getActivities() {
+    public List<Listener_activity> getActivities() {
         return activities;
     }
 
-//    public void setActivities(Set<Listener_activity> activities) {
-//        this.activities = activities;
-//    }
+    public void setActivities(List<Listener_activity> activities) {
+        this.activities = activities;
+    }
 
     public Set<Playlist> getPlaylists() {
         return playlists;

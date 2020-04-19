@@ -15,8 +15,8 @@ public class Listener extends User{
     @OneToMany(mappedBy = "listener")
     private List<Playlist> playlists;
 
-    @OneToMany(mappedBy = "listener")
-    private Set<Listener_activity> listener_activities;
+    @OneToMany(mappedBy = "listener", cascade = CascadeType.ALL)
+    private List<Listener_activity> listener_activities;
 
     public Listener(){
         super();
@@ -26,12 +26,6 @@ public class Listener extends User{
         super(username, password, first_name, last_name, phone, address, email);
         this.fav_genre=fav_genre;
         this.disliked_genre=disliked_genre;
-    }
-
-    public void addActivity(Listener_activity listener_activity) {
-        this.listener_activities.add(listener_activity);
-        if(listener_activity.getListener()!= this)
-            listener_activity.setListener(this);
     }
 
     public void addPlaylist(Playlist playlist){
@@ -68,11 +62,11 @@ public class Listener extends User{
         this.playlists = playlists;
     }
 
-    public Set<Listener_activity> getListener_activities() {
+    public List<Listener_activity> getListener_activities() {
         return listener_activities;
     }
 
-    public void setListener_activities(Set<Listener_activity> listener_activities) {
+    public void setListener_activities(List<Listener_activity> listener_activities) {
         this.listener_activities = listener_activities;
     }
 
