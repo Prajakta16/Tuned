@@ -92,6 +92,9 @@ public class TestController {
                         album.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.spotify_url"));
                         album.setSpotify_id(spotify_id);
                         album.setImage_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.image_url"));
+                        album.setAlbum_type((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.album_details.album_type"));
+                        album.setPopularity((Integer) JsonPath.read(songJsonResponse, "$.[" + i + "].album.album_details.popularity"));
+                        //add genres to album/////////////////////////
                         String release_date = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.release_year");
                         String release_year = release_date.substring(0, 4);
                         album.setRelease_year(release_year);
@@ -128,6 +131,10 @@ public class TestController {
                             artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
                             artist.setSpotify_id(artist_spotify_id);
                             artist.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_url"));
+                            artist.setImage_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].artist_details.image_url"));
+                            artist.setPopularity((int) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].artist_details.popularity"));
+                            //set followers
+                            //set genres
                         }
                         else {
                             artist = artistRepository.findArtistBySpotify_id(artist_spotify_id);

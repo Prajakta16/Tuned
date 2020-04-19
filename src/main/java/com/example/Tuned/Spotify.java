@@ -99,29 +99,40 @@ public class Spotify {
                 jsonObject.put("duration", JsonPath.read(song_json, "$.tracks.items[" + i + "].duration_ms"));
                 jsonObject.put("preview_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].preview_url"));
 
-                Map m = new LinkedHashMap(6);
+                Map m = new LinkedHashMap(7);
                 m.put("title", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.name"));
                 m.put("spotify_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.external_urls.spotify"));
                 m.put("spotify_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.id"));
                 m.put("image_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.images[2].url"));
                 m.put("release_year", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.release_date"));
-                String href = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.href");
-                //JSONObject album_details = fetchAlbumTypeForAlbum(href);
+                System.out.println(m);
+
+                String albhref = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.href");
+                JSONObject album_details = fetchAlbumDetailsForAlbum(albhref,access_token);
+                System.out.println(album_details);
+                m.put("album_details",album_details);
+
 
                 Integer count_artists_in_album = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists.length()");
                 JSONArray ja = new JSONArray();
-                System.out.println(count_artists_in_album);
                 for (int j = 0; j < count_artists_in_album; j++) {
                     Map mArtist = new LinkedHashMap(2);
                     mArtist.put("name", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].name"));
                     mArtist.put("spotify_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].id"));
                     mArtist.put("spotify_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].external_urls.spotify"));
+
+                    String arthref = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].href");
+                    JSONObject artist_details = fetchArtistDetailsForArtist(arthref,access_token);
+                    System.out.println(artist_details);
+                    mArtist.put("artist_details",artist_details);
+
                     ja.add(mArtist); // adding map to array
                 }
                 //jsonObject.put("artists",ja);
                 m.put("artists", ja);
                 jsonObject.put("album", m); // putting album to JSONObject of song
 
+                System.out.println(jsonObject);
                 jsonArray.add(jsonObject);
             }
             return jsonArray;
@@ -131,6 +142,93 @@ public class Spotify {
         return null;
     }
 
+    public JSONObject fetchAlbumDetailsForAlbum(String href, String access_token){
+        try {
+            URI uri = new URI(href);
+            String album_json = getResponse(uri, access_token);
+
+            JSONObject albOnject = new JSONObject();
+            albOnject.put("album_type", JsonPath.read(album_json, "$.album_type"));
+            albOnject.put("popularity", JsonPath.read(album_json, "$.popularity"));
+
+            Integer count_genres_in_album = JsonPath.read(album_json, "$.genres.length()");
+            JSONArray genreArray = new JSONArray();
+            System.out.println(count_genres_in_album);
+            for (int j = 0; j < count_genres_in_album; j++) {
+                Map mGenre = new LinkedHashMap(1);
+                mGenre.put("name", JsonPath.read(album_json, "$.genres[" + j + "]"));
+                genreArray.add(mGenre); // adding map to array
+            }
+            albOnject.put("genres",genreArray);
+            return albOnject;
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public JSONObject fetchArtistDetailsForArtist(String href, String access_token){
+        try {
+            URI uri = new URI(href);
+            String artist_json = getResponse(uri, access_token);
+
+            JSONObject artObject = new JSONObject();
+            artObject.put("image_url", JsonPath.read(artist_json, "$.images[2].url"));
+            artObject.put("popularity", JsonPath.read(artist_json, "$.popularity"));
+            artObject.put("followers", JsonPath.read(artist_json, "$.followers.total"));
+
+//            Integer count_genres_in_artist = JsonPath.read(artist_json, "$.genres.length()");
+//            JSONArray genreArray = new JSONArray();
+//            System.out.println(count_genres_in_artist);
+//            for (int j = 0; j < count_genres_in_artist; j++) {
+//                Map mGenre = new LinkedHashMap(1);
+//                mGenre.put("name", JsonPath.read(artist_json, "$.genres[" + j + "]"));
+//                genreArray.add(mGenre); // adding map to array
+//            }
+//            artObject.put("genres",genreArray);
+
+            return artObject;
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getResponse(URI uri, String access_token) {
+
+        try {
+            String bearerAuth = "Bearer " + access_token;
+            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Authorization", bearerAuth);
+            connection.setRequestProperty("Accept", "application/json");
+            connection.connect();
+            int responseCode = connection.getResponseCode();
+            System.out.println(responseCode);
+
+            if (responseCode != 200)
+                throw new RuntimeException("HttpResponseCode for getting access token " + responseCode);
+            else {
+                StringBuilder response = new StringBuilder();
+                String curr_line;
+                BufferedReader objReader = new BufferedReader(new InputStreamReader((connection.getInputStream()), StandardCharsets.UTF_8));
+
+                while ((curr_line = objReader.readLine()) != null) {
+                    System.out.println(curr_line);
+                    response.append(curr_line);
+                }
+                objReader.close();
+                return response.toString();
+            }
+        } catch (ProtocolException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     public URI applyParameters(URI baseUri, String[] urlParameters) {
         StringBuilder query = new StringBuilder();
@@ -149,57 +247,6 @@ public class Spotify {
                     baseUri.getPath(), query.toString(), null);
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-//    public JSONObject fetchAlbumTypeForAlbum(String href){
-//        try {
-//            URI baseUrl = new URI(href);
-//
-//
-//        } catch (ProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        return null;
-//    }
-
-    public String getResponse(URI uri, String access_token) {
-
-        try {
-            String bearerAuth = "Bearer " + access_token;
-            HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", bearerAuth);
-            connection.setRequestProperty("Accept", "application/json");
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            System.out.println(responseCode);
-
-            if (responseCode != 200)
-                throw new RuntimeException("HttpResponseCode for getting access token " + responseCode);
-            else {
-                StringBuilder song_response = new StringBuilder();
-                String curr_line;
-                BufferedReader objReader = new BufferedReader(new InputStreamReader((connection.getInputStream()), StandardCharsets.UTF_8));
-
-                while ((curr_line = objReader.readLine()) != null) {
-                    System.out.println(curr_line);
-                    song_response.append(curr_line);
-                }
-                objReader.close();
-                return song_response.toString();
-            }
-        } catch (ProtocolException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
         return null;
     }
