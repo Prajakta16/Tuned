@@ -81,6 +81,33 @@ public class Spotify {
         return null;
     }
 
+    public JSONArray searchArtist(String access_token, String name) throws URISyntaxException {
+        URI baseUrl = new URI("https://api.spotify.com/v1/search");
+        URI final_uri = applyParameters(baseUrl, new String[]{"q", name, "type", "artist", "limit", "1"});
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            String artist_json = getResponse(final_uri, access_token);
+            Integer count_items = JsonPath.read(artist_json, "$.artists.items.length()"); //counts the number of songs in json response
+
+            int i = 0;
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("href", JsonPath.read(artist_json, "$.artists.items[" + i + "].href"));
+            jsonObject.put("name", JsonPath.read(artist_json, "$.artists.items[" + i + "].name"));
+            jsonObject.put("spotify_url", JsonPath.read(artist_json, "$.artists.items[" + i + "].external_urls.spotify"));
+            jsonObject.put("spotify_id", JsonPath.read(artist_json, "$.artists.items[" + i + "].id"));
+            jsonObject.put("popularity", JsonPath.read(artist_json, "$.artists.items[" + i + "].popularity"));
+            jsonObject.put("followers", JsonPath.read(artist_json, "$.artists.items[" + i + "].followers.total"));
+            jsonObject.put("image_url", JsonPath.read(artist_json, "$.artists.items[" + i + "].images[2].url"));
+            jsonArray.add(jsonObject);
+
+            return jsonArray;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public JSONArray searchSong(String access_token, String title) throws URISyntaxException {
 
         URI baseUrl = new URI("https://api.spotify.com/v1/search");
@@ -108,9 +135,9 @@ public class Spotify {
                 System.out.println(m);
 
                 String albhref = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.href");
-                JSONObject album_details = fetchAlbumDetailsForAlbum(albhref,access_token);
+                JSONObject album_details = fetchAlbumDetailsForAlbum(albhref, access_token);
                 System.out.println(album_details);
-                m.put("album_details",album_details);
+                m.put("album_details", album_details);
 
 
                 Integer count_artists_in_album = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists.length()");
@@ -122,9 +149,9 @@ public class Spotify {
                     mArtist.put("spotify_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].external_urls.spotify"));
 
                     String arthref = JsonPath.read(song_json, "$.tracks.items[" + i + "].album.artists[" + j + "].href");
-                    JSONObject artist_details = fetchArtistDetailsForArtist(arthref,access_token);
+                    JSONObject artist_details = fetchArtistDetailsForArtist(arthref, access_token);
                     System.out.println(artist_details);
-                    mArtist.put("artist_details",artist_details);
+                    mArtist.put("artist_details", artist_details);
 
                     ja.add(mArtist); // adding map to array
                 }
@@ -142,7 +169,7 @@ public class Spotify {
         return null;
     }
 
-    public JSONObject fetchAlbumDetailsForAlbum(String href, String access_token){
+    public JSONObject fetchAlbumDetailsForAlbum(String href, String access_token) {
         try {
             URI uri = new URI(href);
             String album_json = getResponse(uri, access_token);
@@ -159,7 +186,7 @@ public class Spotify {
                 mGenre.put("name", JsonPath.read(album_json, "$.genres[" + j + "]"));
                 genreArray.add(mGenre); // adding map to array
             }
-            albOnject.put("genres",genreArray);
+            albOnject.put("genres", genreArray);
             return albOnject;
 
         } catch (URISyntaxException e) {
@@ -168,7 +195,7 @@ public class Spotify {
         return null;
     }
 
-    public JSONObject fetchArtistDetailsForArtist(String href, String access_token){
+    public JSONObject fetchArtistDetailsForArtist(String href, String access_token) {
         try {
             URI uri = new URI(href);
             String artist_json = getResponse(uri, access_token);

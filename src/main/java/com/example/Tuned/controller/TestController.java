@@ -43,31 +43,8 @@ public class TestController {
         if (!songRepository.findSongByTitle(title).isEmpty())
             songs = songRepository.findSongByTitle(title);
         else {
-            String access_token;
-            Spotify_token newSpotify_token;
+            String access_token = fetchToken();
             JSONArray songJsonResponse = new JSONArray();
-
-            LocalTime curr_time = LocalTime.now();
-            System.out.println(curr_time);
-
-            Spotify_token spotify_token = new Spotify_token();
-            if (spotify_tokenRepository.findById(1).isPresent()) {
-                spotify_token = spotify_tokenRepository.findById(1).get(); //there is always going to be just 1 row
-                Boolean active = spotify_token.isActive();
-                if(active==true){//old token is still active
-                    access_token = spotify_token.getToken();
-                }
-                else{//Creating new token as old one is expired
-                    access_token = spotify_token.getActiveToken();
-                    newSpotify_token = new Spotify_token(1, access_token, curr_time);
-                    spotify_tokenRepository.deleteAll();
-                    spotify_tokenRepository.save(newSpotify_token);
-                }
-            } else { //Creating new token as no token exists
-                access_token = spotify_token.getActiveToken();
-                newSpotify_token = new Spotify_token(1, access_token, curr_time);
-                spotify_tokenRepository.save(newSpotify_token);
-            }
 
             try {
                 songJsonResponse = spotify.searchSong(access_token, title);
@@ -170,6 +147,69 @@ public class TestController {
             }
         }
         return songs;
+    }
+
+    @GetMapping("/api/artist/search/{name}")
+    public Artist findArtistByName(@PathVariable("name") String name){
+        Artist artist = new Artist();
+        if(artistRepository.findArtistByUsername(name)!=null){
+            artist = artistRepository.findArtistByUsername(name);
+        }
+        else{
+            String access_token = fetchToken();
+            JSONArray artistJsonResponse = new JSONArray();
+
+            try{
+                artistJsonResponse = spotify.searchArtist(access_token,name);
+                System.out.println(artistJsonResponse);
+                int i=0;
+                String username = (String) JsonPath.read(artistJsonResponse, "$.[" + i + "].name");
+                artist.setUsername(username);
+                artist.setFirst_name(username);
+                artist.setLast_name(username);
+                artist.setPassword("artistpass");
+                artist.setEmail(username.substring(1, 3) + "@tuned.com");
+                artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
+                artist.setSpotify_id((String) JsonPath.read(artistJsonResponse, "$.[" + i + "].spotify_url"));
+                artist.setSpotify_url((String) JsonPath.read(artistJsonResponse, "$.[" + i + "].spotify_url"));
+                artist.setImage_url((String) JsonPath.read(artistJsonResponse, "$.[" + i + "].image_url"));
+                artist.setPopularity((Integer) JsonPath.read(artistJsonResponse, "$.[" + i + "].popularity"));
+                //set followers
+                //set genres
+                //set href
+                artistRepository.save(artist);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return artist;
+    }
+
+    public String fetchToken(){
+        Spotify_token newSpotify_token;
+        String access_token;
+        LocalTime curr_time = LocalTime.now();
+        System.out.println(curr_time);
+
+        Spotify_token spotify_token = new Spotify_token();
+        if (spotify_tokenRepository.findById(1).isPresent()) {
+            spotify_token = spotify_tokenRepository.findById(1).get(); //there is always going to be just 1 row
+            Boolean active = spotify_token.isActive();
+            if(active==true){//old token is still active
+                access_token = spotify_token.getToken();
+            }
+            else{//Creating new token as old one is expired
+                access_token = spotify_token.getActiveToken();
+                newSpotify_token = new Spotify_token(1, access_token, curr_time);
+                spotify_tokenRepository.deleteAll();
+                spotify_tokenRepository.save(newSpotify_token);
+            }
+        } else { //Creating new token as no token exists
+            access_token = spotify_token.getActiveToken();
+            newSpotify_token = new Spotify_token(1, access_token, curr_time);
+            spotify_tokenRepository.save(newSpotify_token);
+        }
+        return access_token;
     }
 
 
