@@ -1,10 +1,7 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.Spotify;
-import com.example.Tuned.model.Album;
-import com.example.Tuned.model.Artist;
-import com.example.Tuned.model.Song;
-import com.example.Tuned.model.Spotify_token;
+import com.example.Tuned.model.*;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.SongRepository;
@@ -43,9 +40,8 @@ public class TestController {
     public List<Song> findSongByTitle(@PathVariable("title") String title) {
 
         List<Song> songs = new ArrayList<>();
-        if (songRepository.findSongByTitle(title) != null)
+        if (!songRepository.findSongByTitle(title).isEmpty())
             songs = songRepository.findSongByTitle(title);
-
         else {
             String access_token;
             Spotify_token newSpotify_token;
@@ -54,27 +50,21 @@ public class TestController {
             LocalTime curr_time = LocalTime.now();
             System.out.println(curr_time);
 
+            Spotify_token spotify_token = new Spotify_token();
             if (spotify_tokenRepository.findById(1).isPresent()) {
-                Spotify_token spotify_token = spotify_tokenRepository.findById(1).get(); //there is always going to be just 1 row
-
-                LocalTime last_time = spotify_token.getTime();
-                System.out.println(last_time);
-                System.out.println(ChronoUnit.MINUTES.between(last_time, curr_time));
-
-                if (ChronoUnit.MINUTES.between(last_time, curr_time) <= 60 && ChronoUnit.MINUTES.between(last_time, curr_time) >= -60) {
+                spotify_token = spotify_tokenRepository.findById(1).get(); //there is always going to be just 1 row
+                Boolean active = spotify_token.isActive();
+                if(active==true){//old token is still active
                     access_token = spotify_token.getToken();
-                    System.out.println("Token still active");
-                } else {
-                    System.out.println("Creating new token as old one is expired");
-                    access_token = spotify.getNewAccessCode();
+                }
+                else{//Creating new token as old one is expired
+                    access_token = spotify_token.getActiveToken();
                     newSpotify_token = new Spotify_token(1, access_token, curr_time);
                     spotify_tokenRepository.deleteAll();
                     spotify_tokenRepository.save(newSpotify_token);
                 }
-                System.out.println(access_token);
-            } else {
-                System.out.println("Creating new token as no token exists");
-                access_token = spotify.getNewAccessCode();
+            } else { //Creating new token as no token exists
+                access_token = spotify_token.getActiveToken();
                 newSpotify_token = new Spotify_token(1, access_token, curr_time);
                 spotify_tokenRepository.save(newSpotify_token);
             }
@@ -94,50 +84,74 @@ public class TestController {
 
                     Album album = new Album();
                     String album_title = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.title");
+                    String spotify_id = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.spotify_id");
 
-                    if(albumRepository.findAlbumByTitle(album_title)==null){
+                    if(albumRepository.findAlbumBySpotifyId(spotify_id)==null){
+                        System.out.println("No album present in db");
                         album.setTitle(album_title);
                         album.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.spotify_url"));
-                        album.setSpotify_id((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.spotify_id"));
+                        album.setSpotify_id(spotify_id);
                         album.setImage_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.image_url"));
                         String release_date = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.release_year");
                         String release_year = release_date.substring(0, 4);
                         album.setRelease_year(release_year);
                     }
+
                     else{
-                        album = albumRepository.findAlbumByTitle(album_title);
+                        album = albumRepository.findAlbumBySpotifyId(spotify_id);
                     }
 
-                    if(!album.getSongs().contains(song))
-                        album.getSongs().add(song);
-                    song.setAlbum(album);
+                    if(album.getSongs()==null){
+                        List<Song> songlist = new ArrayList<>();
+                        songlist.add(song);
+                        album.setSongs(songlist);
+                    }
+                    else{
+                        if(!album.getSongs().contains(song))
+                            album.getSongs().add(song);
+                    }
+                    if(song.getAlbum()!= album)
+                        song.setAlbum(album);
 
                     Integer count_artists_in_album = JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists.length()");
                     for (int j = 0; j < count_artists_in_album; j++) {
-
                         Artist artist = new Artist();
                         String username = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name");
+                        String artist_spotify_id = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_id");
 
-                        if(artistRepository.findArtistByUsername(username)== null){
+                        if(artistRepository.findArtistBySpotify_id(artist_spotify_id)== null){
                             artist.setUsername(username);
                             artist.setFirst_name((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name"));
                             artist.setLast_name((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name"));
                             artist.setPassword("artistpass");
                             artist.setEmail(username.substring(1, 3) + "@tuned.com");
                             artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
-                            artist.setSpotify_id((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_id"));
+                            artist.setSpotify_id(artist_spotify_id);
                             artist.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_url"));
                         }
                         else {
-                            artist = artistRepository.findArtistByUsername(username);
+                            artist = artistRepository.findArtistBySpotify_id(artist_spotify_id);
                         }
 
-                        if(!artist.getProducedAlbums().contains(album))
-                            artist.getProducedAlbums().add(album);
-
+                        if(artist.getProducedAlbums()==null){
+                            List<Album> albums = new ArrayList<>();
+                            albums.add(album);
+                            artist.setProducedAlbums(albums);
+                        }
+                        else{
+                            if(!artist.getProducedAlbums().contains(album))
+                                artist.getProducedAlbums().add(album);
+                        }
+                        if(album.getProducedByArtists()==null){
+                            List<Artist> artists = new ArrayList<>();
+                            artists.add(artist);
+                            album.setProducedByArtists(artists);
+                        }
+                        else{
+                            if(!album.getProducedByArtists().contains(artist))
+                                album.getProducedByArtists().add(artist);
+                        }
                         artistRepository.save(artist);
-                        if(!album.getProducedByArtists().contains(artist))
-                            album.getProducedByArtists().add(artist);
                     }
                     albumRepository.save(album);
                     songRepository.save(song);
@@ -150,4 +164,6 @@ public class TestController {
         }
         return songs;
     }
+
+
 }

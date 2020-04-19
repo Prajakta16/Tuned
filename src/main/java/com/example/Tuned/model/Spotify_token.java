@@ -1,8 +1,11 @@
 package com.example.Tuned.model;
 
 
+import com.example.Tuned.Spotify;
+
 import java.sql.Timestamp;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import javax.persistence.*;
 
 @Entity(name = "spotify_token")
@@ -37,5 +40,19 @@ public class Spotify_token {
 
     public void setTime(LocalTime time) {
         this.time = time;
+    }
+
+    public String getActiveToken() {
+        Spotify spotify = new Spotify();
+        String access_token = spotify.getNewAccessCode();
+        return access_token;
+    }
+
+    public Boolean isActive() {
+        LocalTime curr_time = LocalTime.now();
+        LocalTime last_time = this.getTime();
+        if (ChronoUnit.MINUTES.between(last_time, curr_time) <= 60 && ChronoUnit.MINUTES.between(last_time, curr_time) >= -60)
+            return true;
+        return false;
     }
 }
