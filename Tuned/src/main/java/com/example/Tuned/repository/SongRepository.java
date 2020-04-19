@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface SongRepository extends CrudRepository<Song, Integer> {
 
-    @Query("SELECT s FROM song s where s.title=: title ")
+    @Query("SELECT s FROM song s where s.title= :title ")
     public List<Song> findSongByTitle(@Param("title") String title);
 
 }

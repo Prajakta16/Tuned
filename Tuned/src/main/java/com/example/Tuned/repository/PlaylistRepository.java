@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface PlaylistRepository extends CrudRepository<Playlist,Integer> {
 
-    @Query("SELECT ply FROM playlist ply where ply.title=: title ")
+    @Query("SELECT ply FROM playlist ply where ply.title= :title ")
     public List<Playlist> findPlaylistByTitle(@Param("title") String title);
 }

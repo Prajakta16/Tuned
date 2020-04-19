@@ -12,6 +12,7 @@ import java.util.List;
 
 
 @Service
+@RestController
 public class ArtistController {
 
     @Autowired
@@ -20,8 +21,8 @@ public class ArtistController {
     @Autowired
     SongRepository songRepository;
 
-    @PostMapping("/api/artist")
-    public Artist createArtist(@RequestBody Artist artist){
+    @PostMapping("/api/artist/new")
+    Artist createArtist(@RequestBody Artist artist){
         return artistRepository.save(artist);
     }
 
@@ -30,9 +31,14 @@ public class ArtistController {
         return (List<Artist>) artistRepository.findAll();
     }
 
-    @GetMapping("api/artist/{username}")
-    public Artist findArtistByFirstName(@PathVariable("username") String first_name){
-        return artistRepository.findArtistByUsername(first_name);
+    @GetMapping("/api/artist/username/{username}")
+    public Artist findArtistByUserName(@PathVariable("username") String username){
+        return artistRepository.findArtistByUsername(username);
+    }
+
+    @GetMapping("/api/artist/name/{first_name}")
+    public Artist findArtistByFirstName(@PathVariable("first_name") String first_name){
+        return artistRepository.findArtistByFirstname(first_name);
     }
 
 //    @PostMapping("/api/artist/{artist_id}/song/new")

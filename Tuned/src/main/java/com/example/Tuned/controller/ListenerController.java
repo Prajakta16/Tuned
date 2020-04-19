@@ -44,6 +44,15 @@ public class ListenerController {
         return listenerRepository.findById(listener_id).get();
     }
 
+    @GetMapping("/api/listener/username/{username}")
+    public Artist findListenerByUserName(@PathVariable("username") String username){
+        return listenerRepository.findListenerByUsername(username);
+    }
+
+    @GetMapping("/api/listener/name/{first_name}")
+    public Artist findListenerByFirstName(@PathVariable("first_name") String first_name){
+        return listenerRepository.findListenerByFirstname(first_name);
+    }
     @GetMapping("/api/listener/{listener_id}/playlists/all")
     public List<Playlist> findAllPlaylistsForListener(int listener_id) {
         if (listenerRepository.findById(listener_id).isPresent()) {
