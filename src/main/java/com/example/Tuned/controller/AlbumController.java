@@ -21,13 +21,13 @@ public class AlbumController {
     @Autowired
     SongRepository songRepository;
 
-    @PostMapping("/api/album")
-    public Album createAlbum(@RequestBody Album album){
+    @PostMapping("/api/album/new")
+    Album createAlbum(@RequestBody Album album){
         return albumRepository.save(album);
     }
 
 
-    @GetMapping("api/album/{album_id}")
+    @GetMapping("/api/album/{album_id}")
     public Album findAlbumById(@PathVariable("album_id") int album_id) {
         if (albumRepository.findById(album_id).isPresent())
             return albumRepository.findById(album_id).get();
@@ -42,6 +42,12 @@ public class AlbumController {
         albumRepository.save(alb);
         return alb;
     }
+
+    @GetMapping("/api/album/name/{title}")
+    public Album findAlbumByTitle(@PathVariable("title") String title) {
+        return albumRepository.findAlbumByTitle(title);
+    }
+
 
     @GetMapping("api/album/select/all")
     public List<Album> findAllAlbums() {

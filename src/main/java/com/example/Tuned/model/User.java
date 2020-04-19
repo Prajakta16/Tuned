@@ -28,13 +28,13 @@ public class User {
 
     @ManyToMany()
     @JoinTable(name = "follower_detail",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
+            joinColumns = @JoinColumn(name = "follower_id" , referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"))
     @JsonIgnore
     private List<User> followers;
 
     @ManyToMany(mappedBy = "followers")
-    @JsonIgnore
+    //@JsonIgnore
     private List<User> follows;
 
     public User(String username, String password, String first_name, String last_name, int phone, String address, String email) {

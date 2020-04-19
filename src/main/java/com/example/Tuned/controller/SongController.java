@@ -20,7 +20,7 @@ public class SongController {
     @Autowired
     AlbumRepository albumRepository;
 
-    @PostMapping("/api/song")
+    @PostMapping("/api/song/new")
     public Song createSong(@RequestBody Song song){
         return songRepository.save(song);
     }
