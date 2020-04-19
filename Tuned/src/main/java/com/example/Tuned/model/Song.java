@@ -29,9 +29,9 @@ public class Song {
     @JsonIgnore
     private Set<Playlist> playlists = new HashSet<Playlist>();
 
-    @ManyToMany(mappedBy = "songs")
+    @ManyToOne
     @JsonIgnore
-    private List<Album> albums;
+    private Album album;
 
     public Song(String title, int duration, int popularity, String preview_url, String spotify_url, String spotify_id) {
         this.title = title;
@@ -123,11 +123,11 @@ public class Song {
         this.playlists = playlists;
     }
 
-    public List<Album> getAlbums() {
-        return albums;
+    public Album getAlbum() {
+        return album;
     }
 
-    public void setAlbums(List<Album> albums) {
-        this.albums = albums;
+    public void setAlbum(Album album) {
+        this.album = album;
     }
 }

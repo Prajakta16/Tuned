@@ -1,6 +1,6 @@
 package com.example.Tuned.controller;
 
-//import com.example.Tuned.Spotify;
+import com.example.Tuned.Spotify;
 import com.example.Tuned.model.Song;
 import com.example.Tuned.model.Spotify_token;
 import com.example.Tuned.repository.SongRepository;
@@ -20,7 +20,6 @@ import java.util.List;
 @RestController
 @Service
 public class TestController {
-    /*
 
     Spotify spotify = new Spotify();
 
@@ -92,5 +91,5 @@ public class TestController {
             e.printStackTrace();
         }
         return null;
-    }*/
+    }
 }

@@ -28,13 +28,9 @@ public class Album {
     @OneToMany(mappedBy = "album")
     private List<Album_genre> album_genres;
 
-    @ManyToMany
-    @JoinTable(name = "album_detail",
-            joinColumns = @JoinColumn(name = "album_id", referencedColumnName = "album_id"),
-            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")
-    )
+    @OneToMany(mappedBy = "album")
     @JsonIgnore
-    private Set<Song> songs = new HashSet<Song>();
+    private List<Song> songs;
 
     @ManyToMany(mappedBy = "producedAlbums")
     @JsonIgnore
@@ -61,14 +57,12 @@ public class Album {
 
     public void addSong(Song song){
         this.songs.add(song);
-        if(!song.getAlbums().contains(this))
-            song.getAlbums().add(this);
+        if(song.getAlbum()!=this)
+            song.setAlbum(this);
     }
 
     public void removeSong(Song song){
         this.songs.remove(song);
-        if(song.getAlbums().contains(this))
-            song.getAlbums().remove(this);
     }
 
     public int getAlbum_id() {
@@ -143,11 +137,11 @@ public class Album {
         this.image_url = image_url;
     }
 
-    public Set<Song> getSongs() {
+    public List<Song> getSongs() {
         return songs;
     }
 
-    public void setSongs(Set<Song> songs) {
+    public void setSongs(List<Song> songs) {
         this.songs = songs;
     }
 
