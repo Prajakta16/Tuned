@@ -12,10 +12,8 @@ import java.util.List;
 @Repository
 public interface SongRepository extends CrudRepository<Song, Integer> {
 
-    @Query("SELECT alb FROM album alb where alb.title = :title ")
-    public Album findAlbumByTitle(@Param("title") String title);
+    @Query("SELECT s FROM song s where s.title = :title ")
+    public List<Song> findSongByTitle(@Param("title") String title);
 
-    @Query("SELECT alb FROM album alb WHERE alb.spotify_id = :spotify_id")
-    public Album findAlbumBySpotifyId(@Param("spotify_id") String spotify_id);
 
 }
