@@ -24,6 +24,7 @@ public class Listener_activity {
     @Column(columnDefinition = "int(3) DEFAULT 0")
     private int visits;
     private String username;
+    private int listener_id;
 
     @ManyToOne
     @JsonIgnore
@@ -139,4 +140,11 @@ public class Listener_activity {
 
     public User getListener() { return listener; }
 
+    public int getListener_id() {
+        return listener_id;
+    }
+
+    public void setListener_id(int listener_id) {
+        this.listener_id = listener_id;
+    }
 }

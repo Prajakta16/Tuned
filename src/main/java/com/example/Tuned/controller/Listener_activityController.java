@@ -46,6 +46,8 @@ public class Listener_activityController {
                 la.setListener(listener);
                 la.setSong(song);
                 la.setLikes(like_value);
+                la.setUsername(listener.getUsername());
+                la.setListener_id(listener.getUser_id());
             System.out.println(la.getSong().getTitle());
             }
             else{
@@ -72,6 +74,8 @@ public class Listener_activityController {
                 la.setListener(listener);
                 la.setSong(song);
                 la.setDislikes(dislike_value);
+                la.setUsername(listener.getUsername());
+                la.setListener_id(listener.getUser_id());
                 System.out.println(la.getSong().getTitle());
             }
             else{
@@ -91,6 +95,7 @@ public class Listener_activityController {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Boolean fav_value = JsonPath.read(favJson, "$.favourite");
             Listener listener = listenerRepository.findById(listener_id).get();
+            String listener_username = listener.getUsername();
             Song song = songRepository.findById(song_id).get();
             Listener_activity la;
 
@@ -99,6 +104,8 @@ public class Listener_activityController {
                 la.setListener(listener);
                 la.setSong(song);
                 la.setIs_favourite(fav_value);
+                la.setUsername(listener.getUsername());
+                la.setListener_id(listener.getUser_id());
                 System.out.println(la.getSong().getTitle());
             }
             else{
@@ -126,6 +133,8 @@ public class Listener_activityController {
                 la.setListener(listener);
                 la.setSong(song);
                 la.setComment(comment);
+                la.setUsername(listener.getUsername());
+                la.setListener_id(listener.getUser_id());
                 System.out.println(la.getSong().getTitle());
             }
             else{
