@@ -60,7 +60,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @PostMapping("/api/listener/{listener_id}/likes/song/{song_id}")
+    @PostMapping("/api/listener/{listener_id}/dislikes/song/{song_id}")
     public Listener_activity listenerPerformsDislikeActivityOnSong(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id, @RequestBody JSONObject dislikeJson) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Boolean dislike_value = JsonPath.read(dislikeJson, "$.dislike");
@@ -86,7 +86,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @PostMapping("/api/listener/{listener_id}/likes/song/{song_id}")
+    @PostMapping("/api/listener/{listener_id}/fav/song/{song_id}")
     public Listener_activity listenerPerformsFavActivityOnSong(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id, @RequestBody JSONObject favJson) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Boolean fav_value = JsonPath.read(favJson, "$.favourite");
@@ -113,7 +113,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @PostMapping("/api/listener/{listener_id}/likes/song/{song_id}")
+    @PostMapping("/api/listener/{listener_id}/comment/song/{song_id}")
     public Listener_activity listenerPerformsCommentActivityOnSong(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id, @RequestBody JSONObject commentJson) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             String comment = JsonPath.read(commentJson, "$.comment");
