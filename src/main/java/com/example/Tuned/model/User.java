@@ -3,6 +3,7 @@ package com.example.Tuned.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "user")
@@ -30,12 +31,12 @@ public class User {
     @JoinTable(name = "follower_detail",
             joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
-    //@JsonIgnore //comment when followers is needed
+    @JsonIgnore
     private List<User> followers;
 
     @ManyToMany(mappedBy = "followers")
-    @JsonIgnore //comment when following is needed
-    private List<User> follows;
+    @JsonIgnore
+    private List<User> following;
 
     public User(String username, String password, String first_name, String last_name, int phone, String address, String email) {
         this.username = username;
@@ -50,27 +51,43 @@ public class User {
     public User() {
     }
 
-    public void addFollower(User followers){
-        this.followers.add(followers);
-        if(!followers.getFollowers().contains(this))
-            followers.getFollowers().add(this);
-    }
-
-    public void removeFollower(User followers){
-        this.followers.remove(followers);
-        if(followers.getFollowers().contains(this))
-            followers.getFollowers().remove(this);
-    }
+//    public void addFollower(User followers){
+//        this.followers.add(followers);
+//        if(!followers.getFollowers().contains(this))
+//            followers.getFollowers().add(this);
+//    }
+//
+//    public void removeFollower(User followers){
+//        this.followers.remove(followers);
+//        if(followers.getFollowers().contains(this))
+//            followers.getFollowers().remove(this);
+//    }
 
     public void followUser(User user){
-        this.getFollows().add(user);
-        if(!user.getFollowers().contains(this)){
-            user.getFollowers().add(this);
+        if(this.getFollowing()==null){
+            List<User> people_you_follow = new ArrayList<>();
+            people_you_follow.add(user);
+            this.setFollowing(people_you_follow);
+        }
+        else{
+            if(!this.getFollowing().contains(user)){
+                this.getFollowing().add(user);
+            }
+        }
+        if(user.getFollowers()==null){
+            List<User> your_followers = new ArrayList<>();
+            your_followers.add(this);
+            user.setFollowers(your_followers);
+        }
+        else{
+            if(!user.getFollowers().contains(this)){
+                user.getFollowers().add(this);
+            }
         }
     }
 
     public void unfollowUser(User user){
-        this.getFollows().remove(user);
+        this.getFollowing().remove(user);
         if(user.getFollowers().contains(this)){
             user.getFollowers().remove(this);
         }
@@ -84,12 +101,12 @@ public class User {
         this.followers = followers;
     }
 
-    public List<User> getFollows() {
-        return follows;
+    public List<User> getFollowing() {
+        return following;
     }
 
-    public void setFollows(List<User> follows) {
-        this.follows = follows;
+    public void setFollowing(List<User> following) {
+        this.following = following;
     }
 
     public int getUser_id() {

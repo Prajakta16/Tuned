@@ -21,70 +21,80 @@ public class UserController {
         return (List<User>) userRepository.findAll();
     }
 
-    @GetMapping("/api/users/id/{user_id}")
-    public User getUserById(@PathVariable("user_id") int user_id) {
-        return userRepository.findById(user_id).get();
-    }
-
-    @GetMapping("/api/users/name/{first_name}")
-    public User getUserByFirst_name(@PathVariable("first_name") String first_name) {
-        return userRepository.findUserByFirst_name(first_name);
-    }
-
-    @GetMapping("/api/users/username/{username}")
-    public User getUserByUsername(@PathVariable("username") String username) {
-        return userRepository.findUserByUsername(username);
-    }
-
-    @PostMapping("/api/users/{user_id}/follows/{follower_id}")
-    public void userFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
+    @PostMapping("/api/user/{user_id}/follows/{other_user_id}")
+    public User userFollowsOtherUser(@PathVariable("user_id") int user_id, @PathVariable("other_user_id") int other_user_id)
     {
-        User user = userRepository.findById(user_id).get();
-        User follower = userRepository.findById(follower_id).get();
-        user.followUser(follower);
-        userRepository.save(follower);
-    }
-
-    @GetMapping("/api/users/{user_id}/getfollowing")
-    public User listuserFollows(@PathVariable("user_id") int user_id)
-    {
-        User user = userRepository.findById(user_id).get();
-        user.getFollowers();
-        return userRepository.save(user);
-    }
-
-    @GetMapping("/api/users/{user_id}/getfollower")
-    public User listuserFollower(@PathVariable("user_id") int user_id)
-    {
-        User user = userRepository.findById(user_id).get();
-        user.getFollows();
-        return userRepository.save(user);
-    }
-
-    @PostMapping("/api/users/{user_id}/unfollows/{follower_id}")
-    public void userUnfollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id) {
-        User user = userRepository.findById(user_id).get();
-        User follower = userRepository.findById(follower_id).get();
-        user.unfollowUser(follower);
-        userRepository.save(user);
-    }
-
-    //show if he already follows
-    @PostMapping("/api/users/{user_id}/checkfollows/{follower_id}")
-    public boolean checkUserFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
-    {
-        User user = userRepository.findById(user_id).get();
-        User follower = userRepository.findById(follower_id).get();
-        List<User> followers = user.getFollowers();
-        if (followers.contains(follower))
-        {
-            return Boolean.TRUE;
+        if(userRepository.findById(user_id).isPresent() && userRepository.findById(other_user_id).isPresent()){
+            User user = userRepository.findById(user_id).get();
+            User other_user = userRepository.findById(other_user_id).get();
+            user.followUser(other_user);
+            userRepository.save(other_user);
+            return userRepository.save(user);
         }
-        else
-        {
-            return Boolean.FALSE;
-        }
+        return null;
     }
+
+    @GetMapping("/api/user/{user_id}/following")
+    public List<User> getFollowing(@PathVariable("user_id") int user_id)
+    {
+        if(userRepository.findById(user_id).isPresent()){
+           List<User> following = userRepository.findFollowing(user_id);
+           return following;
+    }
+        return null;
+    }
+
+    @GetMapping("/api/user/{user_id}/followers")
+    public List<User> getFollowers(@PathVariable("user_id") int user_id)
+    {
+        if(userRepository.findById(user_id).isPresent()){
+            List<User> followers = userRepository.findFollowers(user_id);
+            return followers;
+        }
+        return null;
+    }
+
+//
+//    @GetMapping("/api/users/{user_id}/getfollowing")
+//    public User listuserFollows(@PathVariable("user_id") int user_id)
+//    {
+//        User user = userRepository.findById(user_id).get();
+//        user.getFollowers();
+//        return userRepository.save(user);
+//    }
+//
+//    @GetMapping("/api/users/{user_id}/getfollower")
+//    public User listuserFollower(@PathVariable("user_id") int user_id)
+//    {
+//        User user = userRepository.findById(user_id).get();
+//        user.getFollows();
+//        return userRepository.save(user);
+//    }
+//
+//    @PostMapping("/api/users/{user_id}/unfollows/{follower_id}")
+//    public void userUnfollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id) {
+//        User user = userRepository.findById(user_id).get();
+//        User follower = userRepository.findById(follower_id).get();
+//        user.unfollowUser(follower);
+//        userRepository.save(user);
+//    }
+//
+//    //show if he already follows
+//    @PostMapping("/api/users/{user_id}/checkfollows/{follower_id}")
+//    public boolean checkUserFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
+//    {
+//        User user = userRepository.findById(user_id).get();
+//        User follower = userRepository.findById(follower_id).get();
+//        List<User> followers = user.getFollowers();
+//        if (followers.contains(follower))
+//        {
+//            return Boolean.TRUE;
+//        }
+//        else
+//        {
+//            return Boolean.FALSE;
+//        }
+//    }
     
     //Updates for Admin
     @PostMapping("/api/user/admin/update/user/{user_id}/address/{addressname}")
