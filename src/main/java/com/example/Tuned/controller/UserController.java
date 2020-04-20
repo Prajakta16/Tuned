@@ -43,26 +43,30 @@ public class UserController {
         User user = userRepository.findById(user_id).get();
         User follower = userRepository.findById(follower_id).get();
         user.followUser(follower);
-        userRepository.save(user);
+        userRepository.save(follower);
     }
 
-    //@GetMapping("/api/users/{user_id}/getfollower")
-    //public void listuserFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
-    //{
-    //    User user = userRepository.findById(user_id).get();
-    //    User follower = userRepository.findById(follower_id).get();
-    //    user.addFollower(follower);
-    //    userRepository.save(user);
-    //}
+    @GetMapping("/api/users/{user_id}/getfollowing")
+    public User listuserFollows(@PathVariable("user_id") int user_id)
+    {
+        User user = userRepository.findById(user_id).get();
+        user.getFollowers();
+        return userRepository.save(user);
+    }
+
+    @GetMapping("/api/users/{user_id}/getfollower")
+    public User listuserFollower(@PathVariable("user_id") int user_id)
+    {
+        User user = userRepository.findById(user_id).get();
+        user.getFollows();
+        return userRepository.save(user);
+    }
 
     @PostMapping("/api/users/{user_id}/unfollows/{follower_id}")
-    public void userUnfollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
-    {
+    public void userUnfollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id) {
         User user = userRepository.findById(user_id).get();
         User follower = userRepository.findById(follower_id).get();
         user.unfollowUser(follower);
         userRepository.save(user);
     }
-    //follow and unfollow a user
-
 }

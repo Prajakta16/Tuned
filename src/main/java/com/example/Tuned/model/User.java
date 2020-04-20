@@ -28,8 +28,8 @@ public class User {
 
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "follower_detail",
-            joinColumns = @JoinColumn(name = "follower_id" , referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"))
+            joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
     @JsonIgnore
     private List<User> followers;
 
