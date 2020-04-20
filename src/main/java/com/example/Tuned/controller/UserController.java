@@ -69,6 +69,23 @@ public class UserController {
         userRepository.save(user);
     }
 
+    //show if he already follows
+    @PostMapping("/api/users/{user_id}/checkfollows/{follower_id}")
+    public boolean checkUserFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
+    {
+        User user = userRepository.findById(user_id).get();
+        User follower = userRepository.findById(follower_id).get();
+        List<User> followers = user.getFollowers();
+        if (followers.contains(follower))
+        {
+            return Boolean.TRUE;
+        }
+        else
+        {
+            return Boolean.FALSE;
+        }
+    }
+    
     //Updates for Admin
     @PostMapping("/api/user/admin/update/user/{user_id}/address/{addressname}")
     public void updateUserAddress(@PathVariable("user_id") int user_id, @PathVariable("addressname") String addressname)
