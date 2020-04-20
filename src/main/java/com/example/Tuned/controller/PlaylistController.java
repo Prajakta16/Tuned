@@ -24,13 +24,13 @@ public class PlaylistController {
 
     //Admin purpose PD-this would be irrelevant because a playlist cannot exists without a listener
     @PostMapping("/api/playlist/new")
-    public Playlist createPlaylist(@RequestBody Playlist playlist){
+    public Playlist createPlaylist(@RequestBody Playlist playlist) {
         return playlistRepository.save(playlist);
     }
 
     @PostMapping("/api/playlist/{playlist_id}/song/{song_id}")
-    public Playlist addSongToPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id){
-        if(playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()){
+    public Playlist addSongToPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id) {
+        if (playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Playlist playlist = playlistRepository.findById(playlist_id).get();
             Song song = songRepository.findById(song_id).get();
             playlist.addSong(song);
@@ -46,6 +46,13 @@ public class PlaylistController {
             return playlistRepository.findById(playlist_id).get();
         else
             return null;
+    }
+
+    @GetMapping("/api/playlist/{playlist_id}/listener")
+    public Listener getListenerDetailsForPlaylist(@PathVariable("playlist_id") int playlist_id) {
+        if (playlistRepository.findById(playlist_id).isPresent())
+            return playlistRepository.findListenerDetails(playlist_id);
+        return null;
     }
 
     @GetMapping("/api/playlists/all")

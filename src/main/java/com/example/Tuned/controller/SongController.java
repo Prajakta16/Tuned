@@ -31,12 +31,6 @@ public class SongController {
     @Autowired
     Listener_activityRepository listener_activityRepository;
 
-    //only allowing artist to create a new song inside an album
-//    @PostMapping("/api/song/new")
-//    public Song createSong(@RequestBody Song song){
-//        return songRepository.save(song);
-//    }
-
     @GetMapping("/api/song/all")
     public List<Song> findAllSongs() {
         return (List<Song>) songRepository.findAll();

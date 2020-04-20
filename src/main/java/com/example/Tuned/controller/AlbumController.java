@@ -29,11 +29,6 @@ public class AlbumController {
     @Autowired
     ArtistRepository artistRepository;
 
-    @PostMapping("/api/album/new")
-    Album createAlbum(@RequestBody Album album) {
-        return albumRepository.save(album);
-    }
-
     @PostMapping("/api/album/{album_id}/song/{song_id}")
     public Album addExistingSongToAlbum(@PathVariable("album_id") int album_id, @PathVariable("song_id") int song_id) {
         if (albumRepository.findById(album_id).isPresent() && songRepository.findById(song_id).isPresent()) {
