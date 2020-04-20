@@ -3,9 +3,7 @@ package com.example.Tuned.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name="song")
 @Table(name="song")
@@ -27,7 +25,8 @@ public class Song {
 
     @ManyToMany(mappedBy = "songs")
     @JsonIgnore
-    private Set<Playlist> playlists = new HashSet<Playlist>();
+    private Set<Playlist> playlists;
+    //private List<Playlist> playlists;
 
     @ManyToOne
     @JsonIgnore
@@ -122,6 +121,14 @@ public class Song {
     public void setPlaylists(Set<Playlist> playlists) {
         this.playlists = playlists;
     }
+
+    //public List<Playlist> getPlaylists() {
+    //    return playlists;
+    //}
+
+    //public void setPlaylists(List<Playlist> playlists) {
+    //    this.playlists = playlists;
+    //}
 
     public Album getAlbum() {
         return album;

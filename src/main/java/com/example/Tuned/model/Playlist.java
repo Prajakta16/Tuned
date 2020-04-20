@@ -3,8 +3,7 @@ package com.example.Tuned.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name = "playlist")
 @Table(name = "playlist")
@@ -23,13 +22,15 @@ public class Playlist {
     @JsonIgnore
     private Listener listener;
 
-    @ManyToMany
+    //cascade => To prevent deletion of child
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "playlist_detail",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")
     )
-    @JsonIgnore
-    private Set<Song> songs = new HashSet<Song>();
+    //@JsonIgnore
+    private Set<Song> songs;
+    //private List<Song> songs;
 
     public Playlist(String title, String description) {
         this.title=title;
@@ -84,6 +85,13 @@ public class Playlist {
         return listener;
     }
 
+    //public List<Song> getSongs() {
+    //    return songs;
+    //}
+
+    //public void setSongs(List<Song> songs) {
+    //    this.songs = songs;
+    //}
     public Set<Song> getSongs() {
         return songs;
     }

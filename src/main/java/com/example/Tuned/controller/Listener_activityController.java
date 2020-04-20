@@ -28,13 +28,8 @@ public class Listener_activityController {
     @Autowired
     ListenerRepository listenerRepository;
 
-    //   6. Like a song
-    //   7. Dislike a song
-    //   8. Mark song as favorite
-    //   9. Increase views on a song
-    //  10. comments a song
-
-    @GetMapping("api/user/{listener_id}/likes/{song_id}")
+    //should all these return something
+    @GetMapping("/api/user/{listener_id}/likes/{song_id}")
     public Listener_activity likeASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;
@@ -43,12 +38,14 @@ public class Listener_activityController {
             if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
                 la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
                 la.setLikes(true);
+                la.setDislikes(false);
             }
             else{
                 la = new Listener_activity();
                 la.setSong(song);
                 la.setListener(listener);
                 la.setLikes(true);
+                la.setDislikes(false);
                 if(!listener.getListener_activities().contains(la))
                     listener.getListener_activities().add(la);
                 if(!song.getActivities().contains(la))
@@ -59,7 +56,156 @@ public class Listener_activityController {
             songRepository.save(song);
             return la;
         }
-        System.out.println("listener or song not present");
+        //System.out.println("listener or song not present");
+        return null;
+    }
+
+    @GetMapping("/api/user/{listener_id}/dislikes/{song_id}")
+    public Listener_activity dislikeASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
+        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Listener_activity la;
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Song song = songRepository.findById(song_id).get();
+            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
+                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+                la.setDislikes(true);
+                la.setLikes(false);
+            }
+            else{
+                la = new Listener_activity();
+                la.setSong(song);
+                la.setListener(listener);
+                la.setDislikes(true);
+                la.setLikes(false);
+                if(!listener.getListener_activities().contains(la))
+                    listener.getListener_activities().add(la);
+                if(!song.getActivities().contains(la))
+                    song.getActivities().add(la);
+            }
+            listener_activityRepository.save(la);
+            listenerRepository.save(listener);
+            songRepository.save(song);
+            return la;
+        }
+        //System.out.println("listener or song not present");
+        return null;
+    }
+
+    @GetMapping("/api/user/{listener_id}/favourite/{song_id}")
+    public Listener_activity favoriteASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
+        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Listener_activity la;
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Song song = songRepository.findById(song_id).get();
+            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
+                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+                la.setIs_favourite(true);
+            }
+            else{
+                la = new Listener_activity();
+                la.setSong(song);
+                la.setListener(listener);
+                la.setIs_favourite(true);
+                if(!listener.getListener_activities().contains(la))
+                    listener.getListener_activities().add(la);
+                if(!song.getActivities().contains(la))
+                    song.getActivities().add(la);
+            }
+            listener_activityRepository.save(la);
+            listenerRepository.save(listener);
+            songRepository.save(song);
+            return la;
+        }
+        //System.out.println("listener or song not present");
+        return null;
+    }
+
+    @GetMapping("/api/user/{listener_id}/song/{song_id}/comment/{comments}")
+    public Listener_activity commentASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id, @PathVariable("comments") String comments) {
+        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Listener_activity la;
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Song song = songRepository.findById(song_id).get();
+            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
+                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+                la.setComment(comments);
+            }
+            else{
+                la = new Listener_activity();
+                la.setSong(song);
+                la.setListener(listener);
+                la.setComment(comments);
+                if(!listener.getListener_activities().contains(la))
+                    listener.getListener_activities().add(la);
+                if(!song.getActivities().contains(la))
+                    song.getActivities().add(la);
+            }
+            listener_activityRepository.save(la);
+            listenerRepository.save(listener);
+            songRepository.save(song);
+            return la;
+        }
+        //System.out.println("listener or song not present");
+        return null;
+    }
+
+    @GetMapping("/api/user/{listener_id}/unfavourite/{song_id}")
+    public Listener_activity unfavoriteASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
+        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Listener_activity la;
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Song song = songRepository.findById(song_id).get();
+            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
+                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+                la.setIs_favourite(false);
+            }
+            else{
+                la = new Listener_activity();
+                la.setSong(song);
+                la.setListener(listener);
+                la.setIs_favourite(false);
+                if(!listener.getListener_activities().contains(la))
+                    listener.getListener_activities().add(la);
+                if(!song.getActivities().contains(la))
+                    song.getActivities().add(la);
+            }
+            listener_activityRepository.save(la);
+            listenerRepository.save(listener);
+            songRepository.save(song);
+            return la;
+        }
+        //System.out.println("listener or song not present");
+        return null;
+    }
+
+    @GetMapping("/api/user/{listener_id}/visits/{song_id}")
+    public Listener_activity visitASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
+        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Listener_activity la;
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Song song = songRepository.findById(song_id).get();
+            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
+                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+                int songvis = la.getVisits();
+                songvis = songvis + 1;
+                la.setVisits(songvis);
+            }
+            else{
+                la = new Listener_activity();
+                la.setSong(song);
+                la.setListener(listener);
+                la.setVisits(1);
+                if(!listener.getListener_activities().contains(la))
+                    listener.getListener_activities().add(la);
+                if(!song.getActivities().contains(la))
+                    song.getActivities().add(la);
+            }
+            listener_activityRepository.save(la);
+            listenerRepository.save(listener);
+            songRepository.save(song);
+            return la;
+        }
+        //System.out.println("listener or song not present");
         return null;
     }
 

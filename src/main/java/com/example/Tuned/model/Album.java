@@ -28,8 +28,9 @@ public class Album {
     @OneToMany(mappedBy = "album")
     private List<Album_genre> album_genres;
 
-    @OneToMany(mappedBy = "album")
-    @JsonIgnore
+    //cascade => to cascade delete
+    @OneToMany(mappedBy = "album", cascade = CascadeType.REMOVE)
+    //@JsonIgnore
     private List<Song> songs;
 
     @ManyToMany(mappedBy = "producedAlbums")
