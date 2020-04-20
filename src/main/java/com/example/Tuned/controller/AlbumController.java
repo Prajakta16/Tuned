@@ -32,7 +32,6 @@ public class AlbumController {
         return albumRepository.save(album);
     }
 
-
     @GetMapping("/api/album/{album_id}")
     public Album findAlbumById(@PathVariable("album_id") int album_id) {
         if (albumRepository.findById(album_id).isPresent())
@@ -41,19 +40,10 @@ public class AlbumController {
             return null;
     }
 
-    @RequestMapping("/api/album/insert/{title}")
-    public Album insertAlbum(@PathVariable("title") String title) {
-        Album alb = new Album();
-        alb.setTitle(title);
-        albumRepository.save(alb);
-        return alb;
-    }
-
-    @GetMapping("/api/album/name/{title}")
-    public List<Album> findAlbumByTitle(@PathVariable("title") String title) {
-        return albumRepository.findAlbumByTitle(title);
-    }
-
+//    @GetMapping("/api/album/title/{title}")
+//    public List<Album> findAlbumByTitle(@PathVariable("title") String title) {
+//        return albumRepository.findAlbumByTitle(title);
+//    }
 
     @GetMapping("api/album/select/all")
     public List<Album> findAllAlbums() {

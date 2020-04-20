@@ -2,6 +2,7 @@ package com.example.Tuned.controller;
 
 import com.example.Tuned.model.*;
 import com.example.Tuned.repository.ListenerRepository;
+import com.example.Tuned.repository.Listener_activityRepository;
 import com.example.Tuned.repository.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class ListenerController {
 
     @Autowired
     PlaylistRepository playlistRepository;
+
+    @Autowired
+    Listener_activityRepository listener_activityRepository;
 
     @PostMapping("/api/listener/new")
     Listener createListener(@RequestBody  Listener listener){
@@ -66,6 +70,15 @@ public class ListenerController {
         if (listenerRepository.findById(listener_id).isPresent()) {
             Listener listener = listenerRepository.findById(listener_id).get();
             return listener.getPlaylists();
+        }
+        return null;
+    }
+
+    @GetMapping("/api/listener/{listener_id}/activities/all")
+    public List<Listener_activity> findAllActivitiesForListener(@PathVariable("listener_id") int listener_id){
+        if (listenerRepository.findById(listener_id).isPresent()) {
+            Listener listener = listenerRepository.findById(listener_id).get();
+            return listener_activityRepository.findActivityByListener(listener);
         }
         return null;
     }
