@@ -87,10 +87,10 @@ public class User {
     }
 
     public void unfollowUser(User user){
-        this.getFollowing().remove(user);
-        if(user.getFollowers().contains(this)){
+        if(this.getFollowing().contains(user))
+            this.getFollowing().remove(user);
+        if(user.getFollowers().contains(this))
             user.getFollowers().remove(this);
-        }
     }
 
     public List<User> getFollowers() {

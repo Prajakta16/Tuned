@@ -12,9 +12,6 @@ import java.util.List;
 @Repository
 public interface PlaylistRepository extends CrudRepository<Playlist,Integer> {
 
-    @Query("SELECT ply FROM playlist ply where ply.title= :title ")
-    public List<Playlist> findPlaylistByTitle(@Param("title") String title);
-
     @Query("SELECT ply.listener from playlist ply where ply.playlist_id = :playlist_id")
     public Listener findListenerDetails(@Param("playlist_id") int playlist_id);
 }
