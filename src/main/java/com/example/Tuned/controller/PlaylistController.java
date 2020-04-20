@@ -22,11 +22,11 @@ public class PlaylistController {
     @Autowired
     SongRepository songRepository;
 
-    //we create playlist from listener
-    //@PostMapping("/api/playlist")
-    //public Playlist createPlaylist(@RequestBody Playlist playlist){
-    //    return playlistRepository.save(playlist);
-    //}
+    //Admin purpose
+    @PostMapping("/api/playlist/new")
+    public Playlist createPlaylist(@RequestBody Playlist playlist){
+        return playlistRepository.save(playlist);
+    }
 
     @PostMapping("/api/playlist/{playlist_id}/song/{song_id}")
     public Playlist addSongToPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id){
