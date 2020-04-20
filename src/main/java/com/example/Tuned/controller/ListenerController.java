@@ -40,6 +40,10 @@ public class ListenerController {
         return (List<Listener>) listenerRepository.findAll();
     }
 
+    //GET THE USERNAME OF THE USER-ACTIVITY
+    //I tried fetching username but couldn't display the user name in listener activity
+    //So I tried adding a new column user_name in listener_activity
+    //But the problem is, as we are finding listener based on listener_id, only his username is displayed in the field user_name of listener activity
     @GetMapping("/api/listener/find/{listener_id}")
     public Listener getListenerById(@PathVariable("listener_id") int listener_id) {
     Listener listener = listenerRepository.findById(listener_id).get();
