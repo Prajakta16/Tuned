@@ -34,10 +34,11 @@ public class SongController {
     @Autowired
     Listener_activityRepository listener_activityRepository;
 
-    @PostMapping("/api/song/new")
-    public Song createSong(@RequestBody Song song){
-        return songRepository.save(song);
-    }
+    //only allowing artist to create a new song inside an album
+//    @PostMapping("/api/song/new")
+//    public Song createSong(@RequestBody Song song){
+//        return songRepository.save(song);
+//    }
 
     @GetMapping("/api/song/all")
     public List<Song> findAllSongs() {
@@ -51,20 +52,6 @@ public class SongController {
         else
             return null;
     }
-    @GetMapping("/api/song/name/{title}")
-    public List<Song> findSongByTitle(@PathVariable("title") String title) {
-        return songRepository.findSongByTitle(title);
-    }
-
-    //@GetMapping("api/song/{album_id}")
-    //public List<Song> findSongByAlbum(@PathVariable("album_id") int album_id) {
-    //         return (List<Song>) songRepository.findSongByAlbum(album_id);
-    //}
-
-    //@GetMapping("api/song/{user_id}")
-    //public List<Song> findSongByArtist(@PathVariable("user_id") int user_id){
-    //    return (List<Song>) songRepository.findSongByArtist(user_id);
-    //}
 
     @DeleteMapping("api/song/delete/{song_id}")
     public void deleteSongById(@PathVariable("song_id") int song_id) {

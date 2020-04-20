@@ -3,10 +3,7 @@ package com.example.Tuned.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity(name="album")
 @Table(name="album")
@@ -57,31 +54,36 @@ public class Album {
     }
 
     public void addSong(Song song){
-        this.songs.add(song);
-        if(song.getAlbum()!=this)
+        this.getSongs().add(song);
+        if(song.getAlbum() == null){
             song.setAlbum(this);
+        }
+        else{
+            if(song.getAlbum()!=this)
+                song.setAlbum(this);
+        }
     }
 
-    public void addArtist(Artist artist){
-        if(this.getProducedByArtists() == null){
-            Set<Artist> artists = new HashSet<>();
-            artists.add(artist);
-            this.setProducedByArtists(artists);
-        }
-        else{
-            if(!this.getProducedByArtists().contains(artist))
-                this.getProducedByArtists().add(artist);
-        }
-        if(artist.getProducedAlbums()==null){
-            Set<Album> albums = new HashSet<>();
-            albums.add(this);
-            artist.setProducedAlbums(albums);
-        }
-        else{
-            if(!artist.getProducedAlbums().contains(this))
-                artist.getProducedAlbums().add(this);
-        }
-    }
+//    public void addArtist(Artist artist){
+//        if(this.getProducedByArtists() == null){
+//            Set<Artist> artists = new HashSet<>();
+//            artists.add(artist);
+//            this.setProducedByArtists(artists);
+//        }
+//        else{
+//            if(!this.getProducedByArtists().contains(artist))
+//                this.getProducedByArtists().add(artist);
+//        }
+//        if(artist.getProducedAlbums()==null){
+//            Set<Album> albums = new HashSet<>();
+//            albums.add(this);
+//            artist.setProducedAlbums(albums);
+//        }
+//        else{
+//            if(!artist.getProducedAlbums().contains(this))
+//                artist.getProducedAlbums().add(this);
+//        }
+//    }
 
     public void removeSong(Song song){
         this.songs.remove(song);

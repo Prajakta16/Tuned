@@ -39,17 +39,6 @@ public class ArtistController {
     Artist createNewAlbumForArtist(@PathVariable("artist_id") int artist_id,@RequestBody Album album ){
         if(artistRepository.findById(artist_id).isPresent()) {
             Artist artist = artistRepository.findById(artist_id).get();
-//            if (artist.getProducedAlbums() == null) {
-//                Set<Album> albums = new HashSet<>();
-//                albums.add(album);
-//                artist.setProducedAlbums(albums);
-//            } else {
-//                if (!artist.getProducedAlbums().contains(album))
-//                    artist.getProducedAlbums().add(album);
-//            }
-//            Set<Artist> artists = new HashSet<>();
-//            artists.add(artist);
-//            album.setProducedByArtists(artists);
             artist.addAlbum(album);
             albumRepository.save(album);
             return artistRepository.save(artist);
@@ -58,7 +47,7 @@ public class ArtistController {
     }
 
     @PostMapping("/api/artist/{artist_id}/album/{album_id}")
-    public Artist addAlbumToArtist(@PathVariable("artist_id") int artist_id, @PathVariable("album_id") int album_id) {
+    public Artist addExistingAlbumToArtist(@PathVariable("artist_id") int artist_id, @PathVariable("album_id") int album_id) {
         if (artistRepository.findById(artist_id).isPresent() && albumRepository.findById(album_id).isPresent()) {
             Artist artist = artistRepository.findById(artist_id).get();
             Album album = albumRepository.findById(album_id).get();

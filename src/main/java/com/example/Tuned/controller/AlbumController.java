@@ -32,25 +32,6 @@ public class AlbumController {
         return albumRepository.save(album);
     }
 
-    @GetMapping("/api/album/{album_id}")
-    public Album findAlbumById(@PathVariable("album_id") int album_id) {
-        if (albumRepository.findById(album_id).isPresent())
-            return albumRepository.findById(album_id).get();
-        else
-            return null;
-    }
-
-//    @GetMapping("/api/album/title/{title}")
-//    public List<Album> findAlbumByTitle(@PathVariable("title") String title) {
-//        return albumRepository.findAlbumByTitle(title);
-//    }
-
-    @GetMapping("api/album/select/all")
-    public List<Album> findAllAlbums() {
-        List<Album> albums = (List<Album>) albumRepository.findAll();
-        return albums;
-    }
-
     @PostMapping("/api/album/{album_id}/song/{song_id}")
     public Album addExistingSongToAlbum(@PathVariable("album_id") int album_id, @PathVariable("song_id") int song_id) {
         if (albumRepository.findById(album_id).isPresent() && songRepository.findById(song_id).isPresent()) {
@@ -72,6 +53,20 @@ public class AlbumController {
             return albumRepository.save(album);
         }
         return null;
+    }
+
+    @GetMapping("/api/album/{album_id}")
+    public Album findAlbumById(@PathVariable("album_id") int album_id) {
+        if (albumRepository.findById(album_id).isPresent())
+            return albumRepository.findById(album_id).get();
+        else
+            return null;
+    }
+
+    @GetMapping("api/album/select/all")
+    public List<Album> findAllAlbums() {
+        List<Album> albums = (List<Album>) albumRepository.findAll();
+        return albums;
     }
 
     //Admin and artist
