@@ -34,22 +34,25 @@ public class Listener_activityController {
     public Listener_activity listenerPerformsLikeActivityOnSong(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id, @RequestBody JSONObject likeJson) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Boolean like_value = JsonPath.read(likeJson, "$.like");
+            System.out.println(like_value);
             Listener listener = listenerRepository.findById(listener_id).get();
             Song song = songRepository.findById(song_id).get();
             Listener_activity la;
-            if (listener_activityRepository.findActivityByListenerAndSong(listener, song) != null){
+//            if (listener_activityRepository.findActivityByListenerAndSong(listener, song) != null){
                 la = new Listener_activity();
                 la.setListener(listener);
                 la.setSong(song);
                 la.setLikes(like_value);
-            }
-            else{
-                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
-                la.setLikes(like_value);
-            }
+            System.out.println(la.getSong().getTitle());
+//            }
+//            else{
+//                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
+//                la.setLikes(like_value);
+//            }
             listener_activityRepository.save(la);
             listenerRepository.save(listener);
             songRepository.save(song);
+            return la;
         }
         return null;
     }
