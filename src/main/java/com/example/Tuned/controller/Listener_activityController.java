@@ -46,7 +46,6 @@ public class Listener_activityController {
                     la.setLikes(true);     //else set like as true and unlike as false
                     la.setDislikes(false);
                 }
-
             }
             else{
                 la = new Listener_activity();

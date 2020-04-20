@@ -22,7 +22,7 @@ public class PlaylistController {
     @Autowired
     SongRepository songRepository;
 
-    //Admin purpose
+    //Admin purpose PD-this would be irrelevant because a playlist cannot exists without a listener
     @PostMapping("/api/playlist/new")
     public Playlist createPlaylist(@RequestBody Playlist playlist){
         return playlistRepository.save(playlist);
