@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "user")
 @Table(name = "user")
@@ -26,15 +27,15 @@ public class User {
     private String address;
     private String email;
 
-    @ManyToMany()
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "follower_detail",
-            joinColumns = @JoinColumn(name = "follower_id" , referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"))
+            joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
     @JsonIgnore
     private List<User> followers;
 
     @ManyToMany(mappedBy = "followers")
-    //@JsonIgnore
+    @JsonIgnore
     private List<User> follows;
 
     public User(String username, String password, String first_name, String last_name, int phone, String address, String email) {
@@ -63,14 +64,14 @@ public class User {
     }
 
     public void followUser(User user){
-        this.getFollows().add(user);
+        this.getFollowers().add(user);
         if(!user.getFollowers().contains(this)){
             user.getFollowers().add(this);
         }
     }
 
     public void unfollowUser(User user){
-        this.getFollows().remove(user);
+        this.getFollowers().remove(user);
         if(user.getFollowers().contains(this)){
             user.getFollowers().remove(this);
         }

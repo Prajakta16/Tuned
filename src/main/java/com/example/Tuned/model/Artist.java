@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "artist")
 @Table(name="artist")
@@ -20,8 +21,9 @@ public class Artist extends User {
     @JoinTable(name = "album_production",
             joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "album_id"))
-    @JsonIgnore
-    private List<Album> producedAlbums;
+    //@JsonIgnore
+    private Set<Album> producedAlbums;
+    //private List<Album> producedAlbums;
 
     public Artist(){
     }
@@ -35,11 +37,17 @@ public class Artist extends User {
         this.popularity = popularity;
     }
 
-    public void addAlbum(Album album) {
+    //public void addAlbum(Album album) {
+    //    this.producedAlbums.add(album);
+    //    if (album.getProducedByArtists() != this) {
+    //        //album.setProducedByArtists((List<Artist>) this);
+    //    }
+    //}
+
+    public void addAlbum(Album album){
         this.producedAlbums.add(album);
-        if (album.getProducedByArtists() != this) {
-            album.setProducedByArtists((List<Artist>) this);
-        }
+        if(!album.getProducedByArtists().contains(this))
+            album.getProducedByArtists().add(this);
     }
 
     //Won't be here due to changed schema
@@ -98,11 +106,18 @@ public class Artist extends User {
         this.popularity = popularity;
     }
 
-    public List<Album> getProducedAlbums() {
+    public Set<Album> getProducedAlbums() {
         return producedAlbums;
     }
 
-    public void setProducedAlbums(List<Album> producedAlbums) {
+    public void setProducedAlbums(Set<Album> producedAlbums) {
         this.producedAlbums = producedAlbums;
     }
+//public List<Album> getProducedAlbums() {
+    //    return producedAlbums;
+    //}
+
+    //public void setProducedAlbums(List<Album> producedAlbums) {
+    //    this.producedAlbums = producedAlbums;
+    //}
 }

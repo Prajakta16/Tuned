@@ -1,9 +1,11 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.model.Album;
+import com.example.Tuned.model.Artist;
 import com.example.Tuned.model.Playlist;
 import com.example.Tuned.model.Song;
 import com.example.Tuned.repository.AlbumRepository;
+import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class AlbumController {
 
     @Autowired
     SongRepository songRepository;
+
+    @Autowired
+    ArtistRepository artistRepository;
 
     @PostMapping("/api/album/new")
     Album createAlbum(@RequestBody Album album){

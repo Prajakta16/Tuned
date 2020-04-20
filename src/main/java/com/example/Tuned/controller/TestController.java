@@ -17,6 +17,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -117,7 +118,8 @@ public class TestController {
                         if (artist.getProducedAlbums() == null) {
                             List<Album> albums = new ArrayList<>();
                             albums.add(album);
-                            artist.setProducedAlbums(albums);
+//                            artist.setProducedAlbums(albums)
+                            artist.setProducedAlbums((Set<Album>) albums);
                         } else {
                             if (!artist.getProducedAlbums().contains(album))
                                 artist.getProducedAlbums().add(album);
@@ -125,7 +127,8 @@ public class TestController {
                         if (album.getProducedByArtists() == null) {
                             List<Artist> artists = new ArrayList<>();
                             artists.add(artist);
-                            album.setProducedByArtists(artists);
+//                            album.setProducedByArtists(artists);
+                            album.setProducedByArtists((Set<Artist>) artists);
                         } else {
                             if (!album.getProducedByArtists().contains(artist))
                                 album.getProducedByArtists().add(artist);
@@ -201,7 +204,8 @@ public class TestController {
                     albums.add(album);
                 }
                 if (artist.getProducedAlbums() == null) {
-                    artist.setProducedAlbums(albums);
+                    artist.setProducedAlbums((Set<Album>) albums);
+//                    artist.setProducedAlbums(albums);
                 }
                 artistRepository.save(artist);
 //                return artistJsonResponse;
@@ -262,7 +266,8 @@ public class TestController {
                         if(artist.getProducedAlbums()==null){
                             List<Album> albums_for_artist = new ArrayList<>();
                             albums_for_artist.add(album);
-                            artist.setProducedAlbums(albums_for_artist);
+//                            artist.setProducedAlbums(albums_for_artist)
+                            artist.setProducedAlbums((Set<Album>) albums_for_artist);
                         }
                         else{
                             if(!artist.getProducedAlbums().contains(album))
@@ -271,7 +276,8 @@ public class TestController {
 
                         artists.add(artist);
                         if(album.getProducedByArtists()==null){
-                            album.setProducedByArtists(artists);
+//                            album.setProducedByArtists(artists);
+                            album.setProducedByArtists((Set<Artist>) artists);
                         }
                         else {
                             if(!album.getProducedByArtists().contains(artist))

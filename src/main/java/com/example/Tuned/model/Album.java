@@ -35,7 +35,8 @@ public class Album {
 
     @ManyToMany(mappedBy = "producedAlbums")
     @JsonIgnore
-    private List<Artist> producedByArtists;
+    private Set<Artist> producedByArtists;
+    // private List<Artist> producedByArtists;
 
     public Album(){
     }
@@ -146,11 +147,19 @@ public class Album {
         this.songs = songs;
     }
 
-    public List<Artist> getProducedByArtists() {
+    //public List<Artist> getProducedByArtists() {
+    //    return producedByArtists;
+    //}
+
+    //public void setProducedByArtists(List<Artist> producedByArtists) {
+    //    this.producedByArtists = producedByArtists;
+    //}
+
+    public Set<Artist> getProducedByArtists() {
         return producedByArtists;
     }
 
-    public void setProducedByArtists(List<Artist> producedByArtists) {
+    public void setProducedByArtists(Set<Artist> producedByArtists) {
         this.producedByArtists = producedByArtists;
     }
 

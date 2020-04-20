@@ -27,7 +27,7 @@ public class Listener_activityController {
     ListenerRepository listenerRepository;
 
     //should all these return something
-    @GetMapping("/api/user/{listener_id}/likes/{song_id}")
+    @PostMapping("/api/user/{listener_id}/likes/{song_id}")
     public Listener_activity likeASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;
@@ -58,7 +58,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @GetMapping("/api/user/{listener_id}/dislikes/{song_id}")
+    @PostMapping("/api/user/{listener_id}/dislikes/{song_id}")
     public Listener_activity dislikeASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;
@@ -89,7 +89,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @GetMapping("/api/user/{listener_id}/favourite/{song_id}")
+    @PostMapping("/api/user/{listener_id}/favourite/{song_id}")
     public Listener_activity favoriteASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;
@@ -118,7 +118,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @GetMapping("/api/user/{listener_id}/song/{song_id}/comment/{comments}")
+    @PostMapping("/api/user/{listener_id}/song/{song_id}/comment/{comments}")
     public Listener_activity commentASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id, @PathVariable("comments") String comments) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;
@@ -147,7 +147,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @GetMapping("/api/user/{listener_id}/unfavourite/{song_id}")
+    @PostMapping("/api/user/{listener_id}/unfavourite/{song_id}")
     public Listener_activity unfavoriteASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;
@@ -176,7 +176,7 @@ public class Listener_activityController {
         return null;
     }
 
-    @GetMapping("/api/user/{listener_id}/visits/{song_id}")
+    @PostMapping("/api/user/{listener_id}/visits/{song_id}")
     public Listener_activity visitASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
         if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Listener_activity la;

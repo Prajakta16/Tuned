@@ -1,14 +1,13 @@
 package com.example.Tuned.controller;
 
-import com.example.Tuned.model.Artist;
-import com.example.Tuned.model.Listener;
-import com.example.Tuned.model.Playlist;
+import com.example.Tuned.model.*;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.PlaylistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -42,7 +41,17 @@ public class ListenerController {
 
     @GetMapping("/api/listener/find/{listener_id}")
     public Listener getListenerById(@PathVariable("listener_id") int listener_id){
-        return listenerRepository.findById(listener_id).get();
+        Listener listener = listenerRepository.findById(listener_id).get();
+        List<Listener_activity> activities = listener.getListener_activities();
+
+        Iterator<Listener_activity> iter = activities.iterator();
+        while(iter.hasNext()){
+            Listener_activity activity = (Listener_activity)iter.next();
+            User user = activity.getListener();
+        }
+
+
+        return listener;
     }
 
     @GetMapping("/api/listener/{listener_id}/playlists/all")
