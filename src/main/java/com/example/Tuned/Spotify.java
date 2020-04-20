@@ -98,7 +98,7 @@ public class Spotify {
             jsonObject.put("popularity", JsonPath.read(artist_json, "$.artists.items[" + i + "].popularity"));
             jsonObject.put("followers", JsonPath.read(artist_json, "$.artists.items[" + i + "].followers.total"));
             jsonObject.put("image_url", JsonPath.read(artist_json, "$.artists.items[" + i + "].images[2].url"));
-            jsonObject.put("producedAlbums",searchAlbumsForArtist(access_token,spotify_id));
+            jsonObject.put("producedAlbums", searchAlbumsForArtist(access_token, spotify_id));
             jsonArray.add(jsonObject);
             return jsonArray;
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class Spotify {
     }
 
     public JSONArray searchAlbumsForArtist(String access_token, String artist_spotify_id) throws URISyntaxException {
-        String search_artist_albums_url = "https://api.spotify.com/v1/artists/"+artist_spotify_id+"/albums?limit=5";
+        String search_artist_albums_url = "https://api.spotify.com/v1/artists/" + artist_spotify_id + "/albums?limit=5";
         URI uri = new URI(search_artist_albums_url);
         JSONArray jsonArray = new JSONArray();
 
@@ -130,7 +130,7 @@ public class Spotify {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
 
     public JSONArray searchSong(String access_token, String title) throws URISyntaxException {
@@ -190,6 +190,48 @@ public class Spotify {
             return jsonArray;
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public JSONArray searchAlbum(String access_token, String title) throws URISyntaxException {
+        URI baseUrl = new URI("https://api.spotify.com/v1/search");
+        URI final_uri = applyParameters(baseUrl, new String[]{"q", title, "type", "album", "limit", "3"});
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            String album_json = getResponse(final_uri, access_token);
+            int no_albums = JsonPath.read(album_json, "$.albums.items.length()");
+            for (int i = 0; i < no_albums; i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("title", JsonPath.read(album_json, "$.albums.items[" + i + "].name"));
+                jsonObject.put("spotify_url", JsonPath.read(album_json, "$.albums.items[" + i + "].external_urls.spotify"));
+                jsonObject.put("spotify_id", JsonPath.read(album_json, "$.albums.items[" + i + "].id"));
+                jsonObject.put("album_type", JsonPath.read(album_json, "$.albums.items[" + i + "].album_type"));
+                jsonObject.put("image_url", JsonPath.read(album_json, "$.albums.items[" + i + "].images[2].url"));
+                jsonObject.put("release_year", JsonPath.read(album_json, "$.albums.items[" + i + "].release_date"));
+
+                JSONArray ja = new JSONArray();
+                int no_artists = JsonPath.read(album_json, "$.albums.items[" + i + "].artists.length()");
+                for (int j = 0; j < no_artists; j++) {
+                    JSONObject artistObj = new JSONObject();
+                    artistObj.put("name", JsonPath.read(album_json, "$.albums.items[" + i + "].artists[" + j + "].name"));
+                    artistObj.put("spotify_id", JsonPath.read(album_json, "$.albums.items[" + i + "].artists[" + j + "].id"));
+                    artistObj.put("spotify_url", JsonPath.read(album_json, "$.albums.items[" + i + "].artists[" + j + "].external_urls.spotify"));
+
+                    String arthref = JsonPath.read(album_json, "$.albums.items[" + i + "].artists[" + j + "].href");
+                    JSONObject artist_details = fetchArtistDetailsForArtist(arthref, access_token);
+                    System.out.println(artist_details);
+                    artistObj.put("artist_details", artist_details);
+
+                    ja.add(artistObj); // adding map to array
+                }
+                jsonObject.put("artists", ja);
+                jsonArray.add(jsonObject);
+            }
+            return jsonArray;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

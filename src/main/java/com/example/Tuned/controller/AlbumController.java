@@ -45,7 +45,7 @@ public class AlbumController {
     }
 
     @GetMapping("/api/album/name/{title}")
-    public Album findAlbumByTitle(@PathVariable("title") String title) {
+    public List<Album> findAlbumByTitle(@PathVariable("title") String title) {
         return albumRepository.findAlbumByTitle(title);
     }
 
