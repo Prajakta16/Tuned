@@ -15,5 +15,8 @@ public interface SongRepository extends CrudRepository<Song, Integer> {
     @Query("SELECT s FROM song s where s.title = :title ")
     public List<Song> findSongByTitle(@Param("title") String title);
 
+    @Query("SELECT s.album FROM song s WHERE s.song_id = :song_id")
+    public Album findAlbumForSong(@Param("song_id") int song_id);
+
 
 }

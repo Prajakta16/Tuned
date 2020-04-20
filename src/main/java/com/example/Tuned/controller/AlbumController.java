@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -28,7 +30,7 @@ public class AlbumController {
     ArtistRepository artistRepository;
 
     @PostMapping("/api/album/new")
-    Album createAlbum(@RequestBody Album album){
+    Album createAlbum(@RequestBody Album album) {
         return albumRepository.save(album);
     }
 
@@ -45,7 +47,7 @@ public class AlbumController {
     }
 
     @PostMapping("/api/album/{album_id}/new/song/")
-    public Album addNewSongToAlbum(@PathVariable("album_id") int album_id,@RequestBody Song song) {
+    public Album addNewSongToAlbum(@PathVariable("album_id") int album_id, @RequestBody Song song) {
         if (albumRepository.findById(album_id).isPresent()) {
             Album album = albumRepository.findById(album_id).get();
             album.addSong(song);
@@ -67,6 +69,15 @@ public class AlbumController {
     public List<Album> findAllAlbums() {
         List<Album> albums = (List<Album>) albumRepository.findAll();
         return albums;
+    }
+
+    @GetMapping("/api/album/{album_id}/artists")
+    public Set<Artist> findArtistDetailsForAlbum(@PathVariable("album_id") int album_id) {
+        if (albumRepository.findById(album_id).isPresent()) {
+            Set<Artist> artists = albumRepository.findArtistDetailsForAlbum(album_id);
+            return artists;
+        }
+        return null;
     }
 
     //Admin and artist

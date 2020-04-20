@@ -1,9 +1,6 @@
 package com.example.Tuned.controller;
 
-import com.example.Tuned.model.Listener;
-import com.example.Tuned.model.Listener_activity;
-import com.example.Tuned.model.Song;
-import com.example.Tuned.model.User;
+import com.example.Tuned.model.*;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.Listener_activityRepository;
@@ -51,6 +48,15 @@ public class SongController {
             return songRepository.findById(song_id).get();
         else
             return null;
+    }
+
+    @GetMapping("/api/song/{song_id}/album")
+    public Album findAlbumDetailsForSong(@PathVariable("song_id") int song_id){
+        if (songRepository.findById(song_id).isPresent()){
+            Album album = songRepository.findAlbumForSong(song_id);
+            return album;
+        }
+        return null;
     }
 
     @DeleteMapping("api/song/delete/{song_id}")
