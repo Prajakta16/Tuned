@@ -38,7 +38,7 @@ public class TestController {
     ArtistRepository artistRepository;
 
     @GetMapping("/api/song/search/{title}")
-    public List<Song> findSongByTitle(@PathVariable("title") String title) {
+    public List<Song> searchSongByTitle(@PathVariable("title") String title) {
 
         List<Song> songs = new ArrayList<>();
         if (!songRepository.findSongByTitle(title).isEmpty())
@@ -145,7 +145,7 @@ public class TestController {
     }
 
     @GetMapping("/api/artist/search/{name}")
-    public Artist findArtistByName(@PathVariable("name") String name) {
+    public Artist searchArtistByName(@PathVariable("name") String name) {
         Artist artist = new Artist();
         if (artistRepository.findArtistByUsername(name) != null) {
             artist = artistRepository.findArtistByUsername(name);
@@ -210,6 +210,16 @@ public class TestController {
             }
         }
         return artist;
+    }
+
+    @GetMapping("/api/album/search/{title}")
+    public List<Album> searchAlbumByTitle(@PathVariable("title") String title){
+
+        if(albumRepository.findAlbumByTitle(title) != null){
+            List<Album> albums = albumRepository.findAlbumByTitle(title);
+        }
+
+        return null;
     }
 
     public String fetchToken() {
