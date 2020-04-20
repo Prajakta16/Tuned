@@ -69,4 +69,41 @@ public class UserController {
         userRepository.save(user);
     }
 
+    //Updates for Admin
+    @PostMapping("/api/user/admin/update/user/{user_id}/address/{addressname}")
+    public void updateUserAddress(@PathVariable("user_id") int user_id, @PathVariable("addressname") String addressname)
+    {
+        if(userRepository.findById(user_id).isPresent())
+        {
+            User user = userRepository.findById(user_id).get();
+            user.setAddress(addressname);
+            userRepository.save(user);
+
+        }
+    }
+
+    @PostMapping("/api/user/admin/update/user/{user_id}/email/{mailaddress}")
+    public void updateUserMail(@PathVariable("user_id") int user_id, @PathVariable("mailaddress") String mailaddress)
+    {
+        if(userRepository.findById(user_id).isPresent())
+        {
+            User user = userRepository.findById(user_id).get();
+            user.setEmail(mailaddress);
+            userRepository.save(user);
+
+        }
+    }
+
+    @PostMapping("/api/user/admin/update/user/{user_id}/phone/{phonenumber}")
+    public void updateUserPhone(@PathVariable("user_id") int user_id, @PathVariable("phonenumber") int phonenumber)
+    {
+        if(userRepository.findById(user_id).isPresent())
+        {
+            User user = userRepository.findById(user_id).get();
+            user.setPhone(phonenumber);
+            userRepository.save(user);
+
+        }
+    }
+
 }
