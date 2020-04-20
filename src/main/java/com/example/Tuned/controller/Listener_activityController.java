@@ -35,8 +35,16 @@ public class Listener_activityController {
             Song song = songRepository.findById(song_id).get();
             if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
                 la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
-                la.setLikes(true);
-                la.setDislikes(false);
+                if (la.getLikes() == true)  //check if user has already liked a song
+                {
+                    la.setLikes(false);     //if so the clicking like will unlike it
+                }
+                else
+                {
+                    la.setLikes(true);     //else set like as true and unlike as false
+                    la.setDislikes(false);
+                }
+
             }
             else{
                 la = new Listener_activity();
@@ -66,8 +74,15 @@ public class Listener_activityController {
             Song song = songRepository.findById(song_id).get();
             if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
                 la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
-                la.setDislikes(true);
-                la.setLikes(false);
+                if (la.getDislikes() == true)
+                {
+                    la.setDislikes(false);
+                }
+                else
+                {
+                    la.setDislikes(true);
+                    la.setLikes(false);
+                }
             }
             else{
                 la = new Listener_activity();
@@ -97,7 +112,13 @@ public class Listener_activityController {
             Song song = songRepository.findById(song_id).get();
             if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
                 la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
-                la.setIs_favourite(true);
+                if (la.isIs_favourite() == true) //check if already added to fav
+                {
+                    la.setIs_favourite(false); //clicking again will unfav
+                }
+                else {
+                    la.setIs_favourite(true); //else fav
+                }
             }
             else{
                 la = new Listener_activity();
@@ -133,35 +154,6 @@ public class Listener_activityController {
                 la.setSong(song);
                 la.setListener(listener);
                 la.setComment(comments);
-                if(!listener.getListener_activities().contains(la))
-                    listener.getListener_activities().add(la);
-                if(!song.getActivities().contains(la))
-                    song.getActivities().add(la);
-            }
-            listener_activityRepository.save(la);
-            listenerRepository.save(listener);
-            songRepository.save(song);
-            return la;
-        }
-        //System.out.println("listener or song not present");
-        return null;
-    }
-
-    @PostMapping("/api/user/{listener_id}/unfavourite/{song_id}")
-    public Listener_activity unfavoriteASongById(@PathVariable("listener_id") int listener_id, @PathVariable("song_id") int song_id) {
-        if (listenerRepository.findById(listener_id).isPresent() && songRepository.findById(song_id).isPresent()) {
-            Listener_activity la;
-            Listener listener = listenerRepository.findById(listener_id).get();
-            Song song = songRepository.findById(song_id).get();
-            if(listener_activityRepository.findActivityByListenerAndSong(listener,song)!= null){ //an activity exists
-                la = listener_activityRepository.findActivityByListenerAndSong(listener,song);
-                la.setIs_favourite(false);
-            }
-            else{
-                la = new Listener_activity();
-                la.setSong(song);
-                la.setListener(listener);
-                la.setIs_favourite(false);
                 if(!listener.getListener_activities().contains(la))
                     listener.getListener_activities().add(la);
                 if(!song.getActivities().contains(la))

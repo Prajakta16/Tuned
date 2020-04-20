@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.List;
 
@@ -40,18 +41,20 @@ public class ListenerController {
     }
 
     @GetMapping("/api/listener/find/{listener_id}")
-    public Listener getListenerById(@PathVariable("listener_id") int listener_id){
-        Listener listener = listenerRepository.findById(listener_id).get();
-        List<Listener_activity> activities = listener.getListener_activities();
+    public Listener getListenerById(@PathVariable("listener_id") int listener_id) {
+    Listener listener = listenerRepository.findById(listener_id).get();
+    List<Listener_activity> activities = listener.getListener_activities();
 
-        Iterator<Listener_activity> iter = activities.iterator();
-        while(iter.hasNext()){
-            Listener_activity activity = (Listener_activity)iter.next();
-            User user = activity.getListener();
-        }
-
-
-        return listener;
+    Iterator<Listener_activity> iter = activities.iterator();
+    String user_name = null;
+    while (iter.hasNext()) {
+      Listener_activity activity = (Listener_activity) iter.next();
+      User user = activity.getListener();
+      System.out.println(user);
+      user_name = user.getUsername();
+      activity.setUsername(user_name);
+    }
+    return listener;
     }
 
     @GetMapping("/api/listener/{listener_id}/playlists/all")

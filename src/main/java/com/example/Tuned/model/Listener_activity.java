@@ -21,6 +21,7 @@ public class Listener_activity {
     private boolean is_favourite;
     @Column(columnDefinition = "int(3) DEFAULT 0")
     private int visits;
+    private String username;
 
     @ManyToOne
     @JsonIgnore
@@ -57,6 +58,14 @@ public class Listener_activity {
         if(!listener.getListener_activities().contains(this)) {
             listener.getListener_activities().add(this);
         }
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public int getListener_activity_id() {

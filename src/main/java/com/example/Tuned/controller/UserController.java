@@ -5,10 +5,7 @@ import com.example.Tuned.model.User;
 import com.example.Tuned.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,12 +37,12 @@ public class UserController {
         return userRepository.findUserByUsername(username);
     }
 
-    @GetMapping("/api/users/{user_id}/follows/{follower_id}")
+    @PostMapping("/api/users/{user_id}/follows/{follower_id}")
     public void userFollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
     {
         User user = userRepository.findById(user_id).get();
         User follower = userRepository.findById(follower_id).get();
-        user.addFollower(follower);
+        user.followUser(follower);
         userRepository.save(user);
     }
 
@@ -58,12 +55,13 @@ public class UserController {
     //    userRepository.save(user);
     //}
 
-    @GetMapping("/api/users/{user_id}/unfollows/{follower_id}")
+    @PostMapping("/api/users/{user_id}/unfollows/{follower_id}")
     public void userUnfollows(@PathVariable("user_id") int user_id, @PathVariable("follower_id") int follower_id)
     {
         User user = userRepository.findById(user_id).get();
         User follower = userRepository.findById(follower_id).get();
-        user.removeFollower(follower);
+        user.unfollowUser(follower);
+        userRepository.save(user);
     }
     //follow and unfollow a user
 
