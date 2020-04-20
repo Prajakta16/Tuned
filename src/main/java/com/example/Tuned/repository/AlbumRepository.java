@@ -18,6 +18,4 @@ public interface AlbumRepository extends CrudRepository<Album,Integer> {
     @Query("SELECT alb FROM album alb WHERE alb.spotify_id = :spotify_id")
     public Album findAlbumBySpotifyId(@Param("spotify_id") String spotify_id);
 
-    public List<Artist> getArtistsForAlbum(@Param("album") Album album);
-
 }
