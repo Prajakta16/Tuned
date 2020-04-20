@@ -1,9 +1,6 @@
 package com.example.Tuned.controller;
 
-import com.example.Tuned.model.Listener;
-import com.example.Tuned.model.Listener_activity;
-import com.example.Tuned.model.Song;
-import com.example.Tuned.model.User;
+import com.example.Tuned.model.*;
 import com.example.Tuned.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

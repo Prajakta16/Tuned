@@ -65,4 +65,11 @@ public class ListenerController {
         }
         return null;
     }
+
+    //Admin
+    @DeleteMapping("/api/listener/delete/{listener_id}")
+    public void deleteListenerById(@PathVariable("listener_id") int listener_id) {
+        Listener listener = listenerRepository.findById(listener_id).get();
+        listenerRepository.delete(listener);
+    }
 }

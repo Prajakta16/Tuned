@@ -73,6 +73,7 @@ public class AlbumController {
         return null;
     }
 
+    //Admin and artist
     @DeleteMapping("/api/album/delete/{album_id}")
     public void deleteAlbumById(@PathVariable("album_id") int album_id) {
         Album album = albumRepository.findById(album_id).get();

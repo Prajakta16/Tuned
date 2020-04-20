@@ -2,6 +2,7 @@ package com.example.Tuned.controller;
 
 import com.example.Tuned.model.Album;
 import com.example.Tuned.model.Artist;
+import com.example.Tuned.model.Playlist;
 import com.example.Tuned.model.Song;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
@@ -69,5 +70,12 @@ public class ArtistController {
             return artist.getProducedAlbums();
         }
         return null;
+    }
+
+    //Admin
+    @DeleteMapping("/api/artist/delete/{artist_id}")
+    public void deleteArtistById(@PathVariable("artist_id") int artist_id) {
+        Artist artist = artistRepository.findById(artist_id).get();
+        artistRepository.delete(artist);
     }
 }

@@ -66,7 +66,7 @@ public class SongController {
     //    return (List<Song>) songRepository.findSongByArtist(user_id);
     //}
 
-    @DeleteMapping("api/song/{song_id}")
+    @DeleteMapping("api/song/delete/{song_id}")
     public void deleteSongById(@PathVariable("song_id") int song_id) {
         Song song = songRepository.findById(song_id).get();
         songRepository.delete(song);

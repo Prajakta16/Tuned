@@ -53,6 +53,7 @@ public class PlaylistController {
         return (List<Playlist>) playlistRepository.findAll();
     }
 
+    //Admin and also listener
     @DeleteMapping("/api/playlist/delete/{playlist_id}")
     public void deletePlaylistById(@PathVariable("playlist_id") int playlist_id) {
         Playlist playlist = playlistRepository.findById(playlist_id).get();
