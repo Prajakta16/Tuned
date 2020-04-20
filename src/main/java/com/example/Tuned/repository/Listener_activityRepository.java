@@ -16,7 +16,9 @@ public interface Listener_activityRepository extends CrudRepository<Listener_act
     @Query("SELECT la FROM listener_activity la where la.listener=:listener and la.song=:song")
     public Listener_activity findActivityByListenerAndSong(@Param("listener") Listener listener, @Param("song") Song song);
 
-    @Query("SELECT song FROM listener_activity la where la.listener=:listener")
-    public Song findSongByListener(@Param("listener") Listener listener);
+    @Query("SELECT la FROM listener_activity la where la.listener=:listener")
+    public Listener_activity findActivityByListener(@Param("listener") Listener listener);
 
+    @Query("SELECT la.song FROM listener_activity la where la.listener=:listener")
+    public List<Song> findSongByListener(@Param("listener") Listener listener);
 }
