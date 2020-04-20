@@ -1,6 +1,8 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.model.Listener;
+import com.example.Tuned.model.Listener_activity;
+import com.example.Tuned.model.Song;
 import com.example.Tuned.model.User;
 import com.example.Tuned.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,4 +71,5 @@ public class UserController {
         user.unfollowUser(follower);
         userRepository.save(user);
     }
+
 }

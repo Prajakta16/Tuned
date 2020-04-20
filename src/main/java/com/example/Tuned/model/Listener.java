@@ -34,6 +34,7 @@ public class Listener extends User{
             playlist.setListener(this);
     }
 
+
     public void removePlaylist(Playlist playlist){
         this.playlists.remove(playlist);
     }

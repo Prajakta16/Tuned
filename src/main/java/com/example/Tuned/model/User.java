@@ -30,11 +30,11 @@ public class User {
     @JoinTable(name = "follower_detail",
             joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
-    @JsonIgnore
+    //@JsonIgnore //comment when followers is needed
     private List<User> followers;
 
     @ManyToMany(mappedBy = "followers")
-    //@JsonIgnore
+    @JsonIgnore //comment when following is needed
     private List<User> follows;
 
     public User(String username, String password, String first_name, String last_name, int phone, String address, String email) {
