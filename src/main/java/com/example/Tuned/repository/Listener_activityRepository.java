@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface Listener_activityRepository extends CrudRepository<Listener_activity, Integer> {
 
-    @Query("SELECT la FROM listener_activity la where la.listener=:listener and la.song=:song")
+    @Query("SELECT la FROM listener_activity la where la.listener = :listener and la.song = :song")
     public Listener_activity findActivityByListenerAndSong(@Param("listener") Listener listener, @Param("song") Song song);
 
     @Query("SELECT la FROM listener_activity la where la.listener=:listener")

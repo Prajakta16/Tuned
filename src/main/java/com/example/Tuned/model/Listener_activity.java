@@ -3,6 +3,8 @@ package com.example.Tuned.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "listener_activity")
 @Table(name = "listener_activity")
@@ -48,15 +50,29 @@ public class Listener_activity {
 
     public void setSong(Song song) {
         this.song = song;
-        if(!song.getActivities().contains(this)) {
-            song.getActivities().add(this);
+        if(song.getActivities() == null){
+            List<Listener_activity> activities = new ArrayList<>();
+            activities.add(this);
+            song.setActivities(activities);
+        }
+        else{
+            if(!song.getActivities().contains(this)) {
+                song.getActivities().add(this);
+            }
         }
     }
 
     public void setListener(Listener listener) {
         this.listener = listener;
-        if(!listener.getListener_activities().contains(this)) {
-            listener.getListener_activities().add(this);
+        if(listener.getListener_activities() == null){
+            List<Listener_activity> activities = new ArrayList<>();
+            activities.add(this);
+            listener.setListener_activities(activities);
+        }
+        else{
+            if(!listener.getListener_activities().contains(this)) {
+                listener.getListener_activities().add(this);
+            }
         }
     }
 
