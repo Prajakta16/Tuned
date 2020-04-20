@@ -23,7 +23,6 @@ public class Artist extends User {
             inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "album_id"))
     //@JsonIgnore
     private Set<Album> producedAlbums;
-    //private List<Album> producedAlbums;
 
     public Artist(){
     }
@@ -37,33 +36,11 @@ public class Artist extends User {
         this.popularity = popularity;
     }
 
-    //public void addAlbum(Album album) {
-    //    this.producedAlbums.add(album);
-    //    if (album.getProducedByArtists() != this) {
-    //        //album.setProducedByArtists((List<Artist>) this);
-    //    }
-    //}
-
     public void addAlbum(Album album){
         this.producedAlbums.add(album);
         if(!album.getProducedByArtists().contains(this))
             album.getProducedByArtists().add(this);
     }
-
-    //Won't be here due to changed schema
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "song_production",
-//            joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id"))
-//    @JsonIgnore
-//    private List<Song> producedSongs;
-//
-//    public void addSongs(Song song) {
-//        this.producedSongs.add(song);
-//        if (song.getProducedByArtists() != this) {
-//            song.setProducedByArtists((List<Artist>) this);
-//        }
-//    }
 
 
     public String getBiography() {

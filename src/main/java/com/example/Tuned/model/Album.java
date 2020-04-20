@@ -36,7 +36,6 @@ public class Album {
     @ManyToMany(mappedBy = "producedAlbums")
     @JsonIgnore
     private Set<Artist> producedByArtists;
-    // private List<Artist> producedByArtists;
 
     public Album(){
     }

@@ -26,7 +26,6 @@ public class Song {
     @ManyToMany(mappedBy = "songs")
     @JsonIgnore
     private Set<Playlist> playlists;
-    //private List<Playlist> playlists;
 
     @ManyToOne
     @JsonIgnore

@@ -30,7 +30,6 @@ public class Playlist {
     )
     //@JsonIgnore
     private Set<Song> songs;
-    //private List<Song> songs;
 
     public Playlist(String title, String description) {
         this.title=title;

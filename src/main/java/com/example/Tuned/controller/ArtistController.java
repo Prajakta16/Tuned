@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -33,14 +35,26 @@ public class ArtistController {
         return artistRepository.save(artist);
     }
 
-    @GetMapping("/api/artist/all")
-    public List<Artist> getAllArtists(){
-        return (List<Artist>) artistRepository.findAll();
-    }
-
-    @GetMapping("/api/artist/{artist_id}")
-    public Artist findArtistById(@PathVariable("artist_id") int artist_id){
-        return artistRepository.findById(artist_id).get();
+    @PostMapping("/api/artist/{artist_id}/new/album")
+    Artist createNewAlbumForArtist(@PathVariable("artist_id") int artist_id,@RequestBody Album album ){
+        if(artistRepository.findById(artist_id).isPresent()) {
+            Artist artist = artistRepository.findById(artist_id).get();
+//            if (artist.getProducedAlbums() == null) {
+//                Set<Album> albums = new HashSet<>();
+//                albums.add(album);
+//                artist.setProducedAlbums(albums);
+//            } else {
+//                if (!artist.getProducedAlbums().contains(album))
+//                    artist.getProducedAlbums().add(album);
+//            }
+//            Set<Artist> artists = new HashSet<>();
+//            artists.add(artist);
+//            album.setProducedByArtists(artists);
+            artist.addAlbum(album);
+            albumRepository.save(album);
+            return artistRepository.save(artist);
+        }
+        return null;
     }
 
     @PostMapping("/api/artist/{artist_id}/album/{album_id}")
@@ -55,14 +69,16 @@ public class ArtistController {
         return null;
     }
 
-    //    @PostMapping("/api/artist/{artist_id}/song/new")
-//    Artist addSongToArtist(@PathVariable("artist_id") int artist_id, @RequestBody Song newSong){
-//        Artist artist = artistRepository.findById(artist_id).get();
-//        artist.addSongs(newSong);
-//        songRepository.save(newSong);
-//        return artistRepository.save(artist);
-//    }
-//
+    @GetMapping("/api/artist/all")
+    public List<Artist> getAllArtists(){
+        return (List<Artist>) artistRepository.findAll();
+    }
+
+    @GetMapping("/api/artist/{artist_id}")
+    public Artist findArtistById(@PathVariable("artist_id") int artist_id){
+        return artistRepository.findById(artist_id).get();
+    }
+
     @GetMapping("/api/artist/{artist_id}/albums/all")
     public Set<Album> findAlbumOfArtist(@PathVariable("artist_id") int artist_id) {
         if (artistRepository.findById(artist_id).isPresent()) {
