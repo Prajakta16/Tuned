@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Service
 public class AlbumController {
@@ -61,9 +62,15 @@ public class AlbumController {
             Album album = albumRepository.findById(album_id).get();
             Song song = songRepository.findById(song_id).get();
             album.addSong(song);
-            //songRepository.save(song);
+            songRepository.save(song);
             return albumRepository.save(album);
         }
         return null;
+    }
+
+    @DeleteMapping("/api/album/delete/{album_id}")
+    public void deleteAlbumById(@PathVariable("album_id") int album_id) {
+        Album album = albumRepository.findById(album_id).get();
+        albumRepository.delete(album);
     }
 }
