@@ -3,6 +3,7 @@ package com.example.Tuned.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,9 +38,24 @@ public class Artist extends User {
     }
 
     public void addAlbum(Album album){
-        this.producedAlbums.add(album);
-        if(!album.getProducedByArtists().contains(this))
-            album.getProducedByArtists().add(this);
+        if(this.getProducedAlbums() == null){
+            Set<Album> albums = new HashSet<>();
+            albums.add(album);
+            this.setProducedAlbums(albums);
+        }
+        else{
+            if(!this.getProducedAlbums().contains(album))
+                this.producedAlbums.add(album);
+        }
+        if(album.getProducedByArtists() == null){
+            Set<Artist> artists = new HashSet<>();
+            artists.add(this);
+            album.setProducedByArtists(artists);
+        }
+        else{
+            if(!album.getProducedByArtists().contains(this))
+                album.getProducedByArtists().add(this);
+        }
     }
 
 

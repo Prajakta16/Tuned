@@ -62,6 +62,27 @@ public class Album {
             song.setAlbum(this);
     }
 
+    public void addArtist(Artist artist){
+        if(this.getProducedByArtists() == null){
+            Set<Artist> artists = new HashSet<>();
+            artists.add(artist);
+            this.setProducedByArtists(artists);
+        }
+        else{
+            if(!this.getProducedByArtists().contains(artist))
+                this.getProducedByArtists().add(artist);
+        }
+        if(artist.getProducedAlbums()==null){
+            Set<Album> albums = new HashSet<>();
+            albums.add(this);
+            artist.setProducedAlbums(albums);
+        }
+        else{
+            if(!artist.getProducedAlbums().contains(this))
+                artist.getProducedAlbums().add(this);
+        }
+    }
+
     public void removeSong(Song song){
         this.songs.remove(song);
     }
