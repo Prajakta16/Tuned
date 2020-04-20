@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Service
@@ -197,6 +199,27 @@ public class Listener_activityController {
         }
         //System.out.println("listener or song not present");
         return null;
+    }
+
+    @GetMapping("/api/listener/{listener_id}/likes/all")
+    public List<Song> getLikedSongs(int listener_id){
+        Listener listener = listenerRepository.findById(listener_id).get();
+        List<Song> likedSongs = listener_activityRepository.findLikedSongByListener(listener);
+        return likedSongs;
+    }
+
+    @GetMapping("/api/listener/{listener_id}/favourite/all")
+    public List<Song> getFavSongs(int listener_id){
+        Listener listener = listenerRepository.findById(listener_id).get();
+        List<Song> likedSongs = listener_activityRepository.findFavSongByListener(listener);
+        return likedSongs;
+    }
+
+    @GetMapping("/api/listener/{listener_id}/dislikes/all")
+    public List<Song> getDislikedSongs(int listener_id){
+        Listener listener = listenerRepository.findById(listener_id).get();
+        List<Song> likedSongs = listener_activityRepository.findDislikedSongByListener(listener);
+        return likedSongs;
     }
 
     /*
