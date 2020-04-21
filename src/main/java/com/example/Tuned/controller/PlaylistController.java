@@ -50,6 +50,7 @@ public class PlaylistController {
         if (playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()) {
             Playlist playlist = playlistRepository.findById(playlist_id).get();
             Song song = songRepository.findById(song_id).get();
+
             playlist.removeSong(song);
             songRepository.save(song);
             return playlistRepository.save(playlist);

@@ -119,9 +119,9 @@ public class ArtistController {
             removeAlbumFromArtist(a.getAlbum_id(),artist_id);
         }
 
-        artistRepository.delete(artist);
         User user = userRepository.findById(artist_id).get();
         user.removeAllFollowersAndFollowing();
+        artistRepository.deleteById(artist_id);
         userRepository.deleteById(artist_id);
     }
 }

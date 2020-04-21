@@ -51,7 +51,7 @@ public class Playlist {
     }
 
     public void removeSong(Song song){
-        this.songs.remove(song);
+        this.getSongs().remove(song);
         if(song.getPlaylists().contains(this))
             song.getPlaylists().remove(this);
     }

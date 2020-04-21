@@ -47,7 +47,7 @@ public class ListenerController {
         playlistRepository.save(newPlaylist);
         return listenerRepository.save(listener);
     }
-    
+
     @GetMapping("/api/listener/all")
     public List<Listener> getAllListeners(){
         return (List<Listener>) listenerRepository.findAll();

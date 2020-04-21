@@ -36,9 +36,10 @@ public class Listener extends User{
 
 
     public void removePlaylist(Playlist playlist){
-        this.getPlaylists().remove(playlist);
-        if(playlist.getListener() == this)
-            playlist.setListener(null);
+        if(this.getPlaylists().contains(playlist))
+            this.getPlaylists().remove(playlist);
+//        if(playlist.getListener() == this)
+//            playlist.setListener(null);
     }
 
     public String getFav_genre() {
