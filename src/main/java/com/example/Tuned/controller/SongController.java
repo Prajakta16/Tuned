@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.newArrayList;
 
@@ -56,6 +57,18 @@ public class SongController {
     @DeleteMapping("api/song/delete/{song_id}")
     public void deleteSongById(@PathVariable("song_id") int song_id) {
         Song song = songRepository.findById(song_id).get();
+
+        AlbumController albumController = new AlbumController();
+        Album album = song.getAlbum();
+        if(album!=null)
+            albumController.removeSongFromAlbum(album.getAlbum_id(),song_id);
+
+        PlaylistController playlistController = new PlaylistController();
+        Set<Playlist> playlists = song.getPlaylists();
+        if(playlists!=null)
+            for(Playlist p : playlists)
+                playlistController.removeSongFromPlaylist(p.getPlaylist_id(),song_id);
+
         songRepository.delete(song);
     }
 

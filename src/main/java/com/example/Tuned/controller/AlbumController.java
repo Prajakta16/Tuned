@@ -94,6 +94,19 @@ public class AlbumController {
     @DeleteMapping("/api/album/delete/{album_id}")
     public void deleteAlbumById(@PathVariable("album_id") int album_id) {
         Album album = albumRepository.findById(album_id).get();
+
+        Set<Artist> artists = album.getProducedByArtists();
+        if (artists != null) {
+            ArtistController artistController = new ArtistController();
+            for (Artist a : artists)
+                artistController.removeAlbumFromArtist(album_id, a.getUser_id());
+        }
+
+        List<Song> songs = album.getSongs();
+        if (songs != null)
+            for (Song s : songs)
+                removeSongFromAlbum(album_id, s.getSong_id());
+
         albumRepository.delete(album);
     }
 }

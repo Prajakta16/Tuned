@@ -28,9 +28,9 @@ public class User {
     private String email;
     private String user_type;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}) //CascadeType.DETACH
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}) //CascadeType.DETACH
     @JoinTable(name = "follower_detail",
-            joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
     @JsonIgnore
     private List<User> followers;
@@ -52,46 +52,46 @@ public class User {
     public User() {
     }
 
-    public void followUser(User user){
-        if(this.getFollowing()==null){
+    public void followUser(User user) {
+        if (this.getFollowing() == null) {
             List<User> people_you_follow = new ArrayList<>();
             people_you_follow.add(user);
             this.setFollowing(people_you_follow);
-        }
-        else{
-            if(!this.getFollowing().contains(user)){
+        } else {
+            if (!this.getFollowing().contains(user)) {
                 this.getFollowing().add(user);
             }
         }
-        if(user.getFollowers()==null){
+        if (user.getFollowers() == null) {
             List<User> your_followers = new ArrayList<>();
             your_followers.add(this);
             user.setFollowers(your_followers);
-        }
-        else{
-            if(!user.getFollowers().contains(this)){
+        } else {
+            if (!user.getFollowers().contains(this)) {
                 user.getFollowers().add(this);
             }
         }
     }
 
-    public void unfollowUser(User user){
-        if(this.getFollowing().contains(user))
+    public void unfollowUser(User user) {
+        if (this.getFollowing().contains(user))
             this.getFollowing().remove(user);
-        if(user.getFollowers().contains(this))
+        if (user.getFollowers().contains(this))
             user.getFollowers().remove(this);
     }
 
-    public void removeAllFollowersAndFollowing(){
+    public void removeAllFollowersAndFollowing() {
         List<User> following = this.getFollowing();
-        for(User f : following){
-            this.unfollowUser(f);
-        }
+        if (following != null)
+            for (User f : following) {
+                this.unfollowUser(f);
+            }
 
         List<User> followers = this.getFollowers();
-        for(User f : followers){
-            f.unfollowUser(this);
-        }
+        if (followers != null)
+            for (User f : followers) {
+                f.unfollowUser(this);
+            }
     }
 
     public List<User> getFollowers() {

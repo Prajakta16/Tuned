@@ -13,6 +13,7 @@ import com.jayway.jsonpath.JsonPath;
 import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URISyntaxException;
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Service
 public class SpotifySaveController {

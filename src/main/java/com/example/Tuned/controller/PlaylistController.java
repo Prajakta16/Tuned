@@ -56,25 +56,6 @@ public class PlaylistController {
         return null;
     }
 
-    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
-    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id){
-        if(listenerRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent() ){
-            Listener listener = listenerRepository.findById(listener_id).get();
-            Playlist playlist = playlistRepository.findById(playlist_id).get();
-
-//            Set<Song> songs = playlist.getSongs();
-//            for(Song s: songs){
-//                removeSongFromPlaylist(playlist_id, s.getSong_id());
-//            }
-
-            listener.removePlaylist(playlist);
-            playlistRepository.save(playlist);
-            return listenerRepository.save(listener);
-        }
-        return null;
-    }
-
-
     @GetMapping("/api/playlist/{playlist_id}")
     public Playlist findPlaylistById(@PathVariable("playlist_id") int playlist_id) {
         if (playlistRepository.findById(playlist_id).isPresent())
@@ -99,6 +80,17 @@ public class PlaylistController {
     @DeleteMapping("/api/playlist/delete/{playlist_id}")
     public void deletePlaylistById(@PathVariable("playlist_id") int playlist_id) {
         Playlist playlist = playlistRepository.findById(playlist_id).get();
+
+        Set<Song> songs = playlist.getSongs();
+        if (songs != null)
+            for (Song s : songs)
+                removeSongFromPlaylist(playlist_id, s.getSong_id());
+
+        ListenerController listenerController = new ListenerController();
+        Listener listener = playlist.getListener();
+        if(listener!=null)
+            listenerController.removePlaylistFromListener(listener.getUser_id(),playlist_id);
+
         playlistRepository.delete(playlist);
     }
 }

@@ -100,4 +100,19 @@ public class UserController {
         }
         return null;
     }
+
+    public User removeAllFollowersAndFollowingInfo(int user_id){
+        User user = userRepository.findById(user_id).get();
+        user.removeAllFollowersAndFollowing();
+        return userRepository.save(user);
+    }
+
+    @DeleteMapping("/api/listener/delete/{user_id}")
+    public void deleteUserById(@PathVariable("user_id") int user_id) {
+        if (userRepository.findById(user_id).isPresent()) {
+            User user = userRepository.findById(user_id).get();
+            user.removeAllFollowersAndFollowing();
+            userRepository.deleteById(user_id);
+        }
+    }
 }

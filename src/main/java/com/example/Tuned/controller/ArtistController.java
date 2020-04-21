@@ -115,17 +115,17 @@ public class ArtistController {
         Artist artist = artistRepository.findById(artist_id).get();
 
         Set<Album> albums = artist.getProducedAlbums();
+        if(albums!=null)
         for(Album a : albums){
             removeAlbumFromArtist(a.getAlbum_id(),artist_id);
         }
 
-        User user = userRepository.findById(artist_id).get();
-        user.removeAllFollowersAndFollowing();
-        userRepository.save(user);
+        UserController userController = new UserController();
+        userController.removeAllFollowersAndFollowingInfo(artist_id);
 
         artistRepository.deleteById(artist_id);
 
-        if(userRepository.findById(artist_id).isPresent())
-            userRepository.deleteById(artist_id);
+//        if(userRepository.findById(artist_id).isPresent())
+//            userRepository.deleteById(artist_id);
     }
 }

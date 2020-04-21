@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 import java.time.LocalTime;
 import java.util.*;
 
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Service
 public class SpotifyFetchController {
@@ -176,32 +176,6 @@ public class SpotifyFetchController {
         }
         artists = artistRepository.findArtistByUsername(name);
         return artists;
-    }
-
-    public String fetchToken() {
-        Spotify_token newSpotify_token;
-        String access_token;
-        LocalTime curr_time = LocalTime.now();
-        System.out.println(curr_time);
-
-        Spotify_token spotify_token = new Spotify_token();
-        if (spotify_tokenRepository.findById(1).isPresent()) {
-            spotify_token = spotify_tokenRepository.findById(1).get(); //there is always going to be just 1 row
-            Boolean active = spotify_token.isActive();
-            if (active == true) {//old token is still active
-                access_token = spotify_token.getToken();
-            } else {//Creating new token as old one is expired
-                access_token = spotify_token.getActiveToken();
-                newSpotify_token = new Spotify_token(1, access_token, curr_time);
-                spotify_tokenRepository.deleteAll();
-                spotify_tokenRepository.save(newSpotify_token);
-            }
-        } else { //Creating new token as no token exists
-            access_token = spotify_token.getActiveToken();
-            newSpotify_token = new Spotify_token(1, access_token, curr_time);
-            spotify_tokenRepository.save(newSpotify_token);
-        }
-        return access_token;
     }
 
 }

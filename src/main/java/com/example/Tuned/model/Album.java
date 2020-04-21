@@ -26,7 +26,7 @@ public class Album {
     private List<Album_genre> album_genres;
 
     //cascade => to cascade delete
-    @OneToMany(mappedBy = "album", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     //@JsonIgnore
     private List<Song> songs;
 
@@ -64,7 +64,6 @@ public class Album {
         }
         if (song.getAlbum() != this)
             song.setAlbum(this);
-
     }
 
     public void removeSong(Song song) {
@@ -72,27 +71,6 @@ public class Album {
         if (song.getAlbum() == this)
             song.setAlbum(null);
     }
-
-//    public void addArtist(Artist artist){
-//        if(this.getProducedByArtists() == null){
-//            Set<Artist> artists = new HashSet<>();
-//            artists.add(artist);
-//            this.setProducedByArtists(artists);
-//        }
-//        else{
-//            if(!this.getProducedByArtists().contains(artist))
-//                this.getProducedByArtists().add(artist);
-//        }
-//        if(artist.getProducedAlbums()==null){
-//            Set<Album> albums = new HashSet<>();
-//            albums.add(this);
-//            artist.setProducedAlbums(albums);
-//        }
-//        else{
-//            if(!artist.getProducedAlbums().contains(this))
-//                artist.getProducedAlbums().add(this);
-//        }
-//    }
 
     public int getAlbum_id() {
         return album_id;

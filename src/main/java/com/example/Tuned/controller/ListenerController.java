@@ -48,6 +48,22 @@ public class ListenerController {
         return listenerRepository.save(listener);
     }
 
+    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
+    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
+        if (listenerRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent()) {
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
+
+            listener.removePlaylist(playlist);
+
+            listenerRepository.save(listener);
+            playlistRepository.save(playlist);
+            return listener;
+        }
+        return null;
+    }
+
+
     @GetMapping("/api/listener/all")
     public List<Listener> getAllListeners(){
         return (List<Listener>) listenerRepository.findAll();
@@ -91,21 +107,19 @@ public class ListenerController {
     //Admin
     @DeleteMapping("/api/listener/delete/{listener_id}")
     public void deleteListenerById(@PathVariable("listener_id") int listener_id) {
-        Listener listener = listenerRepository.findById(listener_id).get();
+        if (listenerRepository.findById(listener_id).isPresent()) {
+            Listener listener = listenerRepository.findById(listener_id).get();
 
-        List<Playlist> playlists = listener.getPlaylists();
-        for(Playlist p : playlists){
-            listener.removePlaylist(p);
-            playlistRepository.save(p);
-            listenerRepository.save(listener);
+            List<Playlist> playlists = listener.getPlaylists();
+            if (playlists != null) {
+                for (Playlist p : playlists) {
+                    removePlaylistFromListener(listener_id, p.getPlaylist_id());
+                }
+            }
+            UserController userController = new UserController();
+            userController.removeAllFollowersAndFollowingInfo(listener_id);
+            listenerRepository.deleteById(listener_id);
+//            userController.deleteUserById(listener_id);
         }
-
-        User user = userRepository.findById(listener_id).get();
-        user.removeAllFollowersAndFollowing();
-        userRepository.save(user);
-
-        listenerRepository.deleteById(listener_id);
-        if(userRepository.findById(listener_id).isPresent())
-            userRepository.deleteById(listener_id);
     }
 }
