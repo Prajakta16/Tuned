@@ -26,6 +26,7 @@ public class User {
     private long phone;
     private String address;
     private String email;
+    private String dtype;
 
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}) //CascadeType.DETACH
     @JoinTable(name = "follower_detail",
