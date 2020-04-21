@@ -56,12 +56,13 @@ public class ListenerController {
                 playlist.removeSong(s);
                 songRepository.save(s);
             }
+            playlistRepository.save(playlist);
 
             //remove playlist from listener
             listener.removePlaylist(playlist);
-            
-            playlistRepository.save(playlist);
             listenerRepository.save(listener);
+            playlistRepository.save(playlist);
+
             return listener;
         }
       return null;
