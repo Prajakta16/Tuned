@@ -121,7 +121,11 @@ public class ArtistController {
 
         User user = userRepository.findById(artist_id).get();
         user.removeAllFollowersAndFollowing();
+        userRepository.save(user);
+
         artistRepository.deleteById(artist_id);
-        userRepository.deleteById(artist_id);
+
+        if(userRepository.findById(artist_id).isPresent())
+            userRepository.deleteById(artist_id);
     }
 }
