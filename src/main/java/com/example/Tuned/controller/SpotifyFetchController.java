@@ -21,12 +21,15 @@ import java.util.*;
 //@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Service
-public class SpotifyController {
+public class SpotifyFetchController {
 
     Spotify spotify = new Spotify();
 
     @Autowired
     Spotify_tokenRepository spotify_tokenRepository;
+
+    @Autowired
+    SpotifySaveController spotifySaveController;
 
     @Autowired
     SongRepository songRepository;
@@ -346,74 +349,15 @@ public class SpotifyController {
 
     @GetMapping("/api/artist/search/{name}")
     public List<Artist> searchArtistByName(@PathVariable("name") String name) {
-        Artist artist = new Artist();
+
         List<Artist> artists = new ArrayList<>();
 
-        if (!artistRepository.findArtistByUsername(name).isEmpty()) {
-            artists = artistRepository.findArtistByUsername(name);
-            System.out.println(artist.getProducedAlbums());
+        if (artistRepository.findArtistByUsername(name).isEmpty()) {
+            spotifySaveController.saveArtistInDb(name);
         }
-//        else {
-//            String access_token = fetchToken();
-//            JSONArray artistJsonResponse = new JSONArray();
-//
-//            try {
-//                artistJsonResponse = spotify.searchArtist(access_token, name);
-////                System.out.println(artistJsonResponse);
-//                int i = 0;
-//                String username = JsonPath.read(artistJsonResponse, "$.[" + i + "].name");
-//                artist.setUsername(username);
-//                artist.setFirst_name(username);
-//                artist.setLast_name(username);
-//                artist.setPassword("artistpass");
-//                artist.setEmail(username.substring(0, 3) + "@tuned.com");
-//                artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
-//                artist.setSpotify_id(JsonPath.read(artistJsonResponse, "$.[" + i + "].spotify_url"));
-//                artist.setSpotify_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].spotify_id"));
-//                artist.setImage_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].image_url"));
-//                artist.setPopularity(JsonPath.read(artistJsonResponse, "$.[" + i + "].popularity"));
-//                //set followers
-//                //set genres
-//                //set href
-//
-//                int no_albums = JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums.length()");
-//                List<Album> albums = new ArrayList<>();
-//                for (int j = 0; j < no_albums; j++) {
-//                    Album album = new Album();
-//                    album.setTitle(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].title"));
-//                    album.setSpotify_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].spotify_url"));
-//                    album.setSpotify_id(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].spotify_id"));
-//                    album.setImage_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].image_url"));
-//                    album.setAlbum_type(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].album_type"));
-//                    String release_date = JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].release_year");
-//                    String release_year = release_date.substring(0, 4);
-//                    album.setRelease_year(release_year);
-//
-////                    if(album.getProducedByArtists().isEmpty()){
-////                        List<Artist> artists = new ArrayList<>();
-////                        artists.add(artist);
-////                        album.setProducedByArtists(artists);
-////                    }
-////                    else{
-////                        if(!album.getProducedByArtists().contains(artist)){
-////                            album.getProducedByArtists().add(artist);
-////                        }
-////                    }
-//                    albumRepository.save(album);
-//                    System.out.println("success --------------------");
-//                    albums.add(album);
-//                }
-//                if (artist.getProducedAlbums() == null) {
-//                    artist.setProducedAlbums((Set<Album>) albums);
-////                    artist.setProducedAlbums(albums);
-//                }
-//                artistRepository.save(artist);
-//                artists.add(artist);
-////                return artistJsonResponse;
-//            } catch (URISyntaxException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        else{
+            artists = artistRepository.findArtistByUsername(name);
+        }
         return artists;
     }
 

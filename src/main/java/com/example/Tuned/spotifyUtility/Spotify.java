@@ -1,5 +1,6 @@
 package com.example.Tuned.spotifyUtility;
 
+import com.example.Tuned.model.Album;
 import com.example.Tuned.model.Artist;
 import com.example.Tuned.model.Song;
 import org.json.simple.JSONArray;
@@ -83,7 +84,7 @@ public class Spotify {
 
     public JSONArray searchArtist(String access_token, String name) throws URISyntaxException {
         URI baseUrl = new URI("https://api.spotify.com/v1/search");
-        URI final_uri = applyParameters(baseUrl, new String[]{"q", name, "type", "artist", "limit", "1"});
+        URI final_uri = applyParameters(baseUrl, new String[]{"q", name, "type", "artist", "limit", "2"});
         JSONArray jsonArray = new JSONArray();
 
         try {
@@ -97,7 +98,7 @@ public class Spotify {
             jsonObject.put("spotify_id", spotify_id);
             jsonObject.put("popularity", JsonPath.read(artist_json, "$.artists.items[" + i + "].popularity"));
             jsonObject.put("followers", JsonPath.read(artist_json, "$.artists.items[" + i + "].followers.total"));
-            jsonObject.put("image_url", JsonPath.read(artist_json, "$.artists.items[" + i + "].images[2].url"));
+            jsonObject.put("image_url", JsonPath.read(artist_json, "$.artists.items[" + i + "].images[1].url"));
             jsonObject.put("producedAlbums", searchAlbumsForArtist(access_token, spotify_id));
             jsonArray.add(jsonObject);
             return jsonArray;
@@ -124,6 +125,11 @@ public class Spotify {
                 jsonObject.put("album_type", JsonPath.read(albums_json, "$.items[" + i + "].album_type"));
                 jsonObject.put("image_url", JsonPath.read(albums_json, "$.items[" + i + "].images[2].url"));
                 jsonObject.put("release_year", JsonPath.read(albums_json, "$.items[" + i + "].release_date"));
+
+                String href = JsonPath.read(albums_json, "$.items[" + i + "].href");
+                JSONObject album_details = fetchAlbumDetailsForAlbum(href,access_token);
+                jsonObject.put("album_details",album_details);
+
                 jsonArray.add(jsonObject);
             }
             return jsonArray;
