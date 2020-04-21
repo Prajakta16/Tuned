@@ -33,7 +33,11 @@ public class ListenerController {
 
     @PostMapping("/api/listener/new")
     public Listener createListener(@RequestBody  Listener listener){
-        return listenerRepository.save(listener);
+        listenerRepository.save(listener);
+        User user = userRepository.findById(listener.getUser_id()).get();
+        user.setUser_type("listener");
+        userRepository.save(user);
+        return listener;
     }
 
     @PostMapping("/api/listener/{listener_id}/playlist/new")
@@ -43,8 +47,7 @@ public class ListenerController {
         playlistRepository.save(newPlaylist);
         return listenerRepository.save(listener);
     }
-
-
+    
     @GetMapping("/api/listener/all")
     public List<Listener> getAllListeners(){
         return (List<Listener>) listenerRepository.findAll();
