@@ -92,9 +92,18 @@ public class ListenerController {
     @DeleteMapping("/api/listener/delete/{listener_id}")
     public void deleteListenerById(@PathVariable("listener_id") int listener_id) {
         Listener listener = listenerRepository.findById(listener_id).get();
-        listenerRepository.delete(listener);
+
+        List<Playlist> playlists = listener.getPlaylists();
+        for(Playlist p : playlists){
+            listener.removePlaylist(p);
+            playlistRepository.save(p);
+        }
+        listenerRepository.save(listener);
+
         User user = userRepository.findById(listener_id).get();
         user.removeAllFollowersAndFollowing();
+
+        listenerRepository.deleteById(listener_id);
         userRepository.deleteById(listener_id);
     }
 }
