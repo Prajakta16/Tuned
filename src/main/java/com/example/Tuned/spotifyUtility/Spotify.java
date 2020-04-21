@@ -130,6 +130,9 @@ public class Spotify {
                 JSONObject album_details = fetchAlbumDetailsForAlbum(href,access_token);
                 jsonObject.put("album_details",album_details);
 
+                JSONArray songJsonArray = searchSongsForAlbum(access_token,JsonPath.read(albums_json, "$.items[" + i + "].id"));
+                jsonObject.put("songs", songJsonArray);
+
                 jsonArray.add(jsonObject);
             }
             return jsonArray;
@@ -250,7 +253,7 @@ public class Spotify {
     }
 
     public JSONArray searchSongsForAlbum(String access_token, String album_spotify_id) throws URISyntaxException {
-        String search_songs_for_album_url = "https://api.spotify.com/v1/albums/" + album_spotify_id + "/tracks?limit=3";
+        String search_songs_for_album_url = "https://api.spotify.com/v1/albums/" + album_spotify_id + "/tracks?limit=2";
         URI uri = new URI(search_songs_for_album_url);
         JSONArray jsonArray = new JSONArray();
 

@@ -355,9 +355,7 @@ public class SpotifyFetchController {
         if (artistRepository.findArtistByUsername(name).isEmpty()) {
             spotifySaveController.saveArtistInDb(name);
         }
-        else{
-            artists = artistRepository.findArtistByUsername(name);
-        }
+        artists = artistRepository.findArtistByUsername(name);
         return artists;
     }
 

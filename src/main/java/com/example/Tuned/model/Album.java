@@ -54,7 +54,15 @@ public class Album {
     }
 
     public void addSong(Song song){
-        this.getSongs().add(song);
+        if(this.getSongs() == null){
+            List<Song> song_list = new ArrayList<>();
+            song_list.add(song);
+            this.setSongs(song_list);
+        }
+        else{
+            if(!this.getSongs().contains(song))
+                this.getSongs().add(song);
+        }
         if(song.getAlbum() == null){
             song.setAlbum(this);
         }

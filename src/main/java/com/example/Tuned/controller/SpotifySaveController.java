@@ -2,6 +2,7 @@ package com.example.Tuned.controller;
 
 import com.example.Tuned.model.Album;
 import com.example.Tuned.model.Artist;
+import com.example.Tuned.model.Song;
 import com.example.Tuned.model.Spotify_token;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
@@ -48,12 +49,12 @@ public class SpotifySaveController {
             artistJsonResponse = spotify.searchArtist(access_token, name);
             System.out.println(artistJsonResponse);
 
-            int count_artists= JsonPath.read(artistJsonResponse, "$.length()");
+            int count_artists = JsonPath.read(artistJsonResponse, "$.length()");
 
-            for(int i=0; i< count_artists; i++) {
+            for (int i = 0; i < count_artists; i++) {
                 String username = JsonPath.read(artistJsonResponse, "$.[" + i + "].name");
                 artist.setUser_type("artist");
-                artist.setAddress("address of "+username);
+                artist.setAddress("address of " + username);
                 artist.setUsername(username);
                 artist.setFirst_name(username);
                 artist.setLast_name(username);
@@ -80,6 +81,21 @@ public class SpotifySaveController {
                     String release_date = JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].release_year");
                     String release_year = release_date.substring(0, 4);
                     album.setRelease_year(release_year);
+
+                    int count_songs = JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].songs.length()");
+                    for (int k = 0; k < count_songs; k++) {
+                        Song song = new Song();
+                        song.setTitle(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].songs[" + k + "].title"));
+                        //song.setPopularity();
+                        song.setDuration(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].songs[" + k + "].duration"));
+                        song.setPreview_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].songs[" + k + "].preview_url"));
+                        song.setSpotify_id(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].songs[" + k + "].spotify_id"));
+                        song.setSpotify_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].producedAlbums[" + j + "].songs[" + k + "].spotify_url"));
+
+                        album.addSong(song);
+                        albumRepository.save(album);
+                        songRepository.save(song);
+                    }
 
                     artist.addAlbum(album);
                     albumRepository.save(album);
