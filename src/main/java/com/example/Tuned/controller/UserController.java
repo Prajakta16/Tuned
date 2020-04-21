@@ -95,7 +95,7 @@ public class UserController {
             if(updatedUser.getFirst_name() != null && updatedUser.getFirst_name() != user.getFirst_name())
                 user.setFirst_name(updatedUser.getFirst_name());
             if(updatedUser.getLast_name() != null && updatedUser.getLast_name() != user.getLast_name())
-                user.setLast_name(updatedUser.getUsername());
+                user.setLast_name(updatedUser.getLast_name());
             return userRepository.save(user);
         }
         return null;
