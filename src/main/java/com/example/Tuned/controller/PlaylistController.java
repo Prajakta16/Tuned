@@ -71,12 +71,13 @@ public class PlaylistController {
             listener.removePlaylist(playlist);
             listenerRepository.save(listener);
             playlistRepository.save(playlist);
-//            playlistRepository.deleteById(playlist.getPlaylist_id());
+            playlistRepository.deleteById(playlist_id);
 
             return listener;
         }
         return null;
     }
+
 
     @GetMapping("/api/playlist/{playlist_id}")
     public Playlist findPlaylistById(@PathVariable("playlist_id") int playlist_id) {

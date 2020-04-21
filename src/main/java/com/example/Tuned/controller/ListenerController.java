@@ -50,7 +50,7 @@ public class ListenerController {
         return (List<Listener>) listenerRepository.findAll();
     }
 
-    @GetMapping("/api/listener/find/{listener_id}")
+    @GetMapping("/api/listener/{listener_id}")
     public Listener getListenerById(@PathVariable("listener_id") int listener_id) {
     Listener listener = listenerRepository.findById(listener_id).get();
     List<Listener_activity> activities = listener.getListener_activities();

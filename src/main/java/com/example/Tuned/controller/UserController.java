@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -104,6 +105,18 @@ public class UserController {
     public void deleteUser(@PathVariable("user_id") int user_id){
         if(userRepository.findById(user_id).isPresent())
         {
+            User user = userRepository.findById(user_id).get();
+
+            List<User> following = user.getFollowing();
+            for(User f : following){
+                userUnfollowsOtherUser(user_id,f.getUser_id());
+            }
+
+            List<User> followers = user.getFollowers();
+            for(User f : followers){
+                userUnfollowsOtherUser(f.getUser_id(),user_id);
+            }
+
             if(artistRepository.findArtistByUserId(user_id) != null){
                 ArtistController artistController = new ArtistController();
                 artistController.deleteArtistById(user_id);
@@ -113,32 +126,9 @@ public class UserController {
                     ////
                 }
             }
+
             userRepository.deleteById(user_id);
         }
     }
-
-//    @PostMapping("/api/user/admin/update/user/{user_id}/email/{mailaddress}")
-//    public void updateUserMail(@PathVariable("user_id") int user_id, @PathVariable("mailaddress") String mailaddress)
-//    {
-//        if(userRepository.findById(user_id).isPresent())
-//        {
-//            User user = userRepository.findById(user_id).get();
-//            user.setEmail(mailaddress);
-//            userRepository.save(user);
-//
-//        }
-//    }
-//
-//    @PostMapping("/api/user/admin/update/user/{user_id}/phone/{phonenumber}")
-//    public void updateUserPhone(@PathVariable("user_id") int user_id, @PathVariable("phonenumber") int phonenumber)
-//    {
-//        if(userRepository.findById(user_id).isPresent())
-//        {
-//            User user = userRepository.findById(user_id).get();
-//            user.setPhone(phonenumber);
-//            userRepository.save(user);
-//
-//        }
-//    }
 
 }
