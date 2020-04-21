@@ -204,6 +204,8 @@ public class Spotify {
             int no_albums = JsonPath.read(album_json, "$.albums.items.length()");
             for (int i = 0; i < no_albums; i++) {
                 JSONObject jsonObject = new JSONObject();
+                String title2 = JsonPath.read(album_json, "$.albums.items[" + i + "].name");
+                System.out.println(title2);
                 jsonObject.put("title", JsonPath.read(album_json, "$.albums.items[" + i + "].name"));
                 jsonObject.put("spotify_url", JsonPath.read(album_json, "$.albums.items[" + i + "].external_urls.spotify"));
                 jsonObject.put("spotify_id", JsonPath.read(album_json, "$.albums.items[" + i + "].id"));
@@ -211,7 +213,7 @@ public class Spotify {
                 jsonObject.put("image_url", JsonPath.read(album_json, "$.albums.items[" + i + "].images[2].url"));
                 jsonObject.put("release_year", JsonPath.read(album_json, "$.albums.items[" + i + "].release_date"));
 
-                JSONArray ja = new JSONArray();
+                JSONArray artistJsonArray = new JSONArray();
                 int no_artists = JsonPath.read(album_json, "$.albums.items[" + i + "].artists.length()");
                 for (int j = 0; j < no_artists; j++) {
                     JSONObject artistObj = new JSONObject();
@@ -224,9 +226,39 @@ public class Spotify {
                     System.out.println(artist_details);
                     artistObj.put("artist_details", artist_details);
 
-                    ja.add(artistObj); // adding map to array
+                    artistJsonArray.add(artistObj); // adding map to array
                 }
-                jsonObject.put("artists", ja);
+                jsonObject.put("artists", artistJsonArray);
+
+                String album_spotify_id = JsonPath.read(album_json, "$.albums.items[" + i + "].id");
+                JSONArray songJsonArray = searchSongsForAlbum(access_token,album_spotify_id);
+                jsonObject.put("songs", songJsonArray);
+
+                jsonArray.add(jsonObject);
+            }
+            return jsonArray;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public JSONArray searchSongsForAlbum(String access_token, String album_spotify_id) throws URISyntaxException {
+        String search_songs_for_album_url = "https://api.spotify.com/v1/albums/" + album_spotify_id + "/tracks?limit=3";
+        URI uri = new URI(search_songs_for_album_url);
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            String tracks_json = getResponse(uri, access_token);
+            Integer count_items = JsonPath.read(tracks_json, "$.items.length()"); //counts the number of songs in json response
+
+            for (int i = 0; i < count_items; i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("title", JsonPath.read(tracks_json, "$.items[" + i + "].name"));
+                jsonObject.put("spotify_url", JsonPath.read(tracks_json, "$.items[" + i + "].external_urls.spotify"));
+                jsonObject.put("spotify_id", JsonPath.read(tracks_json, "$.items[" + i + "].id"));
+                jsonObject.put("preview_url", JsonPath.read(tracks_json, "$.items[" + i + "].preview_url"));
+                jsonObject.put("duration", JsonPath.read(tracks_json, "$.items[" + i + "].duration_ms"));
                 jsonArray.add(jsonObject);
             }
             return jsonArray;
