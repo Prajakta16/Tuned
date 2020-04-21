@@ -138,8 +138,8 @@ public class SpotifyFetchController {
 
                     artistJsonArray.add(artistObj); // adding map to array
                 }
-                jsonObject.put("artists", artistJsonArray);
             }
+            jsonObject.put("artists", artistJsonArray);
 
             JSONArray songsJsonArray = new JSONArray();
             List<Song> songs = alb.getSongs();
@@ -157,7 +157,6 @@ public class SpotifyFetchController {
                 }
                 jsonObject.put("songs", songsJsonArray);
             }
-
             jsonArray.add(jsonObject);
         }
         return jsonArray;
