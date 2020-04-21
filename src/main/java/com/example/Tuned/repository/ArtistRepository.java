@@ -11,7 +11,9 @@ import java.util.List;
 @Repository
 public interface ArtistRepository extends CrudRepository<Artist,Integer> {
 
-    @Query("SELECT art FROM artist art WHERE art.username= :username")
+
+    public String QUERY = "SELECT art FROM artist art WHERE art.username like CONCAT( '%' ,CONCAT(?1, '%'))";
+    @Query(QUERY)
     public List<Artist> findArtistByUsername(@Param("username") String username);
 
     @Query("SELECT art FROM artist art WHERE art.first_name= :first_name")

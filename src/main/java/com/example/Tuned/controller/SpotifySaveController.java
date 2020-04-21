@@ -39,13 +39,13 @@ public class SpotifySaveController {
 
     Spotify spotify = new Spotify();
 
-    public void saveArtistInDb(String title) {
+    public void saveArtistInDb(String name) {
 
         String access_token = fetchToken();
         JSONArray artistJsonResponse = new JSONArray();
         try {
             Artist artist = new Artist();
-            artistJsonResponse = spotify.searchArtist(access_token, title);
+            artistJsonResponse = spotify.searchArtist(access_token, name);
             System.out.println(artistJsonResponse);
 
             int count_artists= JsonPath.read(artistJsonResponse, "$.length()");
