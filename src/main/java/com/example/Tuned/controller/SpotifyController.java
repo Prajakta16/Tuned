@@ -7,6 +7,7 @@ import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.SongRepository;
 import com.example.Tuned.repository.Spotify_tokenRepository;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,7 @@ import com.jayway.jsonpath.JsonPath;
 
 import java.net.URISyntaxException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 //@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -40,16 +38,59 @@ public class SpotifyController {
 
     @GetMapping("/api/song/search/{title}")
     public List<Song> searchSongByTitle(@PathVariable("title") String title) {
-
         List<Song> songs = new ArrayList<>();
-        if (!songRepository.findSongByTitle(title).isEmpty()){
+        if (!songRepository.findSongByTitle(title).isEmpty()) {
             songs = songRepository.findSongByTitle(title);
-//            for(Song s : songs){
-//                Album a = s.getAlbum();
-//                Set<Artist> artists = a.getProducedByArtists();
-//            }
-        }
-        else {
+            int count_items = songs.size();
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < count_items; i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("title", songs.get(i).getTitle());
+                jsonObject.put("spotify_url", songs.get(i).getSpotify_url());
+                jsonObject.put("spotify_id", songs.get(i).getSpotify_id());
+                jsonObject.put("popularity", songs.get(i).getPopularity());
+                jsonObject.put("duration", songs.get(i).getDuration());
+                jsonObject.put("preview_url", songs.get(i).getPreview_url());
+
+                Map m = new LinkedHashMap(7);
+                m.put("title", songs.get(i).getAlbum().getTitle());
+                m.put("spotify_url", songs.get(i).getAlbum().getSpotify_url());
+                m.put("spotify_id", songs.get(i).getAlbum().getSpotify_id());
+                m.put("image_url", songs.get(i).getAlbum().getImage_url());
+                m.put("release_year", songs.get(i).getAlbum().getRelease_year());
+
+                JSONObject albOnject = new JSONObject();
+                albOnject.put("album_type", songs.get(i).getAlbum().getAlbum_type());
+                albOnject.put("popularity", songs.get(i).getAlbum().getPopularity());
+                m.put("album_details",albOnject);
+
+                Set<Artist> artists = songs.get(i).getAlbum().getProducedByArtists();
+                JSONArray ja = new JSONArray();
+                for(Artist a : artists) {
+                    Map mArtist = new LinkedHashMap(2);
+                    mArtist.put("name", a.getUsername());
+                    mArtist.put("spotify_id", a.getSpotify_id());
+                    mArtist.put("spotify_url", a.getSpotify_url());
+
+                    JSONObject artObject = new JSONObject();
+                    artObject.put("image_url", a.getImage_url());
+                    artObject.put("popularity", a.getPopularity());
+                    artObject.put("followers", a.getFollowers());
+
+                    mArtist.put("artist_details", artObject);
+
+                    ja.add(mArtist); // adding map to array
+                }
+                //jsonObject.put("artists",ja);
+                m.put("artists", ja);
+
+
+                jsonObject.put("album", m); // putting album to JSONObject of song
+                jsonArray.add(jsonObject);
+            }
+            System.out.println(jsonArray);
+            return jsonArray;
+        } else {
             String access_token = fetchToken();
             JSONArray songJsonResponse = new JSONArray();
 
@@ -82,8 +123,7 @@ public class SpotifyController {
                         String release_date = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.release_year");
                         String release_year = release_date.substring(0, 4);
                         album.setRelease_year(release_year);
-                    }
-                    else {
+                    } else {
                         album = albumRepository.findAlbumBySpotifyId(spotify_id);
                     }
 
@@ -124,7 +164,7 @@ public class SpotifyController {
                         if (artist.getProducedAlbums() == null) {
                             Set<Album> albums = new HashSet<>();
                             albums.add(album);
-                            artist.setProducedAlbums( albums);
+                            artist.setProducedAlbums(albums);
                         } else {
                             if (!artist.getProducedAlbums().contains(album))
                                 artist.getProducedAlbums().add(album);
@@ -153,11 +193,11 @@ public class SpotifyController {
     }
 
     @GetMapping("/api/album/search/{title}")
-    public List<Album> searchAlbumByTitle(@PathVariable("title") String title){
+    public List<Album> searchAlbumByTitle(@PathVariable("title") String title) {
 
         List<Album> albums = new ArrayList<>();
-        if(albumRepository.findAlbumByTitle(title) != null){
-             albums = albumRepository.findAlbumByTitle(title);
+        if (albumRepository.findAlbumByTitle(title) != null) {
+            albums = albumRepository.findAlbumByTitle(title);
         }
 
 //        else {
