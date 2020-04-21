@@ -72,8 +72,7 @@ public class PlaylistController {
             listener.removePlaylist(playlist);
             listenerRepository.save(listener);
             playlistRepository.save(playlist);
-            playlistRepository.deleteById(playlist_id);
-
+//            playlistRepository.deleteById(playlist_id);
             return listener;
         }
         return null;
