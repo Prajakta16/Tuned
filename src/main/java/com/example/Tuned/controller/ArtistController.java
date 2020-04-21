@@ -59,6 +59,20 @@ public class ArtistController {
         return null;
     }
 
+    @DeleteMapping("/api/artist/{artist_id}/delete")
+    public void deleteArtist(@PathVariable("artist_id") int artist_id){
+        if ( artistRepository.findById(artist_id).isPresent()) {
+            Artist artist = artistRepository.findById(artist_id).get();
+            Set<Album> albums = artist.getProducedAlbums();
+
+            for(Album a : albums){
+                removeAlbumFromArtist(a.getAlbum_id(),artist_id);
+            }
+
+            artistRepository.deleteById(artist_id);
+        }
+    }
+
     @PostMapping("/api/artist/{artist_id}/album/{album_id}")
     public Artist addExistingAlbumToArtist(@PathVariable("artist_id") int artist_id, @PathVariable("album_id") int album_id) {
         if (artistRepository.findById(artist_id).isPresent() && albumRepository.findById(album_id).isPresent()) {
