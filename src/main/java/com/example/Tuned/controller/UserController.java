@@ -1,6 +1,8 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.model.*;
+import com.example.Tuned.repository.ArtistRepository;
+import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,12 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ArtistRepository artistRepository;
+
+    @Autowired
+    ListenerRepository listenerRepository;
 
     @GetMapping("/api/users/all")
     public List<User> getAllUsers(){
@@ -96,6 +104,15 @@ public class UserController {
     public void deleteUser(@PathVariable("user_id") int user_id){
         if(userRepository.findById(user_id).isPresent())
         {
+            if(artistRepository.findArtistByUserId(user_id) != null){
+                ArtistController artistController = new ArtistController();
+                artistController.deleteArtistById(user_id);
+            }
+            else{
+                if(listenerRepository.findListenertByUserId(user_id) != null){
+                    ////
+                }
+            }
             userRepository.deleteById(user_id);
         }
     }

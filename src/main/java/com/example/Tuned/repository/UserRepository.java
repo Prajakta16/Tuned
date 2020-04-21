@@ -16,4 +16,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     @Query("SELECT usr.followers FROM user usr WHERE usr.user_id = :user_id")
     public List<User> findFollowers(@Param("user_id") int user_id);
+
 }

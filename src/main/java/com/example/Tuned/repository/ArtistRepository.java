@@ -17,4 +17,7 @@ public interface ArtistRepository extends CrudRepository<Artist,Integer> {
 
     @Query("SELECT art FROM artist art WHERE art.spotify_id = :spotify_id")
     public Artist findArtistBySpotify_id(@Param("spotify_id") String spotify_id);
+
+    @Query("SELECT art FROM artist art WHERE art.user_id = :user_id")
+    public Artist findArtistByUserId(@Param("user_id") int user_id);
 }
