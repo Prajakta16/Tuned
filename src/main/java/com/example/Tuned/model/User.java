@@ -27,7 +27,7 @@ public class User {
     private String address;
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE}) //CascadeType.DETACH
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}) //CascadeType.DETACH
     @JoinTable(name = "follower_detail",
             joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))

@@ -52,6 +52,21 @@ public class AlbumController {
         return null;
     }
 
+    @PostMapping("/api/album/{album_id}/song/{song_id}/remove")
+    public Album removeSongFromAlbum(@PathVariable("album_id") int album_id, @PathVariable("song_id") int song_id) {
+        if (albumRepository.findById(album_id).isPresent()) {
+            Album album = albumRepository.findById(album_id).get();
+            Song song = songRepository.findById(song_id).get();
+            album.removeSong(song);
+            songRepository.save(song);
+            albumRepository.save(album);
+            songRepository.deleteById(song_id); //a song cannot exist without an album;
+
+            return album;
+        }
+        return null;
+    }
+
     @GetMapping("/api/album/{album_id}")
     public Album findAlbumById(@PathVariable("album_id") int album_id) {
         if (albumRepository.findById(album_id).isPresent())

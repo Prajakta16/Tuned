@@ -4,6 +4,7 @@ import com.example.Tuned.model.*;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.Listener_activityRepository;
 import com.example.Tuned.repository.PlaylistRepository;
+import com.example.Tuned.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Service
@@ -24,19 +26,45 @@ public class ListenerController {
     PlaylistRepository playlistRepository;
 
     @Autowired
+    SongRepository songRepository;
+
+    @Autowired
     Listener_activityRepository listener_activityRepository;
 
     @PostMapping("/api/listener/new")
-    Listener createListener(@RequestBody  Listener listener){
+    public Listener createListener(@RequestBody  Listener listener){
         return listenerRepository.save(listener);
     }
 
     @PostMapping("/api/listener/{listener_id}/playlist/new")
-    Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist){
+    public Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist){
         Listener listener = listenerRepository.findById(listener_id).get();
         listener.addPlaylist(newPlaylist);
         playlistRepository.save(newPlaylist);
         return listenerRepository.save(listener);
+    }
+
+    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
+    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id){
+        if(listenerRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent() ){
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
+
+            //remove all songs from a playlist
+            Set<Song> songs = playlist.getSongs();
+            for(Song s : songs){
+                playlist.removeSong(s);
+                songRepository.save(s);
+            }
+
+            //remove playlist from listener
+            listener.removePlaylist(playlist);
+            
+            playlistRepository.save(playlist);
+            listenerRepository.save(listener);
+            return listener;
+        }
+      return null;
     }
 
     @GetMapping("/api/listener/all")

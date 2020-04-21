@@ -40,6 +40,18 @@ public class PlaylistController {
         return null;
     }
 
+    @PostMapping("/api/playlist/{playlist_id}/song/{song_id}/remove")
+    public Playlist removeSongFromPlaylist(@PathVariable("playlist_id") int playlist_id, @PathVariable("song_id") int song_id) {
+        if (playlistRepository.findById(playlist_id).isPresent() && songRepository.findById(song_id).isPresent()) {
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
+            Song song = songRepository.findById(song_id).get();
+            playlist.removeSong(song);
+            songRepository.save(song);
+            return playlistRepository.save(playlist);
+        }
+        return null;
+    }
+
     @GetMapping("/api/playlist/{playlist_id}")
     public Playlist findPlaylistById(@PathVariable("playlist_id") int playlist_id) {
         if (playlistRepository.findById(playlist_id).isPresent())

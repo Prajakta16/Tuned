@@ -64,6 +64,12 @@ public class Album {
         }
     }
 
+    public void removeSong(Song song){
+        this.getSongs().remove(song);
+        if(song.getAlbum() == this)
+            song.setAlbum(null);
+    }
+
 //    public void addArtist(Artist artist){
 //        if(this.getProducedByArtists() == null){
 //            Set<Artist> artists = new HashSet<>();
@@ -84,10 +90,6 @@ public class Album {
 //                artist.getProducedAlbums().add(this);
 //        }
 //    }
-
-    public void removeSong(Song song){
-        this.songs.remove(song);
-    }
 
     public int getAlbum_id() {
         return album_id;
