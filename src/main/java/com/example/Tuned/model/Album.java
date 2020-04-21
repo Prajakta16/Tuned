@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.*;
 
-@Entity(name="album")
-@Table(name="album")
+@Entity(name = "album")
+@Table(name = "album")
 public class Album {
 
     @Id
@@ -34,7 +34,7 @@ public class Album {
     @JsonIgnore
     private Set<Artist> producedByArtists;
 
-    public Album(){
+    public Album() {
     }
 
     public Album(String title, Integer popularity, String album_type, String release_year, String spotify_url, String spotify_id, String image_url) {
@@ -47,34 +47,29 @@ public class Album {
         this.image_url = image_url;
     }
 
-    public void addGenre(Album_genre album_genre){
+    public void addGenre(Album_genre album_genre) {
         this.getAlbum_genres().add(album_genre);
-        if(album_genre.getAlbum()!=this)
+        if (album_genre.getAlbum() != this)
             album_genre.setAlbum(this);
     }
 
-    public void addSong(Song song){
-        if(this.getSongs() == null){
+    public void addSong(Song song) {
+        if (this.getSongs() == null) {
             List<Song> song_list = new ArrayList<>();
             song_list.add(song);
             this.setSongs(song_list);
-        }
-        else{
-            if(!this.getSongs().contains(song))
+        } else {
+            if (!this.getSongs().contains(song))
                 this.getSongs().add(song);
         }
-        if(song.getAlbum() == null){
+        if (song.getAlbum() != this)
             song.setAlbum(this);
-        }
-        else{
-            if(song.getAlbum()!=this)
-                song.setAlbum(this);
-        }
+
     }
 
-    public void removeSong(Song song){
+    public void removeSong(Song song) {
         this.getSongs().remove(song);
-        if(song.getAlbum() == this)
+        if (song.getAlbum() == this)
             song.setAlbum(null);
     }
 

@@ -50,52 +50,56 @@ public class SpotifyFetchController {
         songs = songRepository.findSongByTitle(title);
         int count_items = songs.size();
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < count_items; i++) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("song_id", songs.get(i).getSong_id());
-            jsonObject.put("title", songs.get(i).getTitle());
-            jsonObject.put("spotify_url", songs.get(i).getSpotify_url());
-            jsonObject.put("spotify_id", songs.get(i).getSpotify_id());
-            jsonObject.put("popularity", songs.get(i).getPopularity());
-            jsonObject.put("duration", songs.get(i).getDuration());
-            jsonObject.put("preview_url", songs.get(i).getPreview_url());
 
-            Map m = new LinkedHashMap(7);
-            m.put("album_id", songs.get(i).getAlbum().getAlbum_id());
-            m.put("title", songs.get(i).getAlbum().getTitle());
-            m.put("spotify_url", songs.get(i).getAlbum().getSpotify_url());
-            m.put("spotify_id", songs.get(i).getAlbum().getSpotify_id());
-            m.put("image_url", songs.get(i).getAlbum().getImage_url());
-            m.put("release_year", songs.get(i).getAlbum().getRelease_year());
+        if (songs != null)
+            for (int i = 0; i < count_items; i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("song_id", songs.get(i).getSong_id());
+                jsonObject.put("title", songs.get(i).getTitle());
+                jsonObject.put("spotify_url", songs.get(i).getSpotify_url());
+                jsonObject.put("spotify_id", songs.get(i).getSpotify_id());
+                jsonObject.put("popularity", songs.get(i).getPopularity());
+                jsonObject.put("duration", songs.get(i).getDuration());
+                jsonObject.put("preview_url", songs.get(i).getPreview_url());
 
-            JSONObject albOnject = new JSONObject();
-            albOnject.put("album_type", songs.get(i).getAlbum().getAlbum_type());
-            albOnject.put("popularity", songs.get(i).getAlbum().getPopularity());
-            m.put("album_details", albOnject);
+                Map m = new LinkedHashMap(7);
+                m.put("album_id", songs.get(i).getAlbum().getAlbum_id());
+                m.put("title", songs.get(i).getAlbum().getTitle());
+                m.put("spotify_url", songs.get(i).getAlbum().getSpotify_url());
+                m.put("spotify_id", songs.get(i).getAlbum().getSpotify_id());
+                m.put("image_url", songs.get(i).getAlbum().getImage_url());
+                m.put("release_year", songs.get(i).getAlbum().getRelease_year());
 
-            Set<Artist> artists = songs.get(i).getAlbum().getProducedByArtists();
-            JSONArray ja = new JSONArray();
-            for (Artist a : artists) {
-                Map mArtist = new LinkedHashMap(2);
-                mArtist.put("artist_id", a.getUser_id());
-                mArtist.put("name", a.getUsername());
-                mArtist.put("spotify_id", a.getSpotify_id());
-                mArtist.put("spotify_url", a.getSpotify_url());
+                JSONObject albOnject = new JSONObject();
+                albOnject.put("album_type", songs.get(i).getAlbum().getAlbum_type());
+                albOnject.put("popularity", songs.get(i).getAlbum().getPopularity());
+                m.put("album_details", albOnject);
 
-                JSONObject artObject = new JSONObject();
-                artObject.put("image_url", a.getImage_url());
-                artObject.put("popularity", a.getPopularity());
-                artObject.put("followers", a.getFollowers());
+                Set<Artist> artists = songs.get(i).getAlbum().getProducedByArtists();
+                JSONArray ja = new JSONArray();
+                if (artists != null) {
+                    for (Artist a : artists) {
+                        Map mArtist = new LinkedHashMap(2);
+                        mArtist.put("artist_id", a.getUser_id());
+                        mArtist.put("name", a.getUsername());
+                        mArtist.put("spotify_id", a.getSpotify_id());
+                        mArtist.put("spotify_url", a.getSpotify_url());
 
-                mArtist.put("artist_details", artObject);
+                        JSONObject artObject = new JSONObject();
+                        artObject.put("image_url", a.getImage_url());
+                        artObject.put("popularity", a.getPopularity());
+                        artObject.put("followers", a.getFollowers());
 
-                ja.add(mArtist); // adding map to array
+                        mArtist.put("artist_details", artObject);
+
+                        ja.add(mArtist); // adding map to array
+                    }
+                    m.put("artists", ja);
+                }
+
+                jsonObject.put("album", m); // putting album to JSONObject of song
+                jsonArray.add(jsonObject);
             }
-            m.put("artists", ja);
-
-            jsonObject.put("album", m); // putting album to JSONObject of song
-            jsonArray.add(jsonObject);
-        }
         return jsonArray;
     }
 
@@ -105,7 +109,7 @@ public class SpotifyFetchController {
 
         if (albumRepository.findAlbumByTitle(title).isEmpty()) {
             spotifySaveController.saveAlbumInDb(title);
-            }
+        }
 
         albums = albumRepository.findAlbumByTitle(title);
         JSONArray jsonArray = new JSONArray();
@@ -122,7 +126,7 @@ public class SpotifyFetchController {
 
             JSONArray artistJsonArray = new JSONArray();
             Set<Artist> artists = alb.getProducedByArtists();
-            if(alb.getProducedByArtists()!= null) {
+            if (alb.getProducedByArtists() != null) {
                 for (Artist art : artists) {
                     JSONObject artistObj = new JSONObject();
                     artistObj.put("artist_id", art.getUser_id());
@@ -143,7 +147,7 @@ public class SpotifyFetchController {
 
             JSONArray songsJsonArray = new JSONArray();
             List<Song> songs = alb.getSongs();
-            if(alb.getSongs()!= null){
+            if (alb.getSongs() != null) {
                 for (Song son : songs) {
                     JSONObject songObj = new JSONObject();
                     songObj.put("song_id", son.getSong_id());
@@ -155,8 +159,8 @@ public class SpotifyFetchController {
 
                     songsJsonArray.add(songObj); // adding map to array
                 }
-                jsonObject.put("songs", songsJsonArray);
             }
+            jsonObject.put("songs", songsJsonArray);
             jsonArray.add(jsonObject);
         }
         return jsonArray;
