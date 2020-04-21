@@ -44,7 +44,7 @@ public class Artist extends User {
             this.setProducedAlbums(albums);
         } else {
             if (!this.getProducedAlbums().contains(album))
-                this.producedAlbums.add(album);
+                this.getProducedAlbums().add(album);
         }
         if (album.getProducedByArtists() == null) {
             Set<Artist> artists = new HashSet<>();

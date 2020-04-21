@@ -13,7 +13,7 @@ import java.util.Set;
 @Repository
 public interface AlbumRepository extends CrudRepository<Album,Integer> {
 
-    @Query("SELECT alb FROM album alb where alb.title = :title ")
+    @Query("SELECT alb FROM album alb where alb.title like CONCAT( '%' ,CONCAT(?1, '%')) ")
     public List<Album> findAlbumByTitle(@Param("title") String title);
 
     @Query("SELECT alb FROM album alb WHERE alb.spotify_id = :spotify_id")
