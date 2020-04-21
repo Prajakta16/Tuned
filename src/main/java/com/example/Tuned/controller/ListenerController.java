@@ -44,20 +44,6 @@ public class ListenerController {
         return listenerRepository.save(listener);
     }
 
-    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
-    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id){
-        if(listenerRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent() ){
-            Listener listener = listenerRepository.findById(listener_id).get();
-            Playlist playlist = playlistRepository.findById(playlist_id).get();
-
-            listener.removePlaylist(playlist);
-            listenerRepository.save(listener);
-            playlistRepository.deleteById(playlist.getPlaylist_id());
-
-            return listener;
-        }
-      return null;
-    }
 
     @GetMapping("/api/listener/all")
     public List<Listener> getAllListeners(){

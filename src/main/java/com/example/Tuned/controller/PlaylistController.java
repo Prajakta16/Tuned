@@ -3,6 +3,7 @@ package com.example.Tuned.controller;
 import com.example.Tuned.model.Listener;
 import com.example.Tuned.model.Playlist;
 import com.example.Tuned.model.Song;
+import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.PlaylistRepository;
 import com.example.Tuned.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -21,6 +23,9 @@ public class PlaylistController {
 
     @Autowired
     SongRepository songRepository;
+
+    @Autowired
+    ListenerRepository listenerRepository;
 
     //Admin purpose PD-this would be irrelevant because a playlist cannot exists without a listener
     @PostMapping("/api/playlist/new")
@@ -48,6 +53,27 @@ public class PlaylistController {
             playlist.removeSong(song);
             songRepository.save(song);
             return playlistRepository.save(playlist);
+        }
+        return null;
+    }
+
+    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
+    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id){
+        if(listenerRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent() ){
+            Listener listener = listenerRepository.findById(listener_id).get();
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
+
+            Set<Song> songs = playlist.getSongs();
+            for(Song s: songs){
+                removeSongFromPlaylist(playlist_id, s.getSong_id());
+            }
+
+            listener.removePlaylist(playlist);
+            listenerRepository.save(listener);
+            playlistRepository.save(playlist);
+//            playlistRepository.deleteById(playlist.getPlaylist_id());
+
+            return listener;
         }
         return null;
     }
