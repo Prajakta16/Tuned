@@ -1,6 +1,6 @@
 package com.example.Tuned.controller;
 
-import com.example.Tuned.Spotify;
+import com.example.Tuned.spotifyUtility.Spotify;
 import com.example.Tuned.model.*;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
@@ -14,7 +14,6 @@ import com.jayway.jsonpath.JsonPath;
 
 import java.net.URISyntaxException;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,7 @@ import java.util.Set;
 //@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @Service
-public class TestController {
+public class SpotifyController {
 
     Spotify spotify = new Spotify();
 

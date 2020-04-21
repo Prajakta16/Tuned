@@ -1,9 +1,8 @@
 package com.example.Tuned.model;
 
 
-import com.example.Tuned.Spotify;
+import com.example.Tuned.spotifyUtility.Spotify;
 
-import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import javax.persistence.*;

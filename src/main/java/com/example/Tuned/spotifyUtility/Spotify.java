@@ -1,4 +1,4 @@
-package com.example.Tuned;
+package com.example.Tuned.spotifyUtility;
 
 import com.example.Tuned.model.Artist;
 import com.example.Tuned.model.Song;
