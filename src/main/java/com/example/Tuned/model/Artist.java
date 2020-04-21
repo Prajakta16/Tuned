@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity(name = "artist")
-@Table(name="artist")
+@Table(name = "artist")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Artist extends User {
 
@@ -25,7 +25,7 @@ public class Artist extends User {
     //@JsonIgnore
     private Set<Album> producedAlbums;
 
-    public Artist(){
+    public Artist() {
     }
 
     public Artist(String username, String password, String first_name, String last_name, int phone, String address, String email, String biography, String image_url, String spotify_url, String spotify_id, Integer popularity) {
@@ -37,25 +37,34 @@ public class Artist extends User {
         this.popularity = popularity;
     }
 
-    public void addAlbum(Album album){
-        if(this.getProducedAlbums() == null){
+    public void addAlbum(Album album) {
+        if (this.getProducedAlbums() == null) {
             Set<Album> albums = new HashSet<>();
             albums.add(album);
             this.setProducedAlbums(albums);
-        }
-        else{
-            if(!this.getProducedAlbums().contains(album))
+        } else {
+            if (!this.getProducedAlbums().contains(album))
                 this.producedAlbums.add(album);
         }
-        if(album.getProducedByArtists() == null){
+        if (album.getProducedByArtists() == null) {
             Set<Artist> artists = new HashSet<>();
             artists.add(this);
             album.setProducedByArtists(artists);
-        }
-        else{
-            if(!album.getProducedByArtists().contains(this))
+        } else {
+            if (!album.getProducedByArtists().contains(this))
                 album.getProducedByArtists().add(this);
         }
+    }
+
+    public void removeAlbumFromArtist(Album album) {
+        if (this.getProducedAlbums() == null) {
+        } else {
+            if (this.getProducedAlbums().contains(album))
+                this.producedAlbums.remove(album);
+        }
+        if (album.getProducedByArtists().contains(this))
+            album.getProducedByArtists().add(this);
+
     }
 
 

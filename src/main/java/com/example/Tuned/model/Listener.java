@@ -29,14 +29,15 @@ public class Listener extends User{
     }
 
     public void addPlaylist(Playlist playlist){
-        this.playlists.add(playlist);
+        this.getPlaylists().add(playlist);
         if(playlist.getListener()!=this)
             playlist.setListener(this);
     }
 
 
     public void removePlaylist(Playlist playlist){
-        this.playlists.remove(playlist);
+        playlist.setSongs(null);
+        this.getPlaylists().remove(playlist);
         if(playlist.getListener() == this)
             playlist.setListener(null);
     }

@@ -46,6 +46,19 @@ public class ArtistController {
         return null;
     }
 
+    @PostMapping("/api/artist/{artist_id}/album/{album_id}/remove")
+    public Artist removeAlbumFromArtist(@PathVariable("album_id") int album_id, @PathVariable("artist_id") int artist_id) {
+        if (albumRepository.findById(album_id).isPresent() && artistRepository.findById(artist_id).isPresent()) {
+            Album album = albumRepository.findById(album_id).get();
+            Artist artist = artistRepository.findById(artist_id).get();
+
+            artist.removeAlbumFromArtist(album);
+            albumRepository.save(album);
+            return artistRepository.save(artist);
+        }
+        return null;
+    }
+
     @PostMapping("/api/artist/{artist_id}/album/{album_id}")
     public Artist addExistingAlbumToArtist(@PathVariable("artist_id") int artist_id, @PathVariable("album_id") int album_id) {
         if (artistRepository.findById(artist_id).isPresent() && albumRepository.findById(album_id).isPresent()) {

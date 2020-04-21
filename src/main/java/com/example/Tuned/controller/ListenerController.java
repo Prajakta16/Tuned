@@ -50,18 +50,9 @@ public class ListenerController {
             Listener listener = listenerRepository.findById(listener_id).get();
             Playlist playlist = playlistRepository.findById(playlist_id).get();
 
-            //remove all songs from a playlist
-            Set<Song> songs = playlist.getSongs();
-            for(Song s : songs){
-                playlist.removeSong(s);
-                songRepository.save(s);
-            }
-            playlistRepository.save(playlist);
-
-            //remove playlist from listener
             listener.removePlaylist(playlist);
             listenerRepository.save(listener);
-            playlistRepository.save(playlist);
+            playlistRepository.deleteById(playlist.getPlaylist_id());
 
             return listener;
         }
