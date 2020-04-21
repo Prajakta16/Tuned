@@ -92,6 +92,14 @@ public class UserController {
         return null;
     }
 
+    @DeleteMapping("/api/user/{user_id}/delete")
+    public void deleteUser(@PathVariable("user_id") int user_id){
+        if(userRepository.findById(user_id).isPresent())
+        {
+            userRepository.deleteById(user_id);
+        }
+    }
+
 //    @PostMapping("/api/user/admin/update/user/{user_id}/email/{mailaddress}")
 //    public void updateUserMail(@PathVariable("user_id") int user_id, @PathVariable("mailaddress") String mailaddress)
 //    {

@@ -27,7 +27,7 @@ public class User {
     private String address;
     private String email;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE}) //CascadeType.DETACH
     @JoinTable(name = "follower_detail",
             joinColumns = @JoinColumn(name = "user_id" , referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "user_id"))
@@ -50,18 +50,6 @@ public class User {
 
     public User() {
     }
-
-//    public void addFollower(User followers){
-//        this.followers.add(followers);
-//        if(!followers.getFollowers().contains(this))
-//            followers.getFollowers().add(this);
-//    }
-//
-//    public void removeFollower(User followers){
-//        this.followers.remove(followers);
-//        if(followers.getFollowers().contains(this))
-//            followers.getFollowers().remove(this);
-//    }
 
     public void followUser(User user){
         if(this.getFollowing()==null){
