@@ -209,11 +209,12 @@ public class Listener_activityController {
             la.setSong(song);
             la.setUsername(listener.getUsername());
             la.setListener_id(listener.getUser_id());
-            songRepository.save(song);
             listener_activityRepository.save(la);
-        } else {
-            la = listener_activityRepository.findActivityByListenerAndSong(listener, song);
+            songRepository.save(song);
+            listenerRepository.save(listener);
         }
+        la = listener_activityRepository.findActivityByListenerAndSong(listener, song);
+
         return la;
     }
 }
