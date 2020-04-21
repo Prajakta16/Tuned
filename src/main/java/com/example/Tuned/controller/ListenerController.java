@@ -99,7 +99,7 @@ public class ListenerController {
             playlistRepository.save(p);
             listenerRepository.save(listener);
         }
-        
+
         User user = userRepository.findById(listener_id).get();
         user.removeAllFollowersAndFollowing();
         userRepository.save(user);

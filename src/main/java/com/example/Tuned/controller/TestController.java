@@ -148,18 +148,19 @@ public class TestController {
     }
 
     @GetMapping("/api/artist/search/{name}")
-    public Artist searchArtistByName(@PathVariable("name") String name) {
+    public List<Artist> searchArtistByName(@PathVariable("name") String name) {
         Artist artist = new Artist();
+        List<Artist> artists = new ArrayList<>();
         if (artistRepository.findArtistByUsername(name) != null) {
-            artist = artistRepository.findArtistByUsername(name);
-            System.out.println(artist.getProducedAlbums());
+            artists = artistRepository.findArtistByUsername(name);
+//            System.out.println(artist.getProducedAlbums());
         } else {
             String access_token = fetchToken();
             JSONArray artistJsonResponse = new JSONArray();
 
             try {
                 artistJsonResponse = spotify.searchArtist(access_token, name);
-                System.out.println(artistJsonResponse);
+//                System.out.println(artistJsonResponse);
                 int i = 0;
                 String username = JsonPath.read(artistJsonResponse, "$.[" + i + "].name");
                 artist.setUsername(username);
@@ -208,12 +209,13 @@ public class TestController {
 //                    artist.setProducedAlbums(albums);
                 }
                 artistRepository.save(artist);
+                artists.add(artist);
 //                return artistJsonResponse;
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
         }
-        return artist;
+        return artists;
     }
 
     @GetMapping("/api/album/search/{title}")
