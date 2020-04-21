@@ -22,13 +22,13 @@ public interface Listener_activityRepository extends CrudRepository<Listener_act
     @Query("SELECT la.song FROM listener_activity la where la.listener= :listener")
     public List<Song> findSongByListener(@Param("listener") Listener listener);
 
-    @Query("SELECT la.song FROM listener_activity la where la.listener= :listener AND la.likes = :true")
+    @Query("SELECT la.song FROM listener_activity la where la.listener= :listener AND la.likes = true")
     public List<Song> findLikedSongByListener(@Param("listener") Listener listener);
 
-    @Query("SELECT la.song FROM listener_activity la where la.listener= :listener AND la.is_favourite = :true")
+    @Query("SELECT la.song FROM listener_activity la where la.listener= :listener AND la.is_favourite = true")
     public List<Song> findFavSongByListener(@Param("listener") Listener listener);
 
-    @Query("SELECT la.song FROM listener_activity la where la.listener= :listener AND la.dislikes = :true")
+    @Query("SELECT la.song FROM listener_activity la where la.listener= :listener AND la.dislikes = true")
     public List<Song> findDislikedSongByListener(@Param("listener") Listener listener);
 
 }
