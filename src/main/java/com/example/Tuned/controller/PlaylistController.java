@@ -1,8 +1,6 @@
 package com.example.Tuned.controller;
 
-import com.example.Tuned.model.Listener;
-import com.example.Tuned.model.Playlist;
-import com.example.Tuned.model.Song;
+import com.example.Tuned.model.*;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.PlaylistRepository;
 import com.example.Tuned.repository.SongRepository;
@@ -64,16 +62,14 @@ public class PlaylistController {
             Listener listener = listenerRepository.findById(listener_id).get();
             Playlist playlist = playlistRepository.findById(playlist_id).get();
 
-            Set<Song> songs = playlist.getSongs();
-            for(Song s: songs){
-                removeSongFromPlaylist(playlist_id, s.getSong_id());
-            }
+//            Set<Song> songs = playlist.getSongs();
+//            for(Song s: songs){
+//                removeSongFromPlaylist(playlist_id, s.getSong_id());
+//            }
 
             listener.removePlaylist(playlist);
-            listenerRepository.save(listener);
             playlistRepository.save(playlist);
-//            playlistRepository.deleteById(playlist_id);
-            return listener;
+            return listenerRepository.save(listener);
         }
         return null;
     }

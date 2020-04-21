@@ -97,9 +97,9 @@ public class ListenerController {
         for(Playlist p : playlists){
             listener.removePlaylist(p);
             playlistRepository.save(p);
+            listenerRepository.save(listener);
         }
-        listenerRepository.save(listener);
-
+        
         User user = userRepository.findById(listener_id).get();
         user.removeAllFollowersAndFollowing();
         userRepository.save(user);
