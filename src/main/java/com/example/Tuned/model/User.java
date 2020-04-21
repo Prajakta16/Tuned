@@ -81,6 +81,18 @@ public class User {
             user.getFollowers().remove(this);
     }
 
+    public void removeAllFollowersAndFollowing(){
+        List<User> following = this.getFollowing();
+        for(User f : following){
+            this.unfollowUser(f);
+        }
+
+        List<User> followers = this.getFollowers();
+        for(User f : followers){
+            f.unfollowUser(this);
+        }
+    }
+
     public List<User> getFollowers() {
         return followers;
     }

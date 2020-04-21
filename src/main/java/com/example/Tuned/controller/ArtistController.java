@@ -1,12 +1,10 @@
 package com.example.Tuned.controller;
 
-import com.example.Tuned.model.Album;
-import com.example.Tuned.model.Artist;
-import com.example.Tuned.model.Playlist;
-import com.example.Tuned.model.Song;
+import com.example.Tuned.model.*;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.SongRepository;
+import com.example.Tuned.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +21,9 @@ public class ArtistController {
 
     @Autowired
     ArtistRepository artistRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     SongRepository songRepository;
@@ -108,6 +109,15 @@ public class ArtistController {
     @DeleteMapping("/api/artist/delete/{artist_id}")
     public void deleteArtistById(@PathVariable("artist_id") int artist_id) {
         Artist artist = artistRepository.findById(artist_id).get();
+
+        Set<Album> albums = artist.getProducedAlbums();
+        for(Album a : albums){
+            removeAlbumFromArtist(a.getAlbum_id(),artist_id);
+        }
+
         artistRepository.delete(artist);
+        User user = userRepository.findById(artist_id).get();
+        user.removeAllFollowersAndFollowing();
+        userRepository.deleteById(artist_id);
     }
 }

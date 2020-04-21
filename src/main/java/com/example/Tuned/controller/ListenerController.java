@@ -1,10 +1,7 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.model.*;
-import com.example.Tuned.repository.ListenerRepository;
-import com.example.Tuned.repository.Listener_activityRepository;
-import com.example.Tuned.repository.PlaylistRepository;
-import com.example.Tuned.repository.SongRepository;
+import com.example.Tuned.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +18,9 @@ public class ListenerController {
 
     @Autowired
     ListenerRepository listenerRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     PlaylistRepository playlistRepository;
@@ -90,5 +90,8 @@ public class ListenerController {
     public void deleteListenerById(@PathVariable("listener_id") int listener_id) {
         Listener listener = listenerRepository.findById(listener_id).get();
         listenerRepository.delete(listener);
+        User user = userRepository.findById(listener_id).get();
+        user.removeAllFollowersAndFollowing();
+        userRepository.deleteById(listener_id);
     }
 }

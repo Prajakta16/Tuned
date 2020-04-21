@@ -100,35 +100,4 @@ public class UserController {
         }
         return null;
     }
-
-    @DeleteMapping("/api/user/{user_id}/delete")
-    public void deleteUser(@PathVariable("user_id") int user_id){
-        if(userRepository.findById(user_id).isPresent())
-        {
-            User user = userRepository.findById(user_id).get();
-
-            List<User> following = user.getFollowing();
-            for(User f : following){
-                userUnfollowsOtherUser(user_id,f.getUser_id());
-            }
-
-            List<User> followers = user.getFollowers();
-            for(User f : followers){
-                userUnfollowsOtherUser(f.getUser_id(),user_id);
-            }
-
-            if(artistRepository.findArtistByUserId(user_id) != null){
-                ArtistController artistController = new ArtistController();
-                artistController.deleteArtistById(user_id);
-            }
-            else{
-                if(listenerRepository.findListenertByUserId(user_id) != null){
-                    ////
-                }
-            }
-
-            userRepository.deleteById(user_id);
-        }
-    }
-
 }
