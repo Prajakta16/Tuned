@@ -107,6 +107,106 @@ public class SpotifySaveController {
         }
     }
 
+    public void saveSongInDb(String title){
+            String access_token = fetchToken();
+            JSONArray songJsonResponse = new JSONArray();
+
+            try {
+                songJsonResponse = spotify.searchSong(access_token, title);
+
+                Integer count_songs = JsonPath.read(songJsonResponse, "$.length()");
+                for (int i = 0; i < count_songs; i++) {
+                    Song song = new Song();
+                    song.setTitle((String) JsonPath.read(songJsonResponse, "$.[" + i + "].title"));
+                    song.setDuration((int) JsonPath.read(songJsonResponse, "$.[" + i + "].duration"));
+                    song.setSpotify_id((String) JsonPath.read(songJsonResponse, "$.[" + i + "].spotify_id"));
+                    song.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].spotify_url"));
+                    song.setPreview_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].preview_url"));
+                    song.setPopularity((int) JsonPath.read(songJsonResponse, "$.[" + i + "].popularity"));
+
+                    Album album = new Album();
+                    String album_title = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.title");
+                    String spotify_id = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.spotify_id");
+
+                    if (albumRepository.findAlbumBySpotifyId(spotify_id) == null) {
+                        System.out.println("No album present in db");
+                        album.setTitle(album_title);
+                        album.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.spotify_url"));
+                        album.setSpotify_id(spotify_id);
+                        album.setImage_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.image_url"));
+                        album.setAlbum_type((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.album_details.album_type"));
+                        album.setPopularity((Integer) JsonPath.read(songJsonResponse, "$.[" + i + "].album.album_details.popularity"));
+                        //add genres to album/////////////////////////
+                        String release_date = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.release_year");
+                        String release_year = release_date.substring(0, 4);
+                        album.setRelease_year(release_year);
+                    } else {
+                        album = albumRepository.findAlbumBySpotifyId(spotify_id);
+                    }
+
+                    album.addSong(song);
+//                    if (album.getSongs() == null) {
+//                        List<Song> songlist = new ArrayList<>();
+//                        songlist.add(song);
+//                        album.setSongs(songlist);
+//                    } else {
+//                        if (!album.getSongs().contains(song))
+//                            album.getSongs().add(song);
+//                    }
+//                    if (song.getAlbum() != album)
+//                        song.setAlbum(album);
+
+                    Integer count_artists_in_album = JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists.length()");
+                    for (int j = 0; j < count_artists_in_album; j++) {
+                        Artist artist = new Artist();
+                        String username = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name");
+                        String artist_spotify_id = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_id");
+
+                        if (artistRepository.findArtistBySpotify_id(artist_spotify_id) == null) {
+                            artist.setUsername(username);
+                            artist.setFirst_name((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name"));
+                            artist.setLast_name((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name"));
+                            artist.setPassword("artistpass");
+                            artist.setEmail(username.substring(1, 3) + "@tuned.com");
+                            artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
+                            artist.setSpotify_id(artist_spotify_id);
+                            artist.setSpotify_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_url"));
+                            artist.setImage_url((String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].artist_details.image_url"));
+                            artist.setPopularity((int) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].artist_details.popularity"));
+                            //set followers
+                            //set genres
+                        } else {
+                            artist = artistRepository.findArtistBySpotify_id(artist_spotify_id);
+                        }
+
+                        artist.addAlbum(album);
+//                        if (artist.getProducedAlbums() == null) {
+//                            Set<Album> albums = new HashSet<>();
+//                            albums.add(album);
+//                            artist.setProducedAlbums(albums);
+//                        } else {
+//                            if (!artist.getProducedAlbums().contains(album))
+//                                artist.getProducedAlbums().add(album);
+//                        }
+//                        if (album.getProducedByArtists() == null) {
+//                            Set<Artist> artists = new HashSet<>();
+//                            artists.add(artist);
+//                            album.setProducedByArtists(artists);
+//                        } else {
+//                            if (!album.getProducedByArtists().contains(artist))
+//                                album.getProducedByArtists().add(artist);
+//                        }
+
+                        artistRepository.save(artist);
+                    }
+                    albumRepository.save(album);
+                    songRepository.save(song);
+                }
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+    }
+
     public String fetchToken() {
         Spotify_token newSpotify_token;
         String access_token;

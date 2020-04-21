@@ -145,7 +145,7 @@ public class Spotify {
     public JSONArray searchSong(String access_token, String title) throws URISyntaxException {
 
         URI baseUrl = new URI("https://api.spotify.com/v1/search");
-        URI final_uri = applyParameters(baseUrl, new String[]{"q", title, "type", "track", "limit", "3"});
+        URI final_uri = applyParameters(baseUrl, new String[]{"q", title, "type", "track", "limit", "10"});
         JSONArray jsonArray = new JSONArray();
         try {
             String song_json = getResponse(final_uri, access_token);
