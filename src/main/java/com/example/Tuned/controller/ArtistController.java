@@ -33,9 +33,24 @@ public class ArtistController {
     AlbumRepository albumRepository;
 
     @PostMapping("/api/artist/new")
-    Artist createArtist(@RequestBody Artist artist){
+    JSONObject createArtist(@RequestBody Artist artist){
         artist.setUser_type("artist");
-        return artistRepository.save(artist);
+        List<Artist> artist1 = artistRepository.findArtistByUsername(artist.getUsername());
+        JSONObject jsonObject = new JSONObject();
+        if(artist1!=null && !artist1.isEmpty()){
+            jsonObject.put("error", "Username "+ artist.getUsername() +" already exists.");
+            return jsonObject;
+        }
+
+        try {
+            artistRepository.save(artist);
+            jsonObject.put("success", "success");
+            return jsonObject;
+        }catch (Exception e){
+            jsonObject.put("error", "Some error occurred");
+            return jsonObject;
+        }
+
     }
 
     @PostMapping("/api/artist/{artist_id}/new/album")

@@ -13,4 +13,6 @@ public interface ListenerRepository extends CrudRepository<Listener, Integer> {
     @Query("SELECT lis FROM listener lis WHERE lis.user_id = :user_id")
     public Listener findListenerByUserId(@Param("user_id") int user_id);
 
+    @Query("SELECT lis FROM listener lis WHERE lis.username = :username")
+    Listener findListenerByUserName(String username);
 }

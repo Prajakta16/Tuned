@@ -33,10 +33,30 @@ public class ListenerController {
     Listener_activityRepository listener_activityRepository;
 
     @PostMapping("/api/listener/new")
-    public Listener createListener(@RequestBody Listener listener) {
+    public JSONObject createListener(@RequestBody Listener listener) {
         listener.setUser_type("listener");
-        return listenerRepository.save(listener);
+        Listener listener1 = listenerRepository.findListenerByUserName(listener.getUsername());
+        JSONObject jsonObject = new JSONObject();
+        if(listener1!=null){
+            jsonObject.put("error", "Username "+ listener1.getUsername() +" already exists.");
+            return jsonObject;
+        }
+
+        try {
+            listenerRepository.save(listener);
+            jsonObject.put("success", "success");
+            return jsonObject;
+        }catch (Exception e){
+            jsonObject.put("error", "Some error occurred");
+            return jsonObject;
+        }
+
+
+
+        //
     }
+
+
 
     @PostMapping("/api/listener/{listener_id}/playlist/new")
     public Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist) {
