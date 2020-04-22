@@ -30,6 +30,7 @@ public class Album {
     //@JsonIgnore
     private List<Song> songs;
 
+    //@ManyToMany(mappedBy = "producedAlbums", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}) , cascade = CascadeType.ALL
     @ManyToMany(mappedBy = "producedAlbums")
     @JsonIgnore
     private Set<Artist> producedByArtists;

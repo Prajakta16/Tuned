@@ -59,8 +59,7 @@ public class Artist extends User {
     public void removeAlbumFromArtist(Album album) {
         if (this.getProducedAlbums().contains(album))
             this.producedAlbums.remove(album);
-        if (album.getProducedByArtists().contains(this))
-            album.getProducedByArtists().remove(this);
+        album.getProducedByArtists().remove(this);
     }
 
 

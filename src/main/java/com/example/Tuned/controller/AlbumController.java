@@ -96,10 +96,13 @@ public class AlbumController {
         Album album = albumRepository.findById(album_id).get();
 
         Set<Artist> artists = album.getProducedByArtists();
+        System.out.println(artists);
         if (artists != null) {
-            ArtistController artistController = new ArtistController();
-            for (Artist a : artists)
-                artistController.removeAlbumFromArtist(album_id, a.getUser_id());
+            for (Artist a : artists) {
+                a.removeAlbumFromArtist(album);
+                artistRepository.save(a);
+            }
+            albumRepository.save(album);
         }
 
 //        List<Song> songs = album.getSongs();
