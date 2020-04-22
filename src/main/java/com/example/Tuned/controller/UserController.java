@@ -107,7 +107,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @DeleteMapping("/api/listener/delete/{user_id}")
+    @DeleteMapping("/api/user/delete/{user_id}")
     public void deleteUserById(@PathVariable("user_id") int user_id) {
         if (userRepository.findById(user_id).isPresent()) {
             User user = userRepository.findById(user_id).get();

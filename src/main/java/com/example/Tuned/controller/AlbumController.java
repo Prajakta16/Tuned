@@ -102,10 +102,10 @@ public class AlbumController {
                 artistController.removeAlbumFromArtist(album_id, a.getUser_id());
         }
 
-        List<Song> songs = album.getSongs();
-        if (songs != null)
-            for (Song s : songs)
-                removeSongFromAlbum(album_id, s.getSong_id());
+//        List<Song> songs = album.getSongs();
+//        if (songs != null)
+//            for (Song s : songs)
+//                removeSongFromAlbum(album_id, s.getSong_id());
 
         albumRepository.delete(album);
     }
