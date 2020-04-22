@@ -5,6 +5,7 @@ import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.SongRepository;
 import com.example.Tuned.repository.UserRepository;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +36,6 @@ public class ArtistController {
     Artist createArtist(@RequestBody Artist artist){
         artist.setUser_type("artist");
         return artistRepository.save(artist);
-//        User user = userRepository.findById(artist.getUser_id()).get();
-//        user.setUser_type("artist");
-//        userRepository.save(user);
-//        return artist;
     }
 
     @PostMapping("/api/artist/{artist_id}/new/album")
@@ -65,20 +62,6 @@ public class ArtistController {
         return null;
     }
 
-    @DeleteMapping("/api/artist/{artist_id}/delete")
-    public void deleteArtist(@PathVariable("artist_id") int artist_id){
-        if ( artistRepository.findById(artist_id).isPresent()) {
-            Artist artist = artistRepository.findById(artist_id).get();
-            Set<Album> albums = artist.getProducedAlbums();
-
-            for(Album a : albums){
-                removeAlbumFromArtist(a.getAlbum_id(),artist_id);
-            }
-
-            artistRepository.deleteById(artist_id);
-        }
-    }
-
     @PostMapping("/api/artist/{artist_id}/album/{album_id}")
     public Artist addExistingAlbumToArtist(@PathVariable("artist_id") int artist_id, @PathVariable("album_id") int album_id) {
         if (artistRepository.findById(artist_id).isPresent() && albumRepository.findById(album_id).isPresent()) {
@@ -98,11 +81,14 @@ public class ArtistController {
 
     @GetMapping("/api/artist/{artist_id}")
     public Artist findArtistById(@PathVariable("artist_id") int artist_id){
-        return artistRepository.findById(artist_id).get();
+        if (artistRepository.findById(artist_id).isPresent()) {
+            return artistRepository.findById(artist_id).get();
+        }
+        return null;
     }
 
     @GetMapping("/api/artist/{artist_id}/albums/all")
-    public Set<Album> findAlbumOfArtist(@PathVariable("artist_id") int artist_id) {
+    public Set<Album> findAlbumsOfArtist(@PathVariable("artist_id") int artist_id) {
         if (artistRepository.findById(artist_id).isPresent()) {
             Artist artist = artistRepository.findById(artist_id).get();
             return artist.getProducedAlbums();
@@ -110,12 +96,33 @@ public class ArtistController {
         return null;
     }
 
+    @DeleteMapping("/api/artist/{artist_id}/delete")
+    public JSONObject deleteArtist(@PathVariable("artist_id") int artist_id){
+        if (userRepository.findById(artist_id).isPresent()) {
+            userRepository.deleteById(artist_id);
+            JSONObject jsonObject = new JSONObject();
+
+            if(!userRepository.findById(artist_id).isPresent())
+                jsonObject.put("Success", "true");
+            else
+                jsonObject.put("Success", "false");
+            return jsonObject;
+        }
+        return null;
+    }
 
     @DeleteMapping("/api/artist/delete/{artist_id}")
-    public void deleteArtistById(@PathVariable("artist_id") int artist_id) {
+    public JSONObject deleteArtistById(@PathVariable("artist_id") int artist_id) {
         if (userRepository.findById(artist_id).isPresent()) {
-            User user = userRepository.findById(artist_id).get();
             userRepository.deleteById(artist_id);
+
+            JSONObject jsonObject = new JSONObject();
+            if(!userRepository.findById(artist_id).isPresent())
+                jsonObject.put("Success", "true");
+            else
+                jsonObject.put("Success", "false");
+            return jsonObject;
         }
+        return null;
     }
 }

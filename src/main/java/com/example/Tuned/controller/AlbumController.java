@@ -29,18 +29,6 @@ public class AlbumController {
     @Autowired
     ArtistRepository artistRepository;
 
-    @PostMapping("/api/album/{album_id}/song/{song_id}")
-    public Album addExistingSongToAlbum(@PathVariable("album_id") int album_id, @PathVariable("song_id") int song_id) {
-        if (albumRepository.findById(album_id).isPresent() && songRepository.findById(song_id).isPresent()) {
-            Album album = albumRepository.findById(album_id).get();
-            Song song = songRepository.findById(song_id).get();
-            album.addSong(song);
-            songRepository.save(song);
-            return albumRepository.save(album);
-        }
-        return null;
-    }
-
     @PostMapping("/api/album/{album_id}/new/song")
     public Album addNewSongToAlbum(@PathVariable("album_id") int album_id, @RequestBody Song song) {
         if (albumRepository.findById(album_id).isPresent()) {
@@ -79,15 +67,13 @@ public class AlbumController {
 
     @GetMapping("api/album/select/all")
     public List<Album> findAllAlbums() {
-        List<Album> albums = (List<Album>) albumRepository.findAll();
-        return albums;
+        return (List<Album>) albumRepository.findAll();
     }
 
     @GetMapping("/api/album/{album_id}/artists")
     public Set<Artist> findArtistDetailsForAlbum(@PathVariable("album_id") int album_id) {
         if (albumRepository.findById(album_id).isPresent()) {
-            Set<Artist> artists = albumRepository.findArtistDetailsForAlbum(album_id);
-            return artists;
+            return albumRepository.findArtistDetailsForAlbum(album_id);
         }
         return null;
     }

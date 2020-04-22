@@ -2,6 +2,7 @@ package com.example.Tuned.controller;
 
 import com.example.Tuned.model.*;
 import com.example.Tuned.repository.*;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -34,24 +35,26 @@ public class ListenerController {
     @PostMapping("/api/listener/new")
     public Listener createListener(@RequestBody Listener listener) {
         listener.setUser_type("listener");
-//        User user = userRepository.findById(listener.getUser_id()).get();
-//        user.setUser_type("listener");
-//        userRepository.save(user);
         return listenerRepository.save(listener);
     }
 
     @PostMapping("/api/listener/{listener_id}/playlist/new")
     public Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist) {
-        Listener listener = listenerRepository.findById(listener_id).get();
-        listener.addPlaylist(newPlaylist);
-        playlistRepository.save(newPlaylist);
-        return listenerRepository.save(listener);
+        if(listenerRepository.findById(listener_id).isPresent()) {
+            Listener listener = listenerRepository.findById(listener_id).get();
+            listener.addPlaylist(newPlaylist);
+            playlistRepository.save(newPlaylist);
+            return listenerRepository.save(listener);
+        }
+        return null;
     }
 
     @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
     public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
-        Playlist playlist = playlistRepository.findById(playlist_id).get();
-        playlistRepository.delete(playlist);
+        if(listenerRepository.findById(listener_id).isPresent()) {
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
+            playlistRepository.delete(playlist);
+        }
         return null;
     }
 
@@ -99,11 +102,18 @@ public class ListenerController {
     }
 
     @DeleteMapping("/api/listener/delete/{listener_id}")
-    public void deleteArtistById(@PathVariable("listener_id") int listener_id) {
+    public JSONObject deleteArtistById(@PathVariable("listener_id") int listener_id) {
         if (userRepository.findById(listener_id).isPresent()) {
-            User user = userRepository.findById(listener_id).get();
             userRepository.deleteById(listener_id);
+
+            JSONObject jsonObject = new JSONObject();
+            if(!userRepository.findById(listener_id).isPresent())
+                jsonObject.put("Success", "true");
+            else
+                jsonObject.put("Success", "false");
+            return jsonObject;
         }
+        return null;
     }
 
 }

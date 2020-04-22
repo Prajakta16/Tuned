@@ -5,6 +5,7 @@ import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.Listener_activityRepository;
 import com.example.Tuned.repository.SongRepository;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -48,28 +49,36 @@ public class SongController {
     @GetMapping("/api/song/{song_id}/album")
     public Album findAlbumDetailsForSong(@PathVariable("song_id") int song_id){
         if (songRepository.findById(song_id).isPresent()){
-            Album album = songRepository.findAlbumForSong(song_id);
-            return album;
+            return songRepository.findAlbumForSong(song_id);
         }
         return null;
     }
 
     @DeleteMapping("api/song/delete/{song_id}")
-    public void deleteSongById(@PathVariable("song_id") int song_id) {
-        Song song = songRepository.findById(song_id).get();
+    public JSONObject deleteSongById(@PathVariable("song_id") int song_id) {
+        if(songRepository.findById(song_id).isPresent()) {
+            Song song = songRepository.findById(song_id).get();
 
-        AlbumController albumController = new AlbumController();
-        Album album = song.getAlbum();
-        if(album!=null)
-            albumController.removeSongFromAlbum(album.getAlbum_id(),song_id);
+            AlbumController albumController = new AlbumController();
+            Album album = song.getAlbum();
+            if (album != null)
+                albumController.removeSongFromAlbum(album.getAlbum_id(), song_id);
 
-        PlaylistController playlistController = new PlaylistController();
-        Set<Playlist> playlists = song.getPlaylists();
-        if(playlists!=null)
-            for(Playlist p : playlists)
-                playlistController.removeSongFromPlaylist(p.getPlaylist_id(),song_id);
+            PlaylistController playlistController = new PlaylistController();
+            Set<Playlist> playlists = song.getPlaylists();
+            if (playlists != null)
+                for (Playlist p : playlists)
+                    playlistController.removeSongFromPlaylist(p.getPlaylist_id(), song_id);
 
-        songRepository.delete(song);
+            songRepository.delete(song);
+            JSONObject jsonObject = new JSONObject();
+            if (!songRepository.findById(song_id).isPresent())
+                jsonObject.put("Success", "true");
+            else
+                jsonObject.put("Success", "false");
+            return jsonObject;
+        }
+        return null;
     }
 
 }

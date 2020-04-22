@@ -5,6 +5,7 @@ import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.PlaylistRepository;
 import com.example.Tuned.repository.UserRepository;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -109,7 +110,7 @@ public class UserController {
     }
 
     @DeleteMapping("/api/user/delete/{user_id}")
-    public void deleteUserById(@PathVariable("user_id") int user_id) {
+    public JSONObject deleteUserById(@PathVariable("user_id") int user_id) {
         if (userRepository.findById(user_id).isPresent()) {
             User user = userRepository.findById(user_id).get();
 
@@ -118,8 +119,16 @@ public class UserController {
                 user.unfollowUser(f);
                 userRepository.save(user);
             }
-//            userRepository.deleteById(user_id);
+            userRepository.delete(user);
+
+            JSONObject jsonObject = new JSONObject();
+            if(!userRepository.findById(user_id).isPresent())
+                jsonObject.put("Success", "true");
+            else
+                jsonObject.put("Success", "false");
+            return jsonObject;
         }
+        return null;
     }
 
 }

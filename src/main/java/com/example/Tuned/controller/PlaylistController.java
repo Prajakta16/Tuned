@@ -4,12 +4,14 @@ import com.example.Tuned.model.*;
 import com.example.Tuned.repository.ListenerRepository;
 import com.example.Tuned.repository.PlaylistRepository;
 import com.example.Tuned.repository.SongRepository;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
+import java.util.jar.JarEntry;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -78,17 +80,22 @@ public class PlaylistController {
 
     //Admin and also listener
     @DeleteMapping("/api/playlist/delete/{playlist_id}")
-    public void deletePlaylistById(@PathVariable("playlist_id") int playlist_id) {
-        Playlist playlist = playlistRepository.findById(playlist_id).get();
-//        Set<Song> songs = playlist.getSongs();
-//        if (songs != null)
-//            for (Song s : songs)
-//                removeSongFromPlaylist(playlist_id, s.getSong_id());
+    public JSONObject deletePlaylistById(@PathVariable("playlist_id") int playlist_id) {
+        if(!playlistRepository.findById(playlist_id).isPresent()) {
+            Playlist playlist = playlistRepository.findById(playlist_id).get();
 
 //        ListenerController listenerController = new ListenerController();
 //        Listener listener = playlist.getListener();
 //        if(listener!=null)
 ////            listenerController.removePlaylistFromListener(listener.getUser_id(),playlist_id);
-        playlistRepository.delete(playlist);
+            playlistRepository.delete(playlist);
+            JSONObject jsonObject = new JSONObject();
+            if(!playlistRepository.findById(playlist_id).isPresent())
+                jsonObject.put("Success", "true");
+            else
+                jsonObject.put("Success", "false");
+            return jsonObject;
+        }
+        return null;
     }
 }
