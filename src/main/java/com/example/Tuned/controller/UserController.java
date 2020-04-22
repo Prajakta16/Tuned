@@ -109,6 +109,8 @@ public class UserController {
         return null;
     }
 
+    //duplicate API's. Only delete user is enough, remove them from code if you are not using API url it on UI
+
     @DeleteMapping("/api/user/delete/{user_id}")
     public JSONObject deleteUserById(@PathVariable("user_id") int user_id) {
         if (userRepository.findById(user_id).isPresent()) {
@@ -119,14 +121,77 @@ public class UserController {
                 user.unfollowUser(f);
                 userRepository.save(user);
             }
+            JSONObject jsonObject = new JSONObject();
+            try{
+                userRepository.delete(user);
+                if(!userRepository.findById(user_id).isPresent())
+                    jsonObject.put("Success", "true");
+                else
+                    jsonObject.put("Success", "false");
+                return jsonObject;
+            } catch (Exception e) {
+                e.printStackTrace();
+                jsonObject.put("error" , "cannot delete user");
+                return jsonObject;
+            }
+        }
+        return null;
+    }
+
+    @DeleteMapping("/api/artist/delete/{artist_id}")
+    public JSONObject deleteArtist(@PathVariable("artist_id") int artist_id) {
+        if (userRepository.findById(artist_id).isPresent()) {
+            User user = userRepository.findById(artist_id).get();
+
+            List<User> following = user.getFollowing();
+            for(User f : following){
+                user.unfollowUser(f);
+                userRepository.save(user);
+            }
             userRepository.delete(user);
 
             JSONObject jsonObject = new JSONObject();
-            if(!userRepository.findById(user_id).isPresent())
-                jsonObject.put("Success", "true");
-            else
-                jsonObject.put("Success", "false");
-            return jsonObject;
+            try{
+                userRepository.delete(user);
+                if(!userRepository.findById(artist_id).isPresent())
+                    jsonObject.put("Success", "true");
+                else
+                    jsonObject.put("Success", "false");
+                return jsonObject;
+            } catch (Exception e) {
+                e.printStackTrace();
+                jsonObject.put("error" , "cannot delete user");
+                return jsonObject;
+            }
+        }
+        return null;
+    }
+
+    @DeleteMapping("/api/listener/delete/{listener_id}")
+    public JSONObject deleteListener(@PathVariable("listener_id") int listener_id) {
+        if (userRepository.findById(listener_id).isPresent()) {
+            User user = userRepository.findById(listener_id).get();
+
+            List<User> following = user.getFollowing();
+            for(User f : following){
+                user.unfollowUser(f);
+                userRepository.save(user);
+            }
+            userRepository.delete(user);
+
+            JSONObject jsonObject = new JSONObject();
+            try{
+                userRepository.delete(user);
+                if(!userRepository.findById(listener_id).isPresent())
+                    jsonObject.put("Success", "true");
+                else
+                    jsonObject.put("Success", "false");
+                return jsonObject;
+            } catch (Exception e) {
+                e.printStackTrace();
+                jsonObject.put("error" , "cannot delete user");
+                return jsonObject;
+            }
         }
         return null;
     }

@@ -111,18 +111,4 @@ public class ArtistController {
         return null;
     }
 
-    @DeleteMapping("/api/artist/delete/{artist_id}")
-    public JSONObject deleteArtistById(@PathVariable("artist_id") int artist_id) {
-        if (userRepository.findById(artist_id).isPresent()) {
-            userRepository.deleteById(artist_id);
-
-            JSONObject jsonObject = new JSONObject();
-            if(!userRepository.findById(artist_id).isPresent())
-                jsonObject.put("Success", "true");
-            else
-                jsonObject.put("Success", "false");
-            return jsonObject;
-        }
-        return null;
-    }
 }

@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.newArrayList;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController

@@ -1,8 +1,5 @@
 package com.example.Tuned.spotifyUtility;
 
-import com.example.Tuned.model.Album;
-import com.example.Tuned.model.Artist;
-import com.example.Tuned.model.Song;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
