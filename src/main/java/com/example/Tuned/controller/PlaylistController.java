@@ -81,7 +81,7 @@ public class PlaylistController {
     //Admin and also listener
     @DeleteMapping("/api/playlist/delete/{playlist_id}")
     public JSONObject deletePlaylistById(@PathVariable("playlist_id") int playlist_id) {
-        if(!playlistRepository.findById(playlist_id).isPresent()) {
+        if(playlistRepository.findById(playlist_id).isPresent()) {
             Playlist playlist = playlistRepository.findById(playlist_id).get();
 
 //        ListenerController listenerController = new ListenerController();

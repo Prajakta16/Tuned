@@ -7,6 +7,7 @@ import com.example.Tuned.model.Song;
 import com.example.Tuned.repository.AlbumRepository;
 import com.example.Tuned.repository.ArtistRepository;
 import com.example.Tuned.repository.SongRepository;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -80,18 +81,27 @@ public class AlbumController {
 
     //Admin and artist
     @DeleteMapping("/api/album/delete/{album_id}")
-    public void deleteAlbumById(@PathVariable("album_id") int album_id) {
+    public JSONObject deleteAlbumById(@PathVariable("album_id") int album_id) {
         Album album = albumRepository.findById(album_id).get();
 
         Set<Artist> artists = album.getProducedByArtists();
         System.out.println(artists);
-        if (artists != null) {
-            for (Artist a : artists) {
-                a.removeAlbumFromArtist(album);
-                artistRepository.save(a);
+        try{
+            if (artists != null) {
+                for (Artist a : artists) {
+                    a.removeAlbumFromArtist(album);
+                    artistRepository.save(a);
+                }
+                albumRepository.save(album);
             }
-            albumRepository.save(album);
+            albumRepository.delete(album);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success", true);
+            return jsonObject;
+        }catch (Exception e){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success", false);
+            return jsonObject;
         }
-        albumRepository.delete(album);
     }
 }
