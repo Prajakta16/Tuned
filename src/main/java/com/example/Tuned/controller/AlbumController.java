@@ -41,13 +41,15 @@ public class AlbumController {
         return null;
     }
 
-    @PostMapping("/api/album/{album_id}/new/song/")
+    @PostMapping("/api/album/{album_id}/new/song")
     public Album addNewSongToAlbum(@PathVariable("album_id") int album_id, @RequestBody Song song) {
         if (albumRepository.findById(album_id).isPresent()) {
             Album album = albumRepository.findById(album_id).get();
             album.addSong(song);
+
             songRepository.save(song);
-            return albumRepository.save(album);
+            albumRepository.save(album);
+            return album;
         }
         return null;
     }

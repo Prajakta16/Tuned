@@ -33,11 +33,11 @@ public class ListenerController {
 
     @PostMapping("/api/listener/new")
     public Listener createListener(@RequestBody Listener listener) {
-        listenerRepository.save(listener);
-        User user = userRepository.findById(listener.getUser_id()).get();
-        user.setUser_type("listener");
-        userRepository.save(user);
-        return listener;
+        listener.setUser_type("listener");
+//        User user = userRepository.findById(listener.getUser_id()).get();
+//        user.setUser_type("listener");
+//        userRepository.save(user);
+        return listenerRepository.save(listener);
     }
 
     @PostMapping("/api/listener/{listener_id}/playlist/new")
@@ -54,28 +54,6 @@ public class ListenerController {
         playlistRepository.delete(playlist);
         return null;
     }
-//    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
-////        System.out.println(listener_id);
-////        System.out.println(playlist_id);
-//////        System.out.println("Listener: " + listenerRepository.findListenerByUserId(listener_id));
-//////        System.out.println(userRepository.findById(listener_id));
-//////        System.out.println(playlistRepository.findById(playlist_id));
-////        System.out.println(userRepository);
-//////        System.out.println(userRepository.existsById(listener_id));
-//////        Listener listener = (Listener) userRepository.findById(listener_id).get();
-//////        System.out.println(listener.getPlaylists());
-//////        if (userRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent()) {
-////        Listener listener = listenerRepository.findListenerByUserId(listener_id);
-////        Playlist playlist = playlistRepository.findById(playlist_id).get();
-////
-////        listener.removePlaylist(playlist);
-////
-////        listenerRepository.save(listener);
-////        playlistRepository.save(playlist);
-////        return listener;
-//////        }
-//        return null;
-//    }
 
     @GetMapping("/api/listener/all")
     public List<Listener> getAllListeners() {

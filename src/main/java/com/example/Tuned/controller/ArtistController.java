@@ -33,11 +33,12 @@ public class ArtistController {
 
     @PostMapping("/api/artist/new")
     Artist createArtist(@RequestBody Artist artist){
-        artistRepository.save(artist);
-        User user = userRepository.findById(artist.getUser_id()).get();
-        user.setUser_type("artist");
-        userRepository.save(user);
-        return artist;
+        artist.setUser_type("artist");
+        return artistRepository.save(artist);
+//        User user = userRepository.findById(artist.getUser_id()).get();
+//        user.setUser_type("artist");
+//        userRepository.save(user);
+//        return artist;
     }
 
     @PostMapping("/api/artist/{artist_id}/new/album")
