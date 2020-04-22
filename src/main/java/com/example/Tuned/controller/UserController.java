@@ -117,7 +117,8 @@ public class UserController {
             User user = userRepository.findById(user_id).get();
 
             List<User> following = user.getFollowing();
-            for(User f : following){
+            while(!following.isEmpty()){
+                User f = following.get(0);
                 user.unfollowUser(f);
                 userRepository.save(user);
             }

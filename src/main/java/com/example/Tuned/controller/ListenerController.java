@@ -43,8 +43,9 @@ public class ListenerController {
         }
 
         try {
-            listenerRepository.save(listener);
+            Listener newL = listenerRepository.save(listener);
             jsonObject.put("success", "success");
+            jsonObject.put("user_id", newL.getUser_id());
             return jsonObject;
         }catch (Exception e){
             jsonObject.put("error", "Some error occurred");
