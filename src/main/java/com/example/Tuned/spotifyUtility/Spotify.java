@@ -145,7 +145,7 @@ public class Spotify {
     public JSONArray searchSong(String access_token, String title) throws URISyntaxException {
 
         URI baseUrl = new URI("https://api.spotify.com/v1/search");
-        URI final_uri = applyParameters(baseUrl, new String[]{"q", title, "type", "track", "limit", "10"});
+        URI final_uri = applyParameters(baseUrl, new String[]{"q", title, "type", "track", "limit", "5"});
         JSONArray jsonArray = new JSONArray();
         try {
             String song_json = getResponse(final_uri, access_token);
@@ -164,7 +164,7 @@ public class Spotify {
                 m.put("title", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.name"));
                 m.put("spotify_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.external_urls.spotify"));
                 m.put("spotify_id", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.id"));
-                m.put("image_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.images[2].url"));
+                m.put("image_url", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.images[1].url"));
                 m.put("release_year", JsonPath.read(song_json, "$.tracks.items[" + i + "].album.release_date"));
                 System.out.println(m);
 
@@ -219,7 +219,7 @@ public class Spotify {
                 jsonObject.put("spotify_url", JsonPath.read(album_json, "$.albums.items[" + i + "].external_urls.spotify"));
                 jsonObject.put("spotify_id", JsonPath.read(album_json, "$.albums.items[" + i + "].id"));
                 jsonObject.put("album_type", JsonPath.read(album_json, "$.albums.items[" + i + "].album_type"));
-                jsonObject.put("image_url", JsonPath.read(album_json, "$.albums.items[" + i + "].images[2].url"));
+                jsonObject.put("image_url", JsonPath.read(album_json, "$.albums.items[" + i + "].images[1].url"));
                 jsonObject.put("release_year", JsonPath.read(album_json, "$.albums.items[" + i + "].release_date"));
 
                 JSONArray artistJsonArray = new JSONArray();
@@ -309,7 +309,7 @@ public class Spotify {
             String artist_json = getResponse(uri, access_token);
 
             JSONObject artObject = new JSONObject();
-            artObject.put("image_url", JsonPath.read(artist_json, "$.images[2].url"));
+            artObject.put("image_url", JsonPath.read(artist_json, "$.images[1].url"));
             artObject.put("popularity", JsonPath.read(artist_json, "$.popularity"));
             artObject.put("followers", JsonPath.read(artist_json, "$.followers.total"));
 

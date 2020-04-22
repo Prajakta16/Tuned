@@ -112,7 +112,13 @@ public class UserController {
     public void deleteUserById(@PathVariable("user_id") int user_id) {
         if (userRepository.findById(user_id).isPresent()) {
             User user = userRepository.findById(user_id).get();
-            userRepository.deleteById(user_id);
+
+            List<User> following = user.getFollowing();
+            for(User f : following){
+                user.unfollowUser(f);
+                userRepository.save(user);
+            }
+//            userRepository.deleteById(user_id);
         }
     }
 
