@@ -55,21 +55,20 @@ public class SpotifySaveController {
 
             for (int i = 0; i < count_artists; i++) {
                 String username = JsonPath.read(artistJsonResponse, "$.[" + i + "].name");
+                artist.setUsername(username);
                 artist.setUser_type("artist");
                 artist.setAddress("address of " + username);
-                artist.setUsername(username);
-                String[] parts = new String[2];
-                if (username.contains(" ")) {
-                    parts = username.split(" ", 1);
-                }
-                if(parts.length>1){
-                    artist.setFirst_name(parts[0]);
-                    artist.setLast_name(parts[1]);
-                }
-                else{
+
+                String[] splitUsername = splitUsername(username);
+                if(splitUsername.length==1){
                     artist.setLast_name(username);
                     artist.setFirst_name(username);
                 }
+                else{
+                    artist.setLast_name(splitUsername[1]);
+                    artist.setFirst_name(splitUsername[0]);
+                }
+
                 artist.setPassword("artistpass");
                 artist.setEmail(username.substring(0, 3) + "@tuned.com");
                 artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
@@ -161,25 +160,24 @@ public class SpotifySaveController {
                 Integer count_artists_in_album = JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists.length()");
                 for (int j = 0; j < count_artists_in_album; j++) {
                     Artist artist = new Artist();
-                    String username = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name");
-                    String[] parts = new String[2];
-                    if (username.contains(" ")) {
-                        parts = username.split(" ", 1);
-                    }
+                    String username = JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].name");
 
-                    String artist_spotify_id = (String) JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_id");
+                    String artist_spotify_id = JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_id");
 
                     if (artistRepository.findArtistBySpotify_id(artist_spotify_id) == null) {
                         artist.setUsername(username);
                         artist.setUser_type("artist");
-                        if(parts.length>1){
-                            artist.setFirst_name(parts[0]);
-                            artist.setLast_name(parts[1]);
-                        }
-                        else{
+
+                        String[] splitUsername = splitUsername(username);
+                        if(splitUsername.length==1){
                             artist.setLast_name(username);
                             artist.setFirst_name(username);
                         }
+                        else{
+                            artist.setLast_name(splitUsername[1]);
+                            artist.setFirst_name(splitUsername[0]);
+                        }
+
                         artist.setPassword("artistpass");
                         artist.setEmail(username.substring(0, 3) + "@tuned.com");
                         artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
@@ -233,18 +231,14 @@ public class SpotifySaveController {
                     artist.setUser_type("artist");
                     String username = JsonPath.read(albumJsonResponse, "$.[" + i + "].artists[" + j + "].name");
                     artist.setUsername(username);
-                    String[] parts = new String[2];
-                    if (username.contains(" ")) {
-                        parts = username.split(" ", 1);
-                    }
-
-                    if(parts.length>1){
-                        artist.setFirst_name(parts[0]);
-                        artist.setLast_name(parts[1]);
-                    }
-                    else{
+                    String[] splitUsername = splitUsername(username);
+                    if(splitUsername.length==1){
                         artist.setLast_name(username);
                         artist.setFirst_name(username);
+                    }
+                    else{
+                        artist.setLast_name(splitUsername[1]);
+                        artist.setFirst_name(splitUsername[0]);
                     }
                     artist.setPassword("artistpass");
                     artist.setEmail(username.substring(1, 3) + "@tuned.com");
@@ -334,5 +328,10 @@ public class SpotifySaveController {
             spotify_tokenRepository.save(newSpotify_token);
         }
         return access_token;
+    }
+
+    public String[] splitUsername(String username){
+        String[] splitStr = username.split("\\s+");
+        return splitStr;
     }
 }

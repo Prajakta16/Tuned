@@ -69,6 +69,8 @@ public class SpotifyFetchController {
                 m.put("spotify_id", songs.get(i).getAlbum().getSpotify_id());
                 m.put("image_url", songs.get(i).getAlbum().getImage_url());
                 m.put("release_year", songs.get(i).getAlbum().getRelease_year());
+                m.put("album_type", songs.get(i).getAlbum().getAlbum_type());
+                m.put("popularity", songs.get(i).getAlbum().getPopularity());
 
                 JSONObject albOnject = new JSONObject();
                 albOnject.put("album_type", songs.get(i).getAlbum().getAlbum_type());
@@ -84,6 +86,9 @@ public class SpotifyFetchController {
                         mArtist.put("name", a.getUsername());
                         mArtist.put("spotify_id", a.getSpotify_id());
                         mArtist.put("spotify_url", a.getSpotify_url());
+                        mArtist.put("image_url", a.getImage_url());
+                        mArtist.put("popularity", a.getPopularity());
+                        mArtist.put("followers", a.getFollowers());
 
                         JSONObject artObject = new JSONObject();
                         artObject.put("image_url", a.getImage_url());
@@ -139,6 +144,9 @@ public class SpotifyFetchController {
                     artist_details.put("image_url", art.getImage_url());
                     artist_details.put("popularity", art.getPopularity());
                     artistObj.put("artist_details", artist_details);
+                    artistObj.put("followers", art.getFollowers());
+                    artistObj.put("image_url", art.getImage_url());
+                    artistObj.put("popularity", art.getPopularity());
 
                     artistJsonArray.add(artistObj); // adding map to array
                 }
