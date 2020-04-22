@@ -35,6 +35,18 @@ public class UserController {
         return (List<User>) userRepository.findAll();
     }
 
+    @GetMapping("/api/user/isValidUser")
+    public Boolean verifyLoginByCredentials(@RequestBody User user) {
+        if(userRepository.findUserByUsername(user.getUsername())!=null){
+            String username = user.getUsername();
+            String password = user.getPassword();
+            if(userRepository.findUserByCredentials(username,password)!=null)
+                return true;
+            else return false;
+        }
+        return false;
+    }
+
     @PostMapping("/api/user/{user_id}/follows/{other_user_id}")
     public User userFollowsOtherUser(@PathVariable("user_id") int user_id, @PathVariable("other_user_id") int other_user_id) {
         if (userRepository.findById(user_id).isPresent() && userRepository.findById(other_user_id).isPresent()) {

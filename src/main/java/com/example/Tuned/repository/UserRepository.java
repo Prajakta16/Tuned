@@ -13,6 +13,12 @@ import java.util.List;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 
+    @Query("SELECT usr FROM user usr WHERE usr.username = :username")
+    public User findUserByUsername(@Param("username") String username);
+
+    @Query("SELECT usr FROM user usr WHERE usr.username = :username AND usr.password = :password")
+    public User findUserByCredentials(@Param("username") String username, @Param("password") String password );
+
     @Query("SELECT usr.following FROM user usr WHERE usr.user_id = :user_id")
     public List<User> findFollowing(@Param("user_id") int user_id);
 
