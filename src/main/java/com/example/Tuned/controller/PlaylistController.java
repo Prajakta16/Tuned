@@ -80,17 +80,15 @@ public class PlaylistController {
     @DeleteMapping("/api/playlist/delete/{playlist_id}")
     public void deletePlaylistById(@PathVariable("playlist_id") int playlist_id) {
         Playlist playlist = playlistRepository.findById(playlist_id).get();
+//        Set<Song> songs = playlist.getSongs();
+//        if (songs != null)
+//            for (Song s : songs)
+//                removeSongFromPlaylist(playlist_id, s.getSong_id());
 
-        Set<Song> songs = playlist.getSongs();
-        if (songs != null)
-            for (Song s : songs)
-                removeSongFromPlaylist(playlist_id, s.getSong_id());
-
-        ListenerController listenerController = new ListenerController();
-        Listener listener = playlist.getListener();
-        if(listener!=null)
-//            listenerController.removePlaylistFromListener(listener.getUser_id(),playlist_id);
-
+//        ListenerController listenerController = new ListenerController();
+//        Listener listener = playlist.getListener();
+//        if(listener!=null)
+////            listenerController.removePlaylistFromListener(listener.getUser_id(),playlist_id);
         playlistRepository.delete(playlist);
     }
 }

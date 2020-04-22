@@ -104,12 +104,6 @@ public class AlbumController {
             }
             albumRepository.save(album);
         }
-
-//        List<Song> songs = album.getSongs();
-//        if (songs != null)
-//            for (Song s : songs)
-//                removeSongFromAlbum(album_id, s.getSong_id());
-
         albumRepository.delete(album);
     }
 }

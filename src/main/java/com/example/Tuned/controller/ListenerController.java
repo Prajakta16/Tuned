@@ -48,7 +48,12 @@ public class ListenerController {
         return listenerRepository.save(listener);
     }
 
-//    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
+    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
+    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
+        Playlist playlist = playlistRepository.findById(playlist_id).get();
+        playlistRepository.delete(playlist);
+        return null;
+    }
 //    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
 ////        System.out.println(listener_id);
 ////        System.out.println(playlist_id);
@@ -71,7 +76,6 @@ public class ListenerController {
 //////        }
 //        return null;
 //    }
-
 
     @GetMapping("/api/listener/all")
     public List<Listener> getAllListeners() {
@@ -114,6 +118,14 @@ public class ListenerController {
             return listener_activityRepository.findActivityByListener(listener);
         }
         return null;
+    }
+
+    @DeleteMapping("/api/listener/delete/{listener_id}")
+    public void deleteArtistById(@PathVariable("listener_id") int listener_id) {
+        if (userRepository.findById(listener_id).isPresent()) {
+            User user = userRepository.findById(listener_id).get();
+            userRepository.deleteById(listener_id);
+        }
     }
 
 }
