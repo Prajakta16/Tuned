@@ -32,7 +32,7 @@ public class ListenerController {
     Listener_activityRepository listener_activityRepository;
 
     @PostMapping("/api/listener/new")
-    public Listener createListener(@RequestBody  Listener listener){
+    public Listener createListener(@RequestBody Listener listener) {
         listenerRepository.save(listener);
         User user = userRepository.findById(listener.getUser_id()).get();
         user.setUser_type("listener");
@@ -41,49 +41,61 @@ public class ListenerController {
     }
 
     @PostMapping("/api/listener/{listener_id}/playlist/new")
-    public Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist){
+    public Listener addPlaylistToListener(@PathVariable("listener_id") int listener_id, @RequestBody Playlist newPlaylist) {
         Listener listener = listenerRepository.findById(listener_id).get();
         listener.addPlaylist(newPlaylist);
         playlistRepository.save(newPlaylist);
         return listenerRepository.save(listener);
     }
 
-    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
-    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
-        if (listenerRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent()) {
-            Listener listener = listenerRepository.findById(listener_id).get();
-            Playlist playlist = playlistRepository.findById(playlist_id).get();
-
-            listener.removePlaylist(playlist);
-
-            listenerRepository.save(listener);
-            playlistRepository.save(playlist);
-            return listener;
-        }
-        return null;
-    }
+//    @PostMapping("/api/listener/{listener_id}/playlist/{playlist_id}/remove")
+//    public Listener removePlaylistFromListener(@PathVariable("listener_id") int listener_id, @PathVariable("playlist_id") int playlist_id) {
+////        System.out.println(listener_id);
+////        System.out.println(playlist_id);
+//////        System.out.println("Listener: " + listenerRepository.findListenerByUserId(listener_id));
+//////        System.out.println(userRepository.findById(listener_id));
+//////        System.out.println(playlistRepository.findById(playlist_id));
+////        System.out.println(userRepository);
+//////        System.out.println(userRepository.existsById(listener_id));
+//////        Listener listener = (Listener) userRepository.findById(listener_id).get();
+//////        System.out.println(listener.getPlaylists());
+//////        if (userRepository.findById(listener_id).isPresent() && playlistRepository.findById(playlist_id).isPresent()) {
+////        Listener listener = listenerRepository.findListenerByUserId(listener_id);
+////        Playlist playlist = playlistRepository.findById(playlist_id).get();
+////
+////        listener.removePlaylist(playlist);
+////
+////        listenerRepository.save(listener);
+////        playlistRepository.save(playlist);
+////        return listener;
+//////        }
+//        return null;
+//    }
 
 
     @GetMapping("/api/listener/all")
-    public List<Listener> getAllListeners(){
+    public List<Listener> getAllListeners() {
         return (List<Listener>) listenerRepository.findAll();
     }
 
     @GetMapping("/api/listener/{listener_id}")
     public Listener getListenerById(@PathVariable("listener_id") int listener_id) {
-    Listener listener = listenerRepository.findById(listener_id).get();
-    List<Listener_activity> activities = listener.getListener_activities();
+        if (listenerRepository.findById(listener_id).isPresent()) {
+            Listener listener = listenerRepository.findById(listener_id).get();
+            List<Listener_activity> activities = listener.getListener_activities();
 
-    Iterator<Listener_activity> iter = activities.iterator();
-    String user_name = null;
-    while (iter.hasNext()) {
-      Listener_activity activity = (Listener_activity) iter.next();
-      User user = activity.getListener();
-      System.out.println(user);
-      user_name = user.getUsername();
-      activity.setUsername(user_name);
-    }
-    return listener;
+            Iterator<Listener_activity> iter = activities.iterator();
+            String user_name = null;
+            while (iter.hasNext()) {
+                Listener_activity activity = (Listener_activity) iter.next();
+                User user = activity.getListener();
+                System.out.println(user);
+                user_name = user.getUsername();
+                activity.setUsername(user_name);
+            }
+            return listener;
+        }
+        return null;
     }
 
     @GetMapping("/api/listener/{listener_id}/playlists/all")
@@ -96,7 +108,7 @@ public class ListenerController {
     }
 
     @GetMapping("/api/listener/{listener_id}/activities/all")
-    public List<Listener_activity> findAllActivitiesForListener(@PathVariable("listener_id") int listener_id){
+    public List<Listener_activity> findAllActivitiesForListener(@PathVariable("listener_id") int listener_id) {
         if (listenerRepository.findById(listener_id).isPresent()) {
             Listener listener = listenerRepository.findById(listener_id).get();
             return listener_activityRepository.findActivityByListener(listener);
@@ -104,22 +116,4 @@ public class ListenerController {
         return null;
     }
 
-    //Admin
-    @DeleteMapping("/api/listener/delete/{listener_id}")
-    public void deleteListenerById(@PathVariable("listener_id") int listener_id) {
-        if (listenerRepository.findById(listener_id).isPresent()) {
-            Listener listener = listenerRepository.findById(listener_id).get();
-
-            List<Playlist> playlists = listener.getPlaylists();
-            if (playlists != null) {
-                for (Playlist p : playlists) {
-                    removePlaylistFromListener(listener_id, p.getPlaylist_id());
-                }
-            }
-            UserController userController = new UserController();
-            userController.removeAllFollowersAndFollowingInfo(listener_id);
-            listenerRepository.deleteById(listener_id);
-//            userController.deleteUserById(listener_id);
-        }
-    }
 }

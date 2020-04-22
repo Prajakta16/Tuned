@@ -110,22 +110,22 @@ public class ArtistController {
     }
 
     //Admin
-    @DeleteMapping("/api/artist/delete/{artist_id}")
-    public void deleteArtistById(@PathVariable("artist_id") int artist_id) {
-        Artist artist = artistRepository.findById(artist_id).get();
-
-        Set<Album> albums = artist.getProducedAlbums();
-        if(albums!=null)
-        for(Album a : albums){
-            removeAlbumFromArtist(a.getAlbum_id(),artist_id);
-        }
-
-        UserController userController = new UserController();
-        userController.removeAllFollowersAndFollowingInfo(artist_id);
-
-        artistRepository.deleteById(artist_id);
-
-//        if(userRepository.findById(artist_id).isPresent())
-//            userRepository.deleteById(artist_id);
-    }
+//    @DeleteMapping("/api/artist/delete/{artist_id}")
+//    public void deleteArtistById(@PathVariable("artist_id") int artist_id) {
+//        Artist artist = artistRepository.findById(artist_id).get();
+//
+//        Set<Album> albums = artist.getProducedAlbums();
+//        if(albums!=null)
+//        for(Album a : albums){
+//            removeAlbumFromArtist(a.getAlbum_id(),artist_id);
+//        }
+//
+//        UserController userController = new UserController();
+//        userController.removeAllFollowersAndFollowingInfo(artist_id);
+//
+//        artistRepository.deleteById(artist_id);
+//
+////        if(userRepository.findById(artist_id).isPresent())
+////            userRepository.deleteById(artist_id);
+//    }
 }

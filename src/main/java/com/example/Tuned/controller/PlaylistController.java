@@ -89,7 +89,7 @@ public class PlaylistController {
         ListenerController listenerController = new ListenerController();
         Listener listener = playlist.getListener();
         if(listener!=null)
-            listenerController.removePlaylistFromListener(listener.getUser_id(),playlist_id);
+//            listenerController.removePlaylistFromListener(listener.getUser_id(),playlist_id);
 
         playlistRepository.delete(playlist);
     }

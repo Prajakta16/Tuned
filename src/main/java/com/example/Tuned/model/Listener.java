@@ -12,7 +12,7 @@ public class Listener extends User{
     private String fav_genre;
     private String disliked_genre;
 
-    @OneToMany(mappedBy = "listener")
+    @OneToMany(mappedBy = "listener", cascade = CascadeType.ALL)
     private List<Playlist> playlists;
 
     @OneToMany(mappedBy = "listener", cascade = CascadeType.ALL)
@@ -36,10 +36,9 @@ public class Listener extends User{
 
 
     public void removePlaylist(Playlist playlist){
-        if(this.getPlaylists().contains(playlist))
-            this.getPlaylists().remove(playlist);
-        if(playlist.getListener() == this)
-            playlist.setListener(null);
+        System.out.println("aaaa");
+        this.getPlaylists().remove(playlist);
+        System.out.println("bbbbb");
     }
 
     public String getFav_genre() {

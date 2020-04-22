@@ -18,7 +18,7 @@ public class Artist extends User {
     private String spotify_id;
     private Integer popularity;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(name = "album_production",
             joinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "album_id", referencedColumnName = "album_id"))

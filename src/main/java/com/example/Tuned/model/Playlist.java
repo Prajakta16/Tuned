@@ -23,7 +23,7 @@ public class Playlist {
     private Listener listener;
 
     //cascade => To prevent deletion of child
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(name = "playlist_detail",
             joinColumns = @JoinColumn(name = "playlist_id", referencedColumnName = "playlist_id"),
             inverseJoinColumns = @JoinColumn(name = "song_id", referencedColumnName = "song_id")
@@ -32,7 +32,7 @@ public class Playlist {
     private Set<Song> songs;
 
     public Playlist(String title, String description) {
-        this.title=title;
+        this.title = title;
     }
 
     public Playlist() {
@@ -40,20 +40,20 @@ public class Playlist {
 
     public void setListener(Listener listener) {
         this.listener = listener;
-        if(!listener.getPlaylists().contains(this))
+        if (!listener.getPlaylists().contains(this))
             listener.getPlaylists().add(this);
     }
 
-    public void addSong(Song song){
+    public void addSong(Song song) {
         this.songs.add(song);
-        if(!song.getPlaylists().contains(this))
+        if (!song.getPlaylists().contains(this))
             song.getPlaylists().add(this);
     }
 
-    public void removeSong(Song song){
-        if(this.getSongs().contains(song))
+    public void removeSong(Song song) {
+        if (this.getSongs().contains(song))
             this.getSongs().remove(song);
-        if(song.getPlaylists().contains(this))
+        if (song.getPlaylists().contains(this))
             song.getPlaylists().remove(this);
     }
 

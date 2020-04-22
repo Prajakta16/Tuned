@@ -35,7 +35,7 @@ public class User {
     @JsonIgnore
     private List<User> followers;
 
-    @ManyToMany(mappedBy = "followers")
+    @ManyToMany(mappedBy = "followers",cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JsonIgnore
     private List<User> following;
 
@@ -74,10 +74,8 @@ public class User {
     }
 
     public void unfollowUser(User user) {
-        if (this.getFollowing().contains(user))
-            this.getFollowing().remove(user);
-        if (user.getFollowers().contains(this))
-            user.getFollowers().remove(this);
+        this.getFollowing().remove(user);
+        user.getFollowers().remove(this);
     }
 
     public void removeAllFollowersAndFollowing() {
