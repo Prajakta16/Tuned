@@ -52,7 +52,7 @@ public class SongController {
         return null;
     }
 
-    @DeleteMapping("api/song/delete/{song_id}")
+    @DeleteMapping("/api/song/delete/{song_id}")
     public JSONObject deleteSongById(@PathVariable("song_id") int song_id) {
         if(songRepository.findById(song_id).isPresent()) {
             Song song = songRepository.findById(song_id).get();
@@ -71,9 +71,9 @@ public class SongController {
             songRepository.delete(song);
             JSONObject jsonObject = new JSONObject();
             if (!songRepository.findById(song_id).isPresent())
-                jsonObject.put("Success", "true");
+                jsonObject.put("Success", true);
             else
-                jsonObject.put("Success", "false");
+                jsonObject.put("Success", false);
             return jsonObject;
         }
         return null;
