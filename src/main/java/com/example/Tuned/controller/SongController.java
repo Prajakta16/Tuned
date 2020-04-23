@@ -57,16 +57,24 @@ public class SongController {
         if(songRepository.findById(song_id).isPresent()) {
             Song song = songRepository.findById(song_id).get();
 
-            AlbumController albumController = new AlbumController();
-            Album album = song.getAlbum();
-            if (album != null)
-                albumController.removeSongFromAlbum(album.getAlbum_id(), song_id);
 
             PlaylistController playlistController = new PlaylistController();
             Set<Playlist> playlists = song.getPlaylists();
             if (playlists != null)
                 for (Playlist p : playlists)
                     playlistController.removeSongFromPlaylist(p.getPlaylist_id(), song_id);
+            Album album = song.getAlbum();
+            if (album != null){
+                Album albumN = albumRepository.findById(album.getAlbum_id()).get();
+
+                albumN.removeSong(song);
+                songRepository.save(song);
+                albumRepository.save(album);
+                //songRepository.deleteById(song_id); //a song cannot exist without an album;
+
+            }
+
+
 
             songRepository.delete(song);
             JSONObject jsonObject = new JSONObject();
