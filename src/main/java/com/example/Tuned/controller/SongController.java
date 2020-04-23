@@ -1,10 +1,7 @@
 package com.example.Tuned.controller;
 
 import com.example.Tuned.model.*;
-import com.example.Tuned.repository.AlbumRepository;
-import com.example.Tuned.repository.ListenerRepository;
-import com.example.Tuned.repository.Listener_activityRepository;
-import com.example.Tuned.repository.SongRepository;
+import com.example.Tuned.repository.*;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +28,9 @@ public class SongController {
     @Autowired
     Listener_activityRepository listener_activityRepository;
 
+    @Autowired
+    PlaylistRepository playlistRepository;
+
     @GetMapping("/api/song/all")
     public List<Song> findAllSongs() {
         return (List<Song>) songRepository.findAll();
@@ -56,13 +56,16 @@ public class SongController {
     public JSONObject deleteSongById(@PathVariable("song_id") int song_id) {
         if(songRepository.findById(song_id).isPresent()) {
             Song song = songRepository.findById(song_id).get();
-
-
             PlaylistController playlistController = new PlaylistController();
             Set<Playlist> playlists = song.getPlaylists();
             if (playlists != null)
-                for (Playlist p : playlists)
-                    playlistController.removeSongFromPlaylist(p.getPlaylist_id(), song_id);
+                for (Playlist p : playlists) {
+                    p.removeSong(song);
+                    songRepository.save(song);
+                    playlistRepository.save(p);
+
+
+                }
             Album album = song.getAlbum();
             if (album != null){
                 Album albumN = albumRepository.findById(album.getAlbum_id()).get();
@@ -70,7 +73,6 @@ public class SongController {
                 albumN.removeSong(song);
                 songRepository.save(song);
                 albumRepository.save(album);
-                //songRepository.deleteById(song_id); //a song cannot exist without an album;
 
             }
 
