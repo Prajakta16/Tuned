@@ -75,6 +75,7 @@ public class ListenerController {
         if(listenerRepository.findById(listener_id).isPresent()) {
             Playlist playlist = playlistRepository.findById(playlist_id).get();
             playlistRepository.delete(playlist);
+            return listenerRepository.findListenerByUserId(listener_id);
         }
         return null;
     }
