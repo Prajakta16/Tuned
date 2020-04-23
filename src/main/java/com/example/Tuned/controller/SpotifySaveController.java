@@ -56,22 +56,7 @@ public class SpotifySaveController {
             for (int i = 0; i < count_artists; i++) {
                 String username = JsonPath.read(artistJsonResponse, "$.[" + i + "].name");
                 artist.setUsername(username);
-                artist.setUser_type("artist");
-                artist.setAddress("address of " + username);
-
-                String[] splitUsername = splitUsername(username);
-                if(splitUsername.length==1){
-                    artist.setLast_name(username);
-                    artist.setFirst_name(username);
-                }
-                else{
-                    artist.setLast_name(splitUsername[1]);
-                    artist.setFirst_name(splitUsername[0]);
-                }
-
                 artist.setPassword("artistpass");
-                artist.setEmail(username.substring(0, 3) + "@tuned.com");
-                artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
                 artist.setSpotify_id(JsonPath.read(artistJsonResponse, "$.[" + i + "].spotify_url"));
                 artist.setSpotify_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].spotify_id"));
                 artist.setImage_url(JsonPath.read(artistJsonResponse, "$.[" + i + "].image_url"));
@@ -111,6 +96,7 @@ public class SpotifySaveController {
                     artist.addAlbum(album);
                     albumRepository.save(album);
                     artistRepository.save(artist);
+                    SetArtistDetails(artist,username);
                 }
             }
         } catch (URISyntaxException e) {
@@ -166,21 +152,7 @@ public class SpotifySaveController {
 
                     if (artistRepository.findArtistBySpotify_id(artist_spotify_id) == null) {
                         artist.setUsername(username);
-                        artist.setUser_type("artist");
-
-                        String[] splitUsername = splitUsername(username);
-                        if(splitUsername.length==1){
-                            artist.setLast_name(username);
-                            artist.setFirst_name(username);
-                        }
-                        else{
-                            artist.setLast_name(splitUsername[1]);
-                            artist.setFirst_name(splitUsername[0]);
-                        }
-
                         artist.setPassword("artistpass");
-                        artist.setEmail(username.substring(0, 3) + "@tuned.com");
-                        artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
                         artist.setSpotify_id(artist_spotify_id);
                         artist.setSpotify_url(JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].spotify_url"));
                         artist.setImage_url(JsonPath.read(songJsonResponse, "$.[" + i + "].album.artists[" + j + "].artist_details.image_url"));
@@ -193,6 +165,7 @@ public class SpotifySaveController {
 
                     artist.addAlbum(album);
                     artistRepository.save(artist);
+                    SetArtistDetails(artist,username);
                 }
                 albumRepository.save(album);
                 songRepository.save(song);
@@ -231,18 +204,7 @@ public class SpotifySaveController {
                     artist.setUser_type("artist");
                     String username = JsonPath.read(albumJsonResponse, "$.[" + i + "].artists[" + j + "].name");
                     artist.setUsername(username);
-                    String[] splitUsername = splitUsername(username);
-                    if(splitUsername.length==1){
-                        artist.setLast_name(username);
-                        artist.setFirst_name(username);
-                    }
-                    else{
-                        artist.setLast_name(splitUsername[1]);
-                        artist.setFirst_name(splitUsername[0]);
-                    }
                     artist.setPassword("artistpass");
-                    artist.setEmail(username.substring(1, 3) + "@tuned.com");
-                    artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
                     artist.setSpotify_id(JsonPath.read(albumJsonResponse, "$.[" + i + "].artists[" + j + "].spotify_url"));
                     artist.setSpotify_url(JsonPath.read(albumJsonResponse, "$.[" + i + "].artists[" + j + "].spotify_url"));
                     artist.setImage_url(JsonPath.read(albumJsonResponse, "$.[" + i + "].artists[" + j + "].artist_details.image_url"));
@@ -269,6 +231,7 @@ public class SpotifySaveController {
                     }
                     albumRepository.save(album);
                     artistRepository.save(artist);
+                    SetArtistDetails(artist, username);
                 }
 
                 int count_songs_in_album = JsonPath.read(albumJsonResponse, "$.[" + i + "]songs.length()");
@@ -330,8 +293,26 @@ public class SpotifySaveController {
         return access_token;
     }
 
-    public String[] splitUsername(String username){
-        String[] splitStr = username.split("\\s+");
-        return splitStr;
+    private void SetArtistDetails(Artist artist, String username) {
+        if(artistRepository.findById(artist.getUser_id()).isPresent()) {
+            if (username.length() >= 4)
+                artist.setEmail(username.substring(0, 4) + "@tuned.com");
+            else
+                artist.setEmail(username.substring(0, 2) + "@tuned.com");
+            artist.setPhone((long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
+            artist.setUser_type("artist");
+            artist.setAddress("address of " + username);
+
+            String[] splitUsername = username.split("\\s+", 2);
+
+            if (splitUsername.length > 1) {
+                artist.setLast_name(splitUsername[1]);
+                artist.setFirst_name(splitUsername[0]);
+            } else {
+                artist.setFirst_name(username);
+                artist.setLast_name("");
+            }
+            artistRepository.save(artist);
+        }
     }
 }

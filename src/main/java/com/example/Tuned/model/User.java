@@ -16,7 +16,7 @@ public class User {
 
     @Column(unique = true)
     private String username;
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(20) DEFAULT 'password'")
     private String password;
 
     private String first_name;
